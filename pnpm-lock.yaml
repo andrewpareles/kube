@@ -1,0 +1,31 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      mobx-utils:
+        specifier: ^6.1.1
+        version: 6.1.1(mobx@6.15.0)
+
+packages:
+
+  mobx-utils@6.1.1:
+    resolution: {integrity: sha512-ZR4tOKucWAHOdMjqElRl2BEvrzK7duuDdKmsbEbt2kzgVpuLuoYLiDCjc3QwWQl8CmOlxPgaZQpZ7emwNqPkIg==}
+    peerDependencies:
+      mobx: ^6.0.0
+
+  mobx@6.15.0:
+    resolution: {integrity: sha512-UczzB+0nnwGotYSgllfARAqWCJ5e/skuV2K/l+Zyck/H6pJIhLXuBnz+6vn2i211o7DtbE78HQtsYEKICHGI+g==}
+
+snapshots:
+
+  mobx-utils@6.1.1(mobx@6.15.0):
+    dependencies:
+      mobx: 6.15.0
+
+  mobx@6.15.0: {}

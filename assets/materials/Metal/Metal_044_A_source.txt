@@ -1,0 +1,7 @@
+Source: ambientCG
+Page: https://ambientcg.com/a/Metal044A
+License: CC0 1.0
+Downloaded maps: albedo, roughness, normal
+Missing requested maps: ao
+Notes: The uploaded metallic texture is intentionally not used because the fully white metalness map makes this renderer show the material as black without environment reflections. Uploaded displacement is not used because MaterialInfo does not have a displacement texture slot. Metal044A.png is the preview image and is not used.
+Uploaded texture data ids: albedo 378, metallic omitted, roughness 381, normal 383.

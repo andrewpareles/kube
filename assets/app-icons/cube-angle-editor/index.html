@@ -1,0 +1,2923 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cube Angle Editor</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --background: #f2f0eb;
+        --panel: #fcfbf8;
+        --ink: #171715;
+        --muted: #6d6a62;
+        --line: #d8d4ca;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+        padding: 12px;
+        background: var(--background);
+        color: var(--ink);
+        font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      main {
+        /* TODO: AI-PICKED-VALUE: The wider desktop shell gives the expanded controls room without making the preview feel secondary. */
+        width: min(1360px, 100%);
+        height: calc(100dvh - 24px);
+        margin-inline: auto;
+        display: grid;
+        /* TODO: AI-PICKED-VALUE: A 480px control rail keeps preset names and paired sliders readable on desktop. */
+        grid-template-columns: minmax(420px, 1fr) minmax(480px, 520px);
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--panel);
+        box-shadow: 0 24px 70px rgb(36 31 20 / 10%);
+      }
+
+      .preview {
+        min-width: 0;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        /* TODO: AI-PICKED-VALUE: The preview keeps at least 260px for the cube before its download and configuration tools begin scrolling. */
+        grid-template-rows: minmax(260px, 1fr) auto;
+        align-items: stretch;
+        gap: 16px;
+        padding: 32px;
+        border-right: 1px solid var(--line);
+        overflow-y: auto;
+        scrollbar-gutter: stable;
+      }
+
+      .preview-case {
+        min-height: 0;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: 12px;
+      }
+
+      .cube-preview {
+        /* TODO: AI-PICKED-VALUE: 480px uses the wider desktop preview while preserving comfortable whitespace around the rotating cube. */
+        width: min(100%, 480px);
+        max-height: calc(100vh - 112px);
+        color: var(--ink);
+      }
+
+      /* TODO: AI-PICKED-VALUE: The faint cube stays useful as construction guidance without competing with the cut edges. */
+      .cube-path {
+        opacity: 0.14;
+      }
+
+      .hidden-edge-path {
+        opacity: 0.3;
+      }
+
+      .controls {
+        min-width: 0;
+        min-height: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 24px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-gutter: stable;
+      }
+
+      h1 {
+        margin: 0 0 4px;
+        font-size: 21px;
+        letter-spacing: -0.03em;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      .slider-block {
+        display: grid;
+        gap: 7px;
+      }
+
+      .sliders {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 13px 18px;
+      }
+
+      .sliders .slider-block {
+        gap: 5px;
+      }
+
+      .sliders output {
+        font-size: 15px;
+      }
+
+      .appearance-controls {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr));
+        align-items: end;
+        gap: 12px;
+      }
+
+      .stroke-width-presets {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 5px;
+      }
+
+      .stroke-width-presets button {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 5px 0;
+        background: white;
+        color: var(--ink);
+      }
+
+      .effect-color-controls {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .color-control {
+        display: grid;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 650;
+      }
+
+      .select-control {
+        display: grid;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 650;
+      }
+
+      select {
+        width: 100%;
+        height: 22px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 0 6px;
+        background: var(--panel);
+        color: var(--ink);
+      }
+
+      input[type="color"] {
+        width: 100%;
+        height: 22px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 2px;
+        background: var(--panel);
+        cursor: pointer;
+      }
+
+      input[type="color"]:disabled {
+        cursor: not-allowed;
+        opacity: 0.35;
+      }
+
+      .control-section {
+        display: grid;
+        gap: 11px;
+      }
+
+      .control-section h2 {
+        margin: 0;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .parameter-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 13px 18px;
+      }
+
+      .parameter-grid .slider-block {
+        gap: 5px;
+      }
+
+      .parameter-grid output {
+        font-size: 15px;
+      }
+
+      .checkbox-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+      }
+
+      .checkbox-option {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 650;
+      }
+
+      .checkbox-option input {
+        width: 15px;
+        height: 15px;
+        margin: 0;
+        accent-color: var(--ink);
+      }
+
+      .slider-label {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        font-size: 12px;
+        font-weight: 650;
+      }
+
+      output {
+        font-variant-numeric: tabular-nums;
+        font-size: 20px;
+        letter-spacing: -0.04em;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        height: 14px;
+        margin: 0;
+        accent-color: var(--ink);
+        cursor: ew-resize;
+      }
+
+      .range-notes {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      input[type="range"]:disabled {
+        cursor: not-allowed;
+        opacity: 0.35;
+      }
+
+      button {
+        width: 100%;
+        border: 0;
+        border-radius: 12px;
+        padding: 10px 16px;
+        background: var(--ink);
+        color: white;
+        cursor: pointer;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 650;
+      }
+
+      button:hover {
+        opacity: 0.82;
+      }
+
+      .configuration-tools {
+        display: grid;
+        gap: 7px;
+      }
+
+      .configuration-heading {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .configuration-heading h2 {
+        margin: 0;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .configuration-status {
+        min-height: 1em;
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .configuration-tools textarea {
+        width: 100%;
+        min-height: 54px;
+        resize: vertical;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        padding: 8px;
+        background: white;
+        color: var(--ink);
+        font: 10px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      .configuration-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .configuration-buttons button {
+        padding: 8px 10px;
+      }
+
+      .preset-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .preset-buttons button {
+        padding: 8px 10px;
+      }
+
+      .preset-buttons [data-color-preset="starter-blue"] {
+        background: #002c94;
+      }
+
+      .preset-buttons [data-color-preset="electric-violet"],
+      .preset-buttons [data-color-preset="electric-violet-hidden"],
+      .preset-buttons [data-color-preset="electric-lavender"],
+      .preset-buttons [data-color-preset="electric-lavender-bold"],
+      .preset-buttons [data-color-preset="electric-lavender-bold-tight-glow"],
+      .preset-buttons [data-color-preset="electric-lavender-bold-tight-glow-hidden"],
+      .preset-buttons [data-color-preset="electric-lavender-crisp"],
+      .preset-buttons [data-color-preset="electric-lavender-bold-hidden"] {
+        background: linear-gradient(135deg, #4c00ff, #31c7ff);
+      }
+
+      .preset-buttons [data-color-preset="soft-violet"],
+      .preset-buttons [data-color-preset="soft-violet-hidden"] {
+        /* TODO: AI-PICKED-VALUE: These muted violet and cyan values make both gradient ends distinctly darker while preserving the preset's hue. */
+        background: linear-gradient(135deg, #40249e, #367e96);
+      }
+
+      .preset-buttons [data-color-preset="mono-outline"],
+      .preset-buttons [data-color-preset="mono-outline-thin"],
+      .preset-buttons [data-color-preset="mono-outline-thick"] {
+        border: 1px solid #171715;
+        background: #ffffff;
+        color: #171715;
+      }
+
+      .preset-buttons [data-color-preset="golden-depth"] {
+        background: #ffc800;
+        color: #171715;
+      }
+
+      .preset-buttons [data-color-preset="blue-depth"] {
+        background: #61adff;
+        color: #171715;
+      }
+
+      .preset-buttons [data-color-preset="soft-gray-depth"] {
+        border: 1px solid #c8c8c8;
+        background: #f2f2f2;
+        color: #171715;
+      }
+
+      /* TODO: AI-PICKED-VALUE: An inset line distinguishes hidden-edge copies without changing their representative preset color. */
+      .preset-buttons [data-color-preset$="-hidden"] {
+        box-shadow: inset 0 0 0 2px rgb(255 255 255 / 72%);
+      }
+
+      .preset-buttons [data-k-shape-preset] {
+        border: 1px solid var(--line);
+        background: white;
+        color: var(--ink);
+      }
+
+      .preview-tools {
+        display: grid;
+        gap: 12px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+      }
+
+      .preset-gallery,
+      .effect-gallery {
+        width: min(1360px, 100%);
+        margin-inline: auto;
+        display: grid;
+        gap: 18px;
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--panel);
+        box-shadow: 0 24px 70px rgb(36 31 20 / 7%);
+      }
+
+      .preset-gallery > header,
+      .effect-gallery > header {
+        display: grid;
+        gap: 4px;
+      }
+
+      .effect-options {
+        display: flex;
+        align-items: end;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 8px;
+      }
+
+      .preset-gallery > header h2,
+      .effect-gallery > header h2 {
+        margin: 0;
+        font-size: 17px;
+        letter-spacing: -0.02em;
+      }
+
+      .preset-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: start;
+        gap: 18px;
+      }
+
+      .effect-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .effect-card {
+        min-width: 0;
+        display: grid;
+        gap: 8px;
+        margin: 0;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        background: color-mix(in srgb, var(--panel) 82%, var(--background));
+        cursor: pointer;
+        transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+      }
+
+      .effect-card:hover,
+      .effect-card:focus-visible {
+        outline: 0;
+        border-color: var(--ink);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgb(36 31 20 / 10%);
+      }
+
+      .effect-card svg {
+        width: 100%;
+        aspect-ratio: 1;
+      }
+
+      .effect-card figcaption {
+        display: grid;
+        gap: 2px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .effect-card small {
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 500;
+      }
+
+      button:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible {
+        outline: 3px solid #8d9cff;
+        outline-offset: 3px;
+      }
+
+      /* TODO: AI-PICKED-VALUE: Stack before the two desktop tracks can collide, including in narrower desktop app panes. */
+      @media (max-width: 960px) {
+        main {
+          height: auto;
+          max-height: none;
+          grid-template-columns: 1fr;
+          overflow: visible;
+        }
+
+        .preview {
+          min-height: min(56vw, 520px);
+          gap: 16px;
+          padding: 32px 20px;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .cube-preview {
+          max-height: none;
+        }
+
+        .controls {
+          overflow: visible;
+          padding: 28px 32px 32px;
+        }
+
+        .effect-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .preset-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .preset-grid .control-section:last-child {
+          grid-column: 1 / -1;
+        }
+      }
+
+      @media (max-width: 560px) {
+        body {
+          padding: 0;
+        }
+
+        main,
+        .preset-gallery,
+        .effect-gallery {
+          border-right: 0;
+          border-left: 0;
+          border-radius: 0;
+        }
+
+        .preview {
+          min-height: 400px;
+        }
+
+        .controls,
+        .preset-gallery,
+        .effect-gallery {
+          padding: 24px 20px;
+        }
+
+        .preset-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .preset-grid .control-section:last-child {
+          grid-column: auto;
+        }
+
+        .appearance-controls,
+        .effect-color-controls {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="preview" aria-label="Cube preview">
+        <div class="preview-case">
+          <svg class="cube-preview" viewBox="0 0 256 256" fill="none" aria-hidden="true">
+            <path class="cube-path" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <g id="k-left-render"></g>
+          </svg>
+        </div>
+        <div class="preview-tools">
+          <button id="download" type="button">Download SVG</button>
+          <section class="configuration-tools" aria-labelledby="configuration-title">
+            <div class="configuration-heading">
+              <h2 id="configuration-title">Configuration</h2>
+              <span id="configuration-status" class="configuration-status" role="status" aria-live="polite"></span>
+            </div>
+            <textarea id="configuration" rows="3" aria-label="Current cube configuration" spellcheck="false"></textarea>
+            <div class="configuration-buttons">
+              <button id="copy-configuration" type="button">Copy configuration</button>
+              <button id="paste-configuration" type="button">Paste configuration</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="controls">
+        <div>
+          <h1>Cube angle</h1>
+          <p>Rotate the cube vertically and horizontally. The view stays orthographic.</p>
+        </div>
+
+        <section class="control-section">
+          <h2>Cube and extrusion</h2>
+          <div class="sliders">
+            <div class="slider-block">
+              <label class="slider-label" for="top-angle">
+                Top-face view
+                <output id="top-angle-output" for="top-angle">22°</output>
+              </label>
+              <!-- TODO: AI-PICKED-VALUE: 22 degrees gives V2 a noticeably flatter top without making it look nearly side-on. -->
+              <input id="top-angle" type="range" min="0" max="90" value="22" step="0.1" />
+              <div class="range-notes" aria-hidden="true">
+                <span id="top-angle-note-start">No top</span>
+                <span id="top-angle-note-middle"></span>
+                <span id="top-angle-note-end">Top only</span>
+              </div>
+            </div>
+
+            <div class="slider-block">
+              <label class="slider-label" for="horizontal-angle">
+                Horizontal rotation
+                <output id="horizontal-angle-output" for="horizontal-angle">45°</output>
+              </label>
+              <input id="horizontal-angle" type="range" min="0" max="180" value="45" step="0.1" />
+              <div class="range-notes" aria-hidden="true">
+                <span id="horizontal-angle-note-start">0°</span>
+                <span id="horizontal-angle-note-middle">90°</span>
+                <span id="horizontal-angle-note-end">180°</span>
+              </div>
+            </div>
+
+            <div class="slider-block">
+              <label class="slider-label" for="extrusion-depth">
+                Extrusion depth
+                <output id="extrusion-depth-output" for="extrusion-depth">1.00</output>
+              </label>
+              <!-- TODO: AI-PICKED-VALUE: Full depth starts with the K cut all the way through the cube. -->
+              <input id="extrusion-depth" type="range" min="0" max="1" value="1" step="0.01" />
+              <div class="range-notes" aria-hidden="true">
+                <span>Face only</span>
+                <span>Through cube</span>
+              </div>
+            </div>
+
+            <label class="select-control" for="extrusion-alignment">
+              Extrusion alignment
+              <select id="extrusion-alignment">
+                <option value="front" selected>Front</option>
+                <option value="center">Center</option>
+                <option value="back">Back</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="checkbox-options">
+            <label class="checkbox-option" for="show-hidden-edges">
+              <input id="show-hidden-edges" type="checkbox" />
+              Show hidden edges
+            </label>
+            <label class="checkbox-option" for="hide-cube-guide">
+              <input id="hide-cube-guide" type="checkbox" checked />
+              Hide gray scaffolding
+            </label>
+            <label class="checkbox-option" for="full-rotation">
+              <input id="full-rotation" type="checkbox" />
+              Full 360° rotation
+            </label>
+          </div>
+
+          <div class="appearance-controls">
+            <div class="slider-block">
+              <label class="slider-label" for="stroke-width">Stroke width <output id="stroke-width-output" for="stroke-width">2.0</output></label>
+              <!-- TODO: AI-PICKED-VALUE: This range supports no outline through heavy logo treatments without allowing the outline to consume the shape. -->
+              <input id="stroke-width" type="range" min="0" max="24" value="2" step="0.5" />
+            </div>
+            <label class="color-control" for="stroke-color">
+              Stroke color
+              <input id="stroke-color" type="color" value="#002c94" />
+            </label>
+            <label class="color-control" for="face-color">
+              Face color
+              <!-- TODO: AI-PICKED-VALUE: The initial face color matches the preview panel so the existing outline-first appearance is preserved. -->
+              <input id="face-color" type="color" value="#fcfbf8" />
+            </label>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <h2>Edge effects</h2>
+          <div class="checkbox-options">
+            <label class="checkbox-option" for="depth-shading">
+              <input id="depth-shading" type="checkbox" />
+              Face depth shading
+            </label>
+            <label class="checkbox-option" for="transparent-faces">
+              <input id="transparent-faces" type="checkbox" />
+              Transparent faces
+            </label>
+            <label class="checkbox-option" for="neon-glow">
+              <input id="neon-glow" type="checkbox" checked />
+              Neon glow
+            </label>
+            <label class="checkbox-option" for="stroke-gradient">
+              <input id="stroke-gradient" type="checkbox" />
+              Stroke gradient
+            </label>
+          </div>
+          <div class="parameter-grid">
+            <div class="slider-block">
+              <label class="slider-label" for="depth-shading-amount">Shade strength <output id="depth-shading-amount-output" for="depth-shading-amount">0.35</output></label>
+              <!-- TODO: AI-PICKED-VALUE: Thirty-five percent keeps rear edges distinct while making foreground edges more prominent. -->
+              <!-- Depth shading changes opaque face colors only; visible edge opacity stays unchanged. -->
+              <input id="depth-shading-amount" type="range" min="0" max="1" value="0.35" step="0.05" />
+            </div>
+            <div class="slider-block">
+              <label class="slider-label" for="face-depth-gradient-amount">Face gradient <output id="face-depth-gradient-amount-output" for="face-depth-gradient-amount">0.15</output></label>
+              <!-- TODO: AI-PICKED-VALUE: Fifteen percent creates visible depth within each face while preserving the clean logo treatment. -->
+              <input id="face-depth-gradient-amount" type="range" min="0" max="0.5" value="0.15" step="0.05" />
+            </div>
+            <div class="slider-block">
+              <label class="slider-label" for="glow-radius">Glow radius <output id="glow-radius-output" for="glow-radius">6.0</output></label>
+              <!-- TODO: AI-PICKED-VALUE: Six SVG units create a broad halo while the renderer adds a tighter inner halo for visibility. -->
+              <input id="glow-radius" type="range" min="0" max="20" value="6" step="0.5" />
+            </div>
+            <div class="slider-block">
+              <label class="slider-label" for="glow-intensity">Glow intensity <output id="glow-intensity-output" for="glow-intensity">0.20</output></label>
+              <!-- TODO: AI-PICKED-VALUE: Sixty-five percent gives the glow presence while leaving the crisp edge dominant. -->
+              <!-- The user-selected twenty-percent default keeps the halo subtle. -->
+              <input id="glow-intensity" type="range" min="0" max="1" value="0.2" step="0.05" />
+            </div>
+            <div class="slider-block">
+              <label class="slider-label" for="gradient-angle">Gradient angle <output id="gradient-angle-output" for="gradient-angle">45°</output></label>
+              <!-- TODO: AI-PICKED-VALUE: A diagonal gradient shows both colors across most cube orientations. -->
+              <input id="gradient-angle" type="range" min="0" max="360" value="45" step="1" />
+            </div>
+          </div>
+          <div class="effect-color-controls">
+            <label class="color-control" for="glow-color">
+              Glow color
+              <!-- TODO: AI-PICKED-VALUE: This brighter blue stays in the same family as the default dark-blue stroke. -->
+              <input id="glow-color" type="color" value="#2f6bff" />
+            </label>
+            <label class="color-control" for="gradient-start-color">
+              Gradient start
+              <input id="gradient-start-color" type="color" value="#002c94" />
+            </label>
+            <label class="color-control" for="gradient-end-color">
+              Gradient end color
+              <!-- TODO: AI-PICKED-VALUE: Cyan gives the dark-blue starter stroke enough separation for the gradient to read clearly. -->
+              <input id="gradient-end-color" type="color" value="#31c7ff" />
+            </label>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <h2>K shape · values from 0 to 1</h2>
+          <div class="checkbox-options">
+            <label class="checkbox-option" for="parallel-top">
+              <input id="parallel-top" type="checkbox" checked />
+              Parallel top
+            </label>
+            <label class="checkbox-option" for="parallel-bottom">
+              <input id="parallel-bottom" type="checkbox" checked />
+              Parallel bottom
+            </label>
+            <label class="checkbox-option" for="align-inlet-starts">
+              <input id="align-inlet-starts" type="checkbox" checked />
+              Align a0 / c0
+            </label>
+          </div>
+          <div class="parameter-grid">
+            <div class="slider-block">
+              <label class="slider-label" for="a0">a0 · Top start <output id="a0-output" for="a0">0.33</output></label>
+              <input id="a0" type="range" min="0" max="1" value="0.33" step="0.01" />
+            </div>
+            <div class="slider-block">
+              <label class="slider-label" for="a1">a1 · Top end <output id="a1-output" for="a1">0.60</output></label>
+              <input id="a1" type="range" min="0" max="1" value="0.60" step="0.01" />
+            </div>
+            <div class="slider-block">
+              <label class="slider-label" for="b0">b0 · Top depth <output id="b0-output" for="b0">0.34</output></label>
+              <input id="b0" type="range" min="0" max="1" value="0.34" step="0.01" />
+            </div>
+            <div class="slider-block">
+              <label class="slider-label" for="c0">c0 · Bottom start <output id="c0-output" for="c0">0.33</output></label>
+              <input id="c0" type="range" min="0" max="1" value="0.33" step="0.01" />
+            </div>
+            <div class="slider-block">
+              <label class="slider-label" for="c1">c1 · Bottom end <output id="c1-output" for="c1">0.50</output></label>
+              <input id="c1" type="range" min="0" max="1" value="0.50" step="0.01" />
+            </div>
+            <div class="slider-block">
+              <label class="slider-label" for="d0">d0 · Bottom depth <output id="d0-output" for="d0">0.22</output></label>
+              <input id="d0" type="range" min="0" max="1" value="0.22" step="0.01" />
+            </div>
+            <div class="slider-block">
+              <label class="slider-label" for="e0">e0 · Joint depth <output id="e0-output" for="e0">0.39</output></label>
+              <input id="e0" type="range" min="0" max="1" value="0.39" step="0.01" />
+            </div>
+            <div class="slider-block">
+              <label class="slider-label" for="e1">e1 · Joint Y <output id="e1-output" for="e1">0.50</output></label>
+              <input id="e1" type="range" min="0" max="1" value="0.50" step="0.01" />
+            </div>
+          </div>
+        </section>
+
+      </section>
+    </main>
+
+    <section class="preset-gallery" aria-labelledby="preset-gallery-title">
+      <header>
+        <h2 id="preset-gallery-title">Presets</h2>
+      </header>
+      <div class="preset-grid">
+        <section class="control-section" aria-labelledby="color-presets-title">
+          <h2 id="color-presets-title">Color presets</h2>
+          <div class="preset-buttons">
+            <button type="button" data-color-preset="starter-blue">Starter blue</button>
+            <!-- TODO: AI-PICKED-VALUE: The supplied purple, blue, and cyan treatment is named Electric violet so it is easy to recognize in the preset list. -->
+            <button type="button" data-color-preset="electric-violet">Electric violet</button>
+            <button type="button" data-color-preset="electric-violet-hidden">Electric violet + hidden</button>
+            <!-- TODO: AI-PICKED-VALUE: The supplied Electric violet treatment with a pale purple face is named Electric lavender. -->
+            <button type="button" data-color-preset="electric-lavender">Electric lavender</button>
+            <button type="button" data-color-preset="electric-lavender-bold">Electric lavender · bold</button>
+            <button type="button" data-color-preset="electric-lavender-bold-tight-glow">Electric lavender · bold · tight glow</button>
+            <button type="button" data-color-preset="electric-lavender-bold-tight-glow-hidden">Electric lavender · bold · tight glow + hidden</button>
+            <!-- TODO: AI-PICKED-VALUE: The supplied Electric lavender treatment is named Crisp because its glow radius is much tighter. -->
+            <button type="button" data-color-preset="electric-lavender-crisp">Electric lavender · crisp</button>
+            <!-- TODO: AI-PICKED-VALUE: The supplied eight-unit Electric lavender treatment is named Bold + hidden to distinguish its heavy visible and hidden edges. -->
+            <button type="button" data-color-preset="electric-lavender-bold-hidden">Electric lavender · bold + hidden</button>
+            <!-- TODO: AI-PICKED-VALUE: Softer violet and cyan hues with a smaller, weaker glow preserve the Electric violet character with less intensity. -->
+            <button type="button" data-color-preset="soft-violet">Soft violet</button>
+            <button type="button" data-color-preset="soft-violet-hidden">Soft violet + hidden</button>
+            <!-- TODO: AI-PICKED-VALUE: The supplied black-on-white treatment is named Mono outline so its appearance is clear in the preset list. -->
+            <button type="button" data-color-preset="mono-outline">Mono outline</button>
+            <button type="button" data-color-preset="mono-outline-thin">Mono outline thin</button>
+            <button type="button" data-color-preset="mono-outline-thick">Mono outline thick</button>
+            <!-- TODO: AI-PICKED-VALUE: The supplied yellow shaded treatment is named Golden depth so its appearance is clear in the preset list. -->
+            <button type="button" data-color-preset="golden-depth">Golden depth</button>
+            <!-- TODO: AI-PICKED-VALUE: The supplied blue shaded treatment is named Blue depth so its appearance is clear in the preset list. -->
+            <button type="button" data-color-preset="blue-depth">Blue depth</button>
+            <!-- TODO: AI-PICKED-VALUE: The supplied light-gray shaded treatment is named Soft gray depth so its appearance is clear in the preset list. -->
+            <button type="button" data-color-preset="soft-gray-depth">Soft gray depth</button>
+          </div>
+        </section>
+        <section class="control-section" aria-labelledby="k-shape-presets-title">
+          <h2 id="k-shape-presets-title">K shape presets</h2>
+          <div class="preset-buttons">
+            <button type="button" data-k-shape-preset="current-k">Current K</button>
+            <!-- TODO: AI-PICKED-VALUE: The supplied shape is named Aligned K because all three alignment constraints are enabled. -->
+            <button type="button" data-k-shape-preset="aligned-k">Aligned K</button>
+            <!-- TODO: AI-PICKED-VALUE: The shallower supplied shape is named Compact aligned K to distinguish it from the existing aligned preset. -->
+            <button type="button" data-k-shape-preset="compact-aligned-k">Compact aligned K</button>
+            <!-- TODO: AI-PICKED-VALUE: The supplied shape is named Wide stem K because its aligned inlets occupy one third of the face. -->
+            <button type="button" data-k-shape-preset="wide-stem-k">Wide stem K</button>
+            <!-- TODO: AI-PICKED-VALUE: A 0.22 bottom depth raises the bottom inlet slightly while preserving the supplied wide-stem shape. -->
+            <button type="button" data-k-shape-preset="wide-stem-k-higher-bottom">Wide stem K · higher bottom</button>
+            <!-- TODO: AI-PICKED-VALUE: The supplied shape is named Wide stem K · deep top because its top inlet depth increases to 0.34. -->
+            <button type="button" data-k-shape-preset="wide-stem-k-deep-top">Wide stem K · deep top</button>
+          </div>
+        </section>
+        <section class="control-section" aria-labelledby="stroke-width-presets-title">
+          <h2 id="stroke-width-presets-title">Stroke width presets</h2>
+          <div class="stroke-width-presets">
+            <button type="button" data-stroke-width="0">0</button>
+            <button type="button" data-stroke-width="0.5">0.5</button>
+            <button type="button" data-stroke-width="1">1</button>
+            <button type="button" data-stroke-width="1.5">1.5</button>
+            <button type="button" data-stroke-width="2">2</button>
+            <button type="button" data-stroke-width="2.5">2.5</button>
+            <button type="button" data-stroke-width="3">3</button>
+            <button type="button" data-stroke-width="4">4</button>
+            <button type="button" data-stroke-width="5">5</button>
+            <button type="button" data-stroke-width="6">6</button>
+            <button type="button" data-stroke-width="7">7</button>
+            <button type="button" data-stroke-width="8">8</button>
+            <button type="button" data-stroke-width="10">10</button>
+            <button type="button" data-stroke-width="12">12</button>
+            <button type="button" data-stroke-width="14">14</button>
+            <button type="button" data-stroke-width="16">16</button>
+            <button type="button" data-stroke-width="18">18</button>
+            <button type="button" data-stroke-width="20">20</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="effect-gallery" aria-labelledby="effect-gallery-title">
+      <header>
+        <h2 id="effect-gallery-title">Hover studies</h2>
+        <p>Hover, move your pointer, or click a tile to animate the current K.</p>
+        <div class="effect-options">
+          <label class="checkbox-option" for="animate-crease-edges">
+            <input id="animate-crease-edges" type="checkbox" checked />
+            Animate crease edges
+          </label>
+          <label class="checkbox-option" for="shade-final-cube">
+            <input id="shade-final-cube" type="checkbox" checked />
+            Shade final cube
+          </label>
+          <label class="select-control" for="crease-transition-mode">
+            Crease transition
+            <select id="crease-transition-mode">
+              <option value="fade">Fade only</option>
+              <option value="shrink">Shrink only</option>
+              <option value="two-step" selected>Two step</option>
+              <option value="mixed">Some fade, some shrink</option>
+            </select>
+          </label>
+        </div>
+      </header>
+      <div class="effect-grid">
+        <figure class="effect-card" data-effect="cube-morph" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Cube morph <small>Closes the K cuts, then returns</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="reverse-cube-morph" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Cube reveal <small>Hover to reveal; click to close and reopen the K</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="reverse-cube-morph-selected-view" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Cube reveal · selected view <small>Reveals toward the angles selected above</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="reverse-cube-morph-hidden-edge-grow" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Cube reveal · hidden-edge grow <small>Grows hidden edges into the revealed K</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="reverse-cube-morph-selected-view-hidden-edge-grow" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Cube reveal · selected + hidden <small>Uses the selected view and grows hidden edges</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="pointer-angle" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Pointer view <small>Move to rotate, click to close the K briefly</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="pointer-box-click" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Pointer cube morph <small>Move to rotate, click to reveal the K briefly</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="pointer-angle-side" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Pointer view · 22/45 <small>Move around a 22° top and 45° side view</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="pointer-box-click-side" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Pointer cube morph · 22/45 <small>Move around 22° / 45°, click to reveal the K</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="head-on-box" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Head-on to box <small>Turns to the side, then closes into a cube</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="extrude" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Extrude <small>Moves from partial to full depth</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="stroke-pulse" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Stroke grow <small>Grows twenty percent, then returns</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="stroke-shrink" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Stroke shrink <small>Shrinks twenty percent, then returns</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="head-on-extrude" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Head-on to side <small>Turns and fully extrudes together</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="angled-head-on-extrude" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Angled to side <small>Starts with a little depth, then turns and extrudes</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="horizontal-spin" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Horizontal spin <small>Ends at its starting view</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="vertical-spin" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Vertical spin <small>Ends at its starting view</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="body-diagonal-spin" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Body-diagonal spin <small>Rotates 360° around the cube’s (1,1,1) axis</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="body-diagonal-spin-001-110" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Body diagonal 001–110 <small>Rotates around the cube’s (1,1,−1) axis</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="body-diagonal-spin-010-101" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Body diagonal 010–101 <small>Rotates around the cube’s (1,−1,1) axis</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="body-diagonal-spin-011-100" tabindex="0">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Body diagonal 011–100 <small>Rotates around the cube’s (−1,1,1) axis</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="ambient-cube-spin">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Ambient cube spin <small>Drifts continuously around a fixed 3D direction</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="inertial-cube-wander">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Inertial cube wander <small>Smoothly chases rightward-biased targets lasting two to ten seconds</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="inertial-cube-wander-fast">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Inertial cube wander · fast <small>The same smooth wandering with faster average rotation</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="inertial-cube-wander-free">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Inertial cube wander · free <small>Wanders smoothly through unrestricted rotation directions</small></figcaption>
+        </figure>
+        <figure class="effect-card" data-effect="inertial-cube-wander-fast-free">
+          <svg viewBox="0 0 256 256" aria-hidden="true"><g class="effect-render"></g></svg>
+          <figcaption>Inertial cube wander · fast + free <small>Unrestricted wandering with the faster speed range</small></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <script>
+      // Both angles feed one orthographic projection so the cube keeps its real proportions while it rotates.
+      const VIEW_BOX_SIZE = 256;
+      const CUBE_CENTER = VIEW_BOX_SIZE / 2;
+      const CUBE_MAX_WIDTH = 176;
+      const CUBE_MAX_HEIGHT = 220;
+      const CUBE_SCALE = Math.min(CUBE_MAX_WIDTH / Math.sqrt(2), CUBE_MAX_HEIGHT / Math.sqrt(3));
+      // TODO: AI-PICKED-VALUE: A one-unit matching stroke closes browser antialiasing seams between adjacent filled faces and stays beneath the main outline.
+      const FACE_SEAM_STROKE_WIDTH = 1;
+      // TODO: AI-PICKED-VALUE: This cutoff removes collapsed faces below one hundredth of a screen pixel before they can destabilize occlusion tests.
+      const K_POLYGON_SIMPLIFY_EPSILON = 0.00001;
+      // TODO: AI-PICKED-VALUE: These opacities separate construction geometry from the edges intended for the logo.
+      const CUBE_GUIDE_OPACITY = 0.14;
+      // TODO: AI-PICKED-VALUE: Eighteen percent keeps hidden edges readable without letting them compete with the visible outline.
+      const HIDDEN_EDGE_OPACITY = 0.18;
+      const fullCreaseTransition = { movingStrokeScale: 1, movingOpacity: 1, stationaryStrokeScale: 1, stationaryOpacity: 1 };
+      const topAngleInput = document.querySelector("#top-angle");
+      const topAngleOutput = document.querySelector("#top-angle-output");
+      const topAngleNoteStart = document.querySelector("#top-angle-note-start");
+      const topAngleNoteMiddle = document.querySelector("#top-angle-note-middle");
+      const topAngleNoteEnd = document.querySelector("#top-angle-note-end");
+      const horizontalAngleInput = document.querySelector("#horizontal-angle");
+      const horizontalAngleOutput = document.querySelector("#horizontal-angle-output");
+      const extrusionDepthInput = document.querySelector("#extrusion-depth");
+      const extrusionDepthOutput = document.querySelector("#extrusion-depth-output");
+      const extrusionAlignmentInput = document.querySelector("#extrusion-alignment");
+      const strokeWidthInput = document.querySelector("#stroke-width");
+      const strokeWidthOutput = document.querySelector("#stroke-width-output");
+      const strokeColorInput = document.querySelector("#stroke-color");
+      const faceColorInput = document.querySelector("#face-color");
+      const depthShadingInput = document.querySelector("#depth-shading");
+      const transparentFacesInput = document.querySelector("#transparent-faces");
+      const depthShadingAmountInput = document.querySelector("#depth-shading-amount");
+      const depthShadingAmountOutput = document.querySelector("#depth-shading-amount-output");
+      const faceDepthGradientAmountInput = document.querySelector("#face-depth-gradient-amount");
+      const faceDepthGradientAmountOutput = document.querySelector("#face-depth-gradient-amount-output");
+      const neonGlowInput = document.querySelector("#neon-glow");
+      const glowRadiusInput = document.querySelector("#glow-radius");
+      const glowRadiusOutput = document.querySelector("#glow-radius-output");
+      const glowIntensityInput = document.querySelector("#glow-intensity");
+      const glowIntensityOutput = document.querySelector("#glow-intensity-output");
+      const glowColorInput = document.querySelector("#glow-color");
+      const strokeGradientInput = document.querySelector("#stroke-gradient");
+      const gradientStartColorInput = document.querySelector("#gradient-start-color");
+      const gradientEndColorInput = document.querySelector("#gradient-end-color");
+      const gradientAngleInput = document.querySelector("#gradient-angle");
+      const gradientAngleOutput = document.querySelector("#gradient-angle-output");
+      const hideCubeGuideInput = document.querySelector("#hide-cube-guide");
+      const showHiddenEdgesInput = document.querySelector("#show-hidden-edges");
+      const animateCreaseEdgesInput = document.querySelector("#animate-crease-edges");
+      const shadeFinalCubeInput = document.querySelector("#shade-final-cube");
+      const creaseTransitionModeInput = document.querySelector("#crease-transition-mode");
+      const fullRotationInput = document.querySelector("#full-rotation");
+      const horizontalAngleNoteStart = document.querySelector("#horizontal-angle-note-start");
+      const horizontalAngleNoteMiddle = document.querySelector("#horizontal-angle-note-middle");
+      const horizontalAngleNoteEnd = document.querySelector("#horizontal-angle-note-end");
+      const cubePaths = document.querySelectorAll(".cube-path");
+      const kLeftRender = document.querySelector("#k-left-render");
+      const parallelTopInput = document.querySelector("#parallel-top");
+      const parallelBottomInput = document.querySelector("#parallel-bottom");
+      const alignInletStartsInput = document.querySelector("#align-inlet-starts");
+      const downloadButton = document.querySelector("#download");
+      const configurationTextArea = document.querySelector("#configuration");
+      const configurationStatus = document.querySelector("#configuration-status");
+      const copyConfigurationButton = document.querySelector("#copy-configuration");
+      const pasteConfigurationButton = document.querySelector("#paste-configuration");
+      const strokeWidthPresetButtons = document.querySelectorAll("[data-stroke-width]");
+      const colorPresetButtons = document.querySelectorAll("[data-color-preset]");
+      const kShapePresetButtons = document.querySelectorAll("[data-k-shape-preset]");
+      const effectCards = [...document.querySelectorAll(".effect-card")];
+      const parameterNames = ["a0", "a1", "b0", "c0", "c1", "d0", "e0", "e1"];
+      const inputOfParameter = {};
+      const outputOfParameter = {};
+
+      for (const parameterName of parameterNames) {
+        inputOfParameter[parameterName] = document.querySelector(`#${parameterName}`);
+        outputOfParameter[parameterName] = document.querySelector(`#${parameterName}-output`);
+      }
+
+      // Color presets own only appearance controls, so choosing a treatment never changes the current K geometry or camera.
+      const colorConfigurationOfPresetName = {
+        "starter-blue": {
+          strokeWidth: 2,
+          strokeColor: "#002c94",
+          faceColor: "#fcfbf8",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: true,
+          glowRadius: 6,
+          glowIntensity: 0.2,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: false,
+          gradientStartColor: "#002c94",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 45,
+          showHiddenEdges: false,
+        },
+        "electric-violet": {
+          strokeWidth: 6,
+          strokeColor: "#4c00ff",
+          faceColor: "#ffffff",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: true,
+          glowRadius: 6,
+          glowIntensity: 0.25,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: true,
+          gradientStartColor: "#4c00ff",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 42,
+          showHiddenEdges: false,
+        },
+        "electric-violet-hidden": {
+          strokeWidth: 6,
+          strokeColor: "#4c00ff",
+          faceColor: "#ffffff",
+          shouldUseTransparentFaces: true,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: true,
+          glowRadius: 6,
+          glowIntensity: 0.25,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: true,
+          gradientStartColor: "#4c00ff",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 42,
+          showHiddenEdges: true,
+        },
+        "electric-lavender": {
+          strokeWidth: 2,
+          strokeColor: "#4c00ff",
+          faceColor: "#f4f0ff",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: true,
+          glowRadius: 6,
+          glowIntensity: 0.25,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: true,
+          gradientStartColor: "#4c00ff",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 42,
+          showHiddenEdges: false,
+        },
+        "electric-lavender-bold": {
+          strokeWidth: 8,
+          strokeColor: "#4c00ff",
+          faceColor: "#f4f0ff",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: true,
+          glowRadius: 6,
+          glowIntensity: 0.25,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: true,
+          gradientStartColor: "#4c00ff",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 42,
+          showHiddenEdges: false,
+        },
+        "electric-lavender-bold-tight-glow": {
+          strokeWidth: 8,
+          strokeColor: "#4c00ff",
+          faceColor: "#f4f0ff",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: true,
+          glowRadius: 1.5,
+          glowIntensity: 0.25,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: true,
+          gradientStartColor: "#4c00ff",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 42,
+          showHiddenEdges: false,
+        },
+        "electric-lavender-bold-tight-glow-hidden": {
+          strokeWidth: 8,
+          strokeColor: "#4c00ff",
+          faceColor: "#f4f0ff",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: true,
+          glowRadius: 1.5,
+          glowIntensity: 0.25,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: true,
+          gradientStartColor: "#4c00ff",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 42,
+          showHiddenEdges: true,
+        },
+        "electric-lavender-crisp": {
+          strokeWidth: 8,
+          strokeColor: "#4c00ff",
+          faceColor: "#f4f0ff",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: true,
+          glowRadius: 1.5,
+          glowIntensity: 0.25,
+          glowColor: "#336dff",
+          shouldUseStrokeGradient: true,
+          gradientStartColor: "#4c00ff",
+          gradientEndColor: "#33a7ff",
+          gradientAngle: 42,
+          showHiddenEdges: false,
+        },
+        "electric-lavender-bold-hidden": {
+          strokeWidth: 8,
+          strokeColor: "#4c00ff",
+          faceColor: "#f4f0ff",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: true,
+          glowRadius: 6,
+          glowIntensity: 0.25,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: true,
+          gradientStartColor: "#4c00ff",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 42,
+          showHiddenEdges: true,
+        },
+        "soft-violet": {
+          strokeWidth: 2,
+          strokeColor: "#40249e",
+          faceColor: "#ffffff",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: true,
+          glowRadius: 4,
+          glowIntensity: 0.12,
+          glowColor: "#6680e3",
+          shouldUseStrokeGradient: true,
+          gradientStartColor: "#40249e",
+          gradientEndColor: "#367e96",
+          gradientAngle: 42,
+          showHiddenEdges: false,
+        },
+        "soft-violet-hidden": {
+          strokeWidth: 2,
+          strokeColor: "#40249e",
+          faceColor: "#ffffff",
+          shouldUseTransparentFaces: true,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: true,
+          glowRadius: 4,
+          glowIntensity: 0.12,
+          glowColor: "#6680e3",
+          shouldUseStrokeGradient: true,
+          gradientStartColor: "#40249e",
+          gradientEndColor: "#367e96",
+          gradientAngle: 42,
+          showHiddenEdges: true,
+        },
+        "mono-outline": {
+          strokeWidth: 2,
+          strokeColor: "#000000",
+          faceColor: "#ffffff",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: false,
+          glowRadius: 6,
+          glowIntensity: 0.65,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: false,
+          gradientStartColor: "#002c94",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 45,
+          showHiddenEdges: false,
+        },
+        "mono-outline-thin": {
+          strokeWidth: 1,
+          strokeColor: "#000000",
+          faceColor: "#ffffff",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: false,
+          glowRadius: 6,
+          glowIntensity: 0.65,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: false,
+          gradientStartColor: "#002c94",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 45,
+          showHiddenEdges: false,
+        },
+        "mono-outline-thick": {
+          strokeWidth: 6,
+          strokeColor: "#000000",
+          faceColor: "#ffffff",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: false,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: false,
+          glowRadius: 6,
+          glowIntensity: 0.65,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: false,
+          gradientStartColor: "#002c94",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 45,
+          showHiddenEdges: false,
+        },
+        "golden-depth": {
+          strokeWidth: 2,
+          strokeColor: "#000000",
+          faceColor: "#ffc800",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: true,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: false,
+          glowRadius: 6,
+          glowIntensity: 0.1,
+          glowColor: "#000000",
+          shouldUseStrokeGradient: false,
+          gradientStartColor: "#002c94",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 45,
+          showHiddenEdges: false,
+        },
+        "blue-depth": {
+          strokeWidth: 2,
+          strokeColor: "#000000",
+          faceColor: "#61adff",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: true,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: false,
+          glowRadius: 6,
+          glowIntensity: 0.65,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: false,
+          gradientStartColor: "#002c94",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 45,
+          showHiddenEdges: false,
+        },
+        "soft-gray-depth": {
+          strokeWidth: 2,
+          strokeColor: "#000000",
+          faceColor: "#f2f2f2",
+          shouldUseTransparentFaces: false,
+          shouldUseDepthShading: true,
+          depthShadingAmount: 0.35,
+          faceDepthGradientAmount: 0.15,
+          shouldUseNeonGlow: false,
+          glowRadius: 6,
+          glowIntensity: 0.65,
+          glowColor: "#2f6bff",
+          shouldUseStrokeGradient: false,
+          gradientStartColor: "#002c94",
+          gradientEndColor: "#31c7ff",
+          gradientAngle: 45,
+          showHiddenEdges: false,
+        },
+      };
+
+      // K shape presets own only the K constraints and points, so choosing a shape preserves the current appearance and camera.
+      const kShapeConfigurationOfPresetName = {
+        "current-k": {
+          parallelTop: false,
+          parallelBottom: true,
+          alignInletStarts: false,
+          parameters: { a0: 0.26, a1: 0.54, b0: 0.44, c0: 0.29, c1: 0.56, d0: 0.29, e0: 0.46, e1: 0.5 },
+        },
+        "aligned-k": {
+          parallelTop: true,
+          parallelBottom: true,
+          alignInletStarts: true,
+          parameters: { a0: 0.26, a1: 0.65, b0: 0.35, c0: 0.26, c1: 0.61, d0: 0.26, e0: 0.55, e1: 0.5 },
+        },
+        "compact-aligned-k": {
+          parallelTop: true,
+          parallelBottom: true,
+          alignInletStarts: true,
+          parameters: { a0: 0.26, a1: 0.59, b0: 0.3, c0: 0.26, c1: 0.55, d0: 0.26, e0: 0.55, e1: 0.5 },
+        },
+        "wide-stem-k": {
+          parallelTop: true,
+          parallelBottom: true,
+          alignInletStarts: true,
+          parameters: { a0: 0.33, a1: 0.56, b0: 0.29, c0: 0.33, c1: 0.48, d0: 0.19, e0: 0.39, e1: 0.5 },
+        },
+        // TODO: AI-PICKED-VALUE: A 0.22 bottom depth raises the bottom inlet slightly while every independent wide-stem control stays unchanged.
+        "wide-stem-k-higher-bottom": {
+          parallelTop: true,
+          parallelBottom: true,
+          alignInletStarts: true,
+          parameters: { a0: 0.33, a1: 0.56, b0: 0.29, c0: 0.33, c1: 0.5, d0: 0.22, e0: 0.39, e1: 0.5 },
+        },
+        "wide-stem-k-deep-top": {
+          parallelTop: true,
+          parallelBottom: true,
+          alignInletStarts: true,
+          parameters: { a0: 0.33, a1: 0.6, b0: 0.34, c0: 0.33, c1: 0.5, d0: 0.22, e0: 0.39, e1: 0.5 },
+        },
+      };
+
+      const inputOfColorConfigurationKey = {
+        strokeWidth: strokeWidthInput,
+        strokeColor: strokeColorInput,
+        faceColor: faceColorInput,
+        shouldUseTransparentFaces: transparentFacesInput,
+        shouldUseDepthShading: depthShadingInput,
+        depthShadingAmount: depthShadingAmountInput,
+        faceDepthGradientAmount: faceDepthGradientAmountInput,
+        shouldUseNeonGlow: neonGlowInput,
+        glowRadius: glowRadiusInput,
+        glowIntensity: glowIntensityInput,
+        glowColor: glowColorInput,
+        shouldUseStrokeGradient: strokeGradientInput,
+        gradientStartColor: gradientStartColorInput,
+        gradientEndColor: gradientEndColorInput,
+        gradientAngle: gradientAngleInput,
+        showHiddenEdges: showHiddenEdgesInput,
+      };
+
+      const getEdgeEffects = (renderId) => ({
+        renderId,
+        shouldUseTransparentFaces: transparentFacesInput.checked,
+        shouldUseDepthShading: depthShadingInput.checked,
+        depthShadingAmount: Number(depthShadingAmountInput.value),
+        faceDepthGradientAmount: Number(faceDepthGradientAmountInput.value),
+        shouldUseNeonGlow: neonGlowInput.checked,
+        glowRadius: Number(glowRadiusInput.value),
+        glowIntensity: Number(glowIntensityInput.value),
+        glowColor: glowColorInput.value,
+        shouldUseStrokeGradient: strokeGradientInput.checked,
+        gradientStartColor: gradientStartColorInput.value,
+        gradientEndColor: gradientEndColorInput.value,
+        gradientAngle: Number(gradientAngleInput.value),
+      });
+
+      // -------------------------- Cube projection --------------------------
+
+      // TODO: AI-PICKED-VALUE: Three decimal places keep rotation smooth while keeping exported SVG path data compact.
+      const roundCoordinate = (coordinate) => Math.round(coordinate * 1000) / 1000;
+
+      // All eight vertices are projected so horizontal rotation works continuously through every quadrant.
+      const getCubeGeometryFromProjectionAxes = (screenXOfAxis, screenYOfAxis, depthOfAxis) => {
+        const rawVertexOfKey = {};
+
+        for (const x of [0, 1]) {
+          for (const y of [0, 1]) {
+            for (const z of [0, 1]) {
+              rawVertexOfKey[`${x}${y}${z}`] = [x * screenXOfAxis.x + y * screenXOfAxis.y + z * screenXOfAxis.z, x * screenYOfAxis.x + y * screenYOfAxis.y + z * screenYOfAxis.z];
+            }
+          }
+        }
+
+        const rawCenterX = (rawVertexOfKey["000"][0] + rawVertexOfKey["111"][0]) / 2;
+        const rawCenterY = (rawVertexOfKey["000"][1] + rawVertexOfKey["111"][1]) / 2;
+        const vertexOfKey = {};
+
+        for (const [vertexKey, [rawX, rawY]] of Object.entries(rawVertexOfKey)) {
+          vertexOfKey[vertexKey] = [CUBE_CENTER + (rawX - rawCenterX) * CUBE_SCALE, CUBE_CENTER + (rawY - rawCenterY) * CUBE_SCALE];
+        }
+
+        return {
+          top: vertexOfKey["000"],
+          rightUpper: vertexOfKey["100"],
+          rightLower: vertexOfKey["110"],
+          bottom: vertexOfKey["111"],
+          leftLower: vertexOfKey["011"],
+          leftUpper: vertexOfKey["001"],
+          center: vertexOfKey["101"],
+          depthOfAxis,
+          cubeScale: CUBE_SCALE,
+          rawCenterX,
+          rawCenterY,
+          screenXOfAxis,
+          screenYOfAxis,
+          vertexOfKey,
+        };
+      };
+
+      const getCubeProjectionAxes = (topAngleDegrees, horizontalAngleDegrees) => {
+        const topAngleRadians = topAngleDegrees * Math.PI / 180;
+        const horizontalAngleRadians = horizontalAngleDegrees * Math.PI / 180;
+        const topAngleSin = Math.sin(topAngleRadians);
+        const topAngleCos = Math.cos(topAngleRadians);
+        const horizontalAngleSin = Math.sin(horizontalAngleRadians);
+        const horizontalAngleCos = Math.cos(horizontalAngleRadians);
+
+        return {
+          depth: { x: topAngleCos * horizontalAngleCos, y: -topAngleSin, z: topAngleCos * horizontalAngleSin },
+          screenX: { x: horizontalAngleSin, y: 0, z: -horizontalAngleCos },
+          screenY: { x: topAngleSin * horizontalAngleCos, y: topAngleCos, z: topAngleSin * horizontalAngleSin },
+        };
+      };
+
+      const getCubeGeometry = (topAngleDegrees, horizontalAngleDegrees) => {
+        const projectionAxisOfName = getCubeProjectionAxes(topAngleDegrees, horizontalAngleDegrees);
+        return getCubeGeometryFromProjectionAxes(projectionAxisOfName.screenX, projectionAxisOfName.screenY, projectionAxisOfName.depth);
+      };
+
+      // Continuous cube effects keep one quaternion orientation so changes in angular velocity never reset or snap the object.
+      const getCubeGeometryWithQuaternionRotation = (topAngleDegrees, horizontalAngleDegrees, rotationQuaternion) => {
+        const projectionAxisOfName = getCubeProjectionAxes(topAngleDegrees, horizontalAngleDegrees);
+        const [rotationX, rotationY, rotationZ, rotationW] = rotationQuaternion;
+        const rotateVector = ([x, y, z]) => {
+          const quaternionVectorCrossX = rotationY * z - rotationZ * y;
+          const quaternionVectorCrossY = rotationZ * x - rotationX * z;
+          const quaternionVectorCrossZ = rotationX * y - rotationY * x;
+          const secondCrossX = rotationY * quaternionVectorCrossZ - rotationZ * quaternionVectorCrossY;
+          const secondCrossY = rotationZ * quaternionVectorCrossX - rotationX * quaternionVectorCrossZ;
+          const secondCrossZ = rotationX * quaternionVectorCrossY - rotationY * quaternionVectorCrossX;
+          return [x + 2 * (rotationW * quaternionVectorCrossX + secondCrossX), y + 2 * (rotationW * quaternionVectorCrossY + secondCrossY), z + 2 * (rotationW * quaternionVectorCrossZ + secondCrossZ)];
+        };
+        const rotatedAxisOfAxis = { x: rotateVector([1, 0, 0]), y: rotateVector([0, 1, 0]), z: rotateVector([0, 0, 1]) };
+        const composeProjectionAxis = (projectionAxis) => ({
+          x: projectionAxis.x * rotatedAxisOfAxis.x[0] + projectionAxis.y * rotatedAxisOfAxis.x[1] + projectionAxis.z * rotatedAxisOfAxis.x[2],
+          y: projectionAxis.x * rotatedAxisOfAxis.y[0] + projectionAxis.y * rotatedAxisOfAxis.y[1] + projectionAxis.z * rotatedAxisOfAxis.y[2],
+          z: projectionAxis.x * rotatedAxisOfAxis.z[0] + projectionAxis.y * rotatedAxisOfAxis.z[1] + projectionAxis.z * rotatedAxisOfAxis.z[2],
+        });
+        return getCubeGeometryFromProjectionAxes(composeProjectionAxis(projectionAxisOfName.screenX), composeProjectionAxis(projectionAxisOfName.screenY), composeProjectionAxis(projectionAxisOfName.depth));
+      };
+
+      // The body-diagonal effect rotates the object basis around normalized (1,1,1), then uses the same camera projection and depth math as every other view.
+      // The other cards use the same math with the other three normalized body diagonals.
+      const getCubeGeometryWithAxisRotation = (topAngleDegrees, horizontalAngleDegrees, rotationDegrees, rotationAxis) => {
+        const rotationAxisLength = Math.hypot(...rotationAxis);
+        const halfRotationRadians = rotationDegrees * Math.PI / 360;
+        const rotationScale = Math.sin(halfRotationRadians) / rotationAxisLength;
+        const rotationQuaternion = [rotationAxis[0] * rotationScale, rotationAxis[1] * rotationScale, rotationAxis[2] * rotationScale, Math.cos(halfRotationRadians)];
+        return getCubeGeometryWithQuaternionRotation(topAngleDegrees, horizontalAngleDegrees, rotationQuaternion);
+      };
+
+      const formatPoint = ([x, y]) => `${roundCoordinate(x)} ${roundCoordinate(y)}`;
+
+      const getCubePathData = (cubeGeometry) => {
+        const cubeEdges = [
+          { vertices: ["000", "100"], faces: [["y", 0], ["z", 0]] },
+          { vertices: ["010", "110"], faces: [["y", 1], ["z", 0]] },
+          { vertices: ["001", "101"], faces: [["y", 0], ["z", 1]] },
+          { vertices: ["011", "111"], faces: [["y", 1], ["z", 1]] },
+          { vertices: ["000", "010"], faces: [["x", 0], ["z", 0]] },
+          { vertices: ["100", "110"], faces: [["x", 1], ["z", 0]] },
+          { vertices: ["001", "011"], faces: [["x", 0], ["z", 1]] },
+          { vertices: ["101", "111"], faces: [["x", 1], ["z", 1]] },
+          { vertices: ["000", "001"], faces: [["x", 0], ["y", 0]] },
+          { vertices: ["100", "101"], faces: [["x", 1], ["y", 0]] },
+          { vertices: ["010", "011"], faces: [["x", 0], ["y", 1]] },
+          { vertices: ["110", "111"], faces: [["x", 1], ["y", 1]] },
+        ];
+        let cubePathData = "";
+
+        for (const { vertices, faces } of cubeEdges) {
+          const isEdgeVisible = faces.some(([axis, side]) => side === 1 ? cubeGeometry.depthOfAxis[axis] > 0 : cubeGeometry.depthOfAxis[axis] < 0);
+          if (isEdgeVisible) {
+            cubePathData += `M${formatPoint(cubeGeometry.vertexOfKey[vertices[0]])}L${formatPoint(cubeGeometry.vertexOfKey[vertices[1]])}`;
+          }
+        }
+
+        return cubePathData;
+      };
+
+      // -------------------------- K cuts and extrusion --------------------------
+
+      const getKPolygonPoints = (parameterValues, inletPointCenterProgress) => {
+        const { a0, a1, b0, c0, c1, d0, e0, e1 } = parameterValues;
+        const topInletPointX = a0 + (a1 - a0) * inletPointCenterProgress / 2;
+        const bottomInletPointX = c0 + (c1 - c0) * inletPointCenterProgress / 2;
+        return [[0, 0], [a0, 0], [topInletPointX, b0], [a1, 0], [1, 0], [1 - e0, e1], [1, 1], [c1, 1], [bottomInletPointX, 1 - d0], [c0, 1], [0, 1]];
+      };
+
+      const projectCubePoint = ([x, y, z], cubeGeometry) => {
+        const rawX = x * cubeGeometry.screenXOfAxis.x + y * cubeGeometry.screenXOfAxis.y + z * cubeGeometry.screenXOfAxis.z;
+        const rawY = x * cubeGeometry.screenYOfAxis.x + y * cubeGeometry.screenYOfAxis.y + z * cubeGeometry.screenYOfAxis.z;
+        const depth = x * cubeGeometry.depthOfAxis.x + y * cubeGeometry.depthOfAxis.y + z * cubeGeometry.depthOfAxis.z;
+        return {
+          depth,
+          screen: [CUBE_CENTER + (rawX - cubeGeometry.rawCenterX) * cubeGeometry.cubeScale, CUBE_CENTER + (rawY - cubeGeometry.rawCenterY) * cubeGeometry.cubeScale],
+        };
+      };
+
+      const getTriangleIndices = (polygonPoints) => {
+        const remainingIndices = polygonPoints.map((_, index) => index);
+        const triangleIndices = [];
+        const polygonArea = polygonPoints.reduce((area, [x, y], index) => {
+          const [nextX, nextY] = polygonPoints[(index + 1) % polygonPoints.length];
+          return area + x * nextY - nextX * y;
+        }, 0);
+        const orientation = Math.sign(polygonArea);
+
+        while (remainingIndices.length > 3) {
+          let didFindEar = false;
+
+          for (let remainingIndex = 0; remainingIndex < remainingIndices.length; remainingIndex += 1) {
+            const previousIndex = remainingIndices[(remainingIndex - 1 + remainingIndices.length) % remainingIndices.length];
+            const currentIndex = remainingIndices[remainingIndex];
+            const nextIndex = remainingIndices[(remainingIndex + 1) % remainingIndices.length];
+            const previousPoint = polygonPoints[previousIndex];
+            const currentPoint = polygonPoints[currentIndex];
+            const nextPoint = polygonPoints[nextIndex];
+            const cornerCross = (currentPoint[0] - previousPoint[0]) * (nextPoint[1] - currentPoint[1]) - (currentPoint[1] - previousPoint[1]) * (nextPoint[0] - currentPoint[0]);
+
+            if (cornerCross * orientation <= 0.000000001) {
+              continue;
+            }
+
+            const doesEarContainPoint = remainingIndices.some((pointIndex) => {
+              if (pointIndex === previousIndex || pointIndex === currentIndex || pointIndex === nextIndex) {
+                return false;
+              }
+              const point = polygonPoints[pointIndex];
+              const crossA = (currentPoint[0] - previousPoint[0]) * (point[1] - previousPoint[1]) - (currentPoint[1] - previousPoint[1]) * (point[0] - previousPoint[0]);
+              const crossB = (nextPoint[0] - currentPoint[0]) * (point[1] - currentPoint[1]) - (nextPoint[1] - currentPoint[1]) * (point[0] - currentPoint[0]);
+              const crossC = (previousPoint[0] - nextPoint[0]) * (point[1] - nextPoint[1]) - (previousPoint[1] - nextPoint[1]) * (point[0] - nextPoint[0]);
+              return crossA * orientation >= -0.000000001 && crossB * orientation >= -0.000000001 && crossC * orientation >= -0.000000001;
+            });
+
+            if (!doesEarContainPoint) {
+              triangleIndices.push([previousIndex, currentIndex, nextIndex]);
+              remainingIndices.splice(remainingIndex, 1);
+              didFindEar = true;
+              break;
+            }
+          }
+
+          if (!didFindEar) {
+            break;
+          }
+        }
+
+        if (remainingIndices.length === 3) {
+          triangleIndices.push([...remainingIndices]);
+        }
+
+        return triangleIndices;
+      };
+
+      // Extrusion alignment places the requested depth against the front, around the center, or against the back of the cube.
+      const getExtrusionOffsets = (extrusionDepth, extrusionAlignment) => {
+        if (extrusionAlignment === "front") {
+          return [0, extrusionDepth];
+        }
+        if (extrusionAlignment === "center") {
+          return [(1 - extrusionDepth) / 2, (1 + extrusionDepth) / 2];
+        }
+        if (extrusionAlignment === "back") {
+          return [1 - extrusionDepth, 1];
+        }
+        throw new Error("The extrusion alignment is invalid.");
+      };
+
+      // Each mesh edge is split at projected triangle boundaries, then tested against surface depth one segment at a time.
+      const getKPrismSvgSource = (kPolygonPoints, faceName, extrusionDepth, extrusionAlignment, cubeGeometry, shouldShowHiddenEdges, hiddenEdgeOpacity, hiddenEdgeStrokeScale, creaseTransition, strokeWidth, strokeColor, faceColor, edgeEffects) => {
+        const { renderId, shouldUseTransparentFaces, shouldUseDepthShading, depthShadingAmount, faceDepthGradientAmount, shouldUseNeonGlow, glowRadius, glowIntensity, glowColor, shouldUseStrokeGradient, gradientStartColor, gradientEndColor, gradientAngle } = edgeEffects;
+        const { movingStrokeScale, movingOpacity, stationaryStrokeScale, stationaryOpacity } = creaseTransition;
+        const surfaceKPolygonPointEntries = kPolygonPoints.map((point, kPolygonPointIndex) => ({ point, kPolygonPointIndex })).filter(({ point: [x, y] }, pointIndex) => {
+          const [previousX, previousY] = kPolygonPoints[(pointIndex - 1 + kPolygonPoints.length) % kPolygonPoints.length];
+          return Math.abs(x - previousX) > K_POLYGON_SIMPLIFY_EPSILON || Math.abs(y - previousY) > K_POLYGON_SIMPLIFY_EPSILON;
+        });
+        const surfaceKPolygonPoints = surfaceKPolygonPointEntries.map(({ point }) => point);
+        let simplifiedKPolygonPointIndices = surfaceKPolygonPoints.map((_, pointIndex) => pointIndex);
+        let didRemoveStraightPoint = true;
+
+        // Collapsed K cuts become an ordinary rectangle, so zero-area faces never reach triangulation or occlusion testing.
+        while (didRemoveStraightPoint && simplifiedKPolygonPointIndices.length > 3) {
+          const pointsBeforeSimplifying = simplifiedKPolygonPointIndices.length;
+          simplifiedKPolygonPointIndices = simplifiedKPolygonPointIndices.filter((surfacePointIndex, pointIndex) => {
+            const [x, y] = surfaceKPolygonPoints[surfacePointIndex];
+            const [previousX, previousY] = surfaceKPolygonPoints[simplifiedKPolygonPointIndices[(pointIndex - 1 + simplifiedKPolygonPointIndices.length) % simplifiedKPolygonPointIndices.length]];
+            const [nextX, nextY] = surfaceKPolygonPoints[simplifiedKPolygonPointIndices[(pointIndex + 1) % simplifiedKPolygonPointIndices.length]];
+            const cross = (x - previousX) * (nextY - y) - (y - previousY) * (nextX - x);
+            const dot = (x - previousX) * (x - nextX) + (y - previousY) * (y - nextY);
+            return Math.abs(cross) > K_POLYGON_SIMPLIFY_EPSILON || dot > K_POLYGON_SIMPLIFY_EPSILON;
+          });
+          didRemoveStraightPoint = simplifiedKPolygonPointIndices.length < pointsBeforeSimplifying;
+        }
+
+        const simplifiedKPolygonPoints = simplifiedKPolygonPointIndices.map((pointIndex) => surfaceKPolygonPoints[pointIndex]);
+        const minimumSimplifiedX = Math.min(...simplifiedKPolygonPoints.map(([x]) => x));
+        const maximumSimplifiedX = Math.max(...simplifiedKPolygonPoints.map(([x]) => x));
+        const minimumSimplifiedY = Math.min(...simplifiedKPolygonPoints.map(([, y]) => y));
+        const maximumSimplifiedY = Math.max(...simplifiedKPolygonPoints.map(([, y]) => y));
+        const shouldRenderSimplifiedCube = simplifiedKPolygonPoints.length === 4 && simplifiedKPolygonPoints.every(([x, y]) => (Math.abs(x - minimumSimplifiedX) < K_POLYGON_SIMPLIFY_EPSILON || Math.abs(x - maximumSimplifiedX) < K_POLYGON_SIMPLIFY_EPSILON) && (Math.abs(y - minimumSimplifiedY) < K_POLYGON_SIMPLIFY_EPSILON || Math.abs(y - maximumSimplifiedY) < K_POLYGON_SIMPLIFY_EPSILON));
+
+        // A fully collapsed K uses the four rectangle corners for the mesh so its walls become four complete cube faces instead of many shaded strips.
+        const faceBoundaryPointIndices = shouldRenderSimplifiedCube ? simplifiedKPolygonPointIndices : surfaceKPolygonPoints.map((_, pointIndex) => pointIndex);
+        const [extrusionFrontOffset, extrusionBackOffset] = getExtrusionOffsets(extrusionDepth, extrusionAlignment);
+        const frontPoints3D = surfaceKPolygonPoints.map(([x, y]) => faceName === "left" ? [x, y, 1 - extrusionFrontOffset] : [1 - extrusionFrontOffset, y, 1 - x]);
+        const backPoints3D = surfaceKPolygonPoints.map(([x, y]) => faceName === "left" ? [x, y, 1 - extrusionBackOffset] : [1 - extrusionBackOffset, y, 1 - x]);
+        const vertices = [...frontPoints3D, ...backPoints3D].map((point3D) => ({ point3D, ...projectCubePoint(point3D, cubeGeometry) }));
+        const pointCount = surfaceKPolygonPoints.length;
+        const frontTriangleIndices = getTriangleIndices(simplifiedKPolygonPoints).map((triangle) => triangle.map((pointIndex) => simplifiedKPolygonPointIndices[pointIndex]));
+        const triangles = [];
+        const edges = [];
+        // Only the four outside cube corners remain structural when the K cuts collapse, so every other front-to-back edge stays fade-controlled throughout the morph.
+        const cubeCornerKPolygonPointIndices = new Set([0, 4, 6, 10]);
+        // The inlet tips and center joint move during the morph, while the remaining K crease points stay in place.
+        const movingKPolygonPointIndices = new Set([2, 5, 8]);
+        const faceVertexIndices = [faceBoundaryPointIndices, faceBoundaryPointIndices.map((pointIndex) => pointCount + pointIndex)];
+        const faceTriangleIndices = [frontTriangleIndices, frontTriangleIndices.map(([indexA, indexB, indexC]) => [pointCount + indexA, pointCount + indexC, pointCount + indexB])];
+
+        for (const [indexA, indexB, indexC] of frontTriangleIndices) {
+          triangles.push([indexA, indexB, indexC]);
+          triangles.push([pointCount + indexA, pointCount + indexC, pointCount + indexB]);
+        }
+
+        for (let pointIndex = 0; pointIndex < pointCount; pointIndex += 1) {
+          const nextPointIndex = (pointIndex + 1) % pointCount;
+          const sideTriangleIndices = [[pointIndex, pointCount + pointIndex, pointCount + nextPointIndex], [pointIndex, pointCount + nextPointIndex, nextPointIndex]];
+          triangles.push(...sideTriangleIndices);
+          edges.push({ indices: [pointIndex, nextPointIndex], isSurfaceDetail: false, shouldShrinkSurfaceDetail: false }, { indices: [pointCount + pointIndex, pointCount + nextPointIndex], isSurfaceDetail: false, shouldShrinkSurfaceDetail: false }, { indices: [pointIndex, pointCount + pointIndex], isSurfaceDetail: !cubeCornerKPolygonPointIndices.has(surfaceKPolygonPointEntries[pointIndex].kPolygonPointIndex), shouldShrinkSurfaceDetail: movingKPolygonPointIndices.has(surfaceKPolygonPointEntries[pointIndex].kPolygonPointIndex) });
+          if (!shouldRenderSimplifiedCube) {
+            faceVertexIndices.push([pointIndex, pointCount + pointIndex, pointCount + nextPointIndex, nextPointIndex]);
+            faceTriangleIndices.push(sideTriangleIndices);
+          }
+        }
+
+        if (shouldRenderSimplifiedCube) {
+          for (let faceBoundaryIndex = 0; faceBoundaryIndex < faceBoundaryPointIndices.length; faceBoundaryIndex += 1) {
+            const pointIndex = faceBoundaryPointIndices[faceBoundaryIndex];
+            const nextPointIndex = faceBoundaryPointIndices[(faceBoundaryIndex + 1) % faceBoundaryPointIndices.length];
+            faceVertexIndices.push([pointIndex, pointCount + pointIndex, pointCount + nextPointIndex, nextPointIndex]);
+            faceTriangleIndices.push([[pointIndex, pointCount + pointIndex, pointCount + nextPointIndex], [pointIndex, pointCount + nextPointIndex, nextPointIndex]]);
+          }
+        }
+
+        let visiblePathData = "";
+        let visibleSurfaceDetailPathData = "";
+        let visibleFadingSurfaceDetailPathData = "";
+        let hiddenPathData = "";
+        let hiddenSurfaceDetailPathData = "";
+        let hiddenFadingSurfaceDetailPathData = "";
+        const visibleVertexIndices = new Set();
+        const hiddenVertexIndices = new Set();
+        const hiddenSurfaceDetailVertexIndices = new Set();
+        const hiddenFadingSurfaceDetailVertexIndices = new Set();
+        const cross2D = ([xA, yA], [xB, yB]) => xA * yB - yA * xB;
+
+        for (const { indices: [edgeStartIndex, edgeEndIndex], isSurfaceDetail, shouldShrinkSurfaceDetail } of edges) {
+          const edgeStart = vertices[edgeStartIndex];
+          const edgeEnd = vertices[edgeEndIndex];
+          const edgeVector = [edgeEnd.screen[0] - edgeStart.screen[0], edgeEnd.screen[1] - edgeStart.screen[1]];
+          const splitParameters = [0, 1];
+
+          for (const triangle of triangles) {
+            for (let triangleEdgeIndex = 0; triangleEdgeIndex < 3; triangleEdgeIndex += 1) {
+              const triangleEdgeStart = vertices[triangle[triangleEdgeIndex]].screen;
+              const triangleEdgeEnd = vertices[triangle[(triangleEdgeIndex + 1) % 3]].screen;
+              const triangleEdgeVector = [triangleEdgeEnd[0] - triangleEdgeStart[0], triangleEdgeEnd[1] - triangleEdgeStart[1]];
+              const startDifference = [triangleEdgeStart[0] - edgeStart.screen[0], triangleEdgeStart[1] - edgeStart.screen[1]];
+              const denominator = cross2D(edgeVector, triangleEdgeVector);
+
+              if (Math.abs(denominator) < 0.0000001) {
+                continue;
+              }
+
+              const edgeParameter = cross2D(startDifference, triangleEdgeVector) / denominator;
+              const triangleEdgeParameter = cross2D(startDifference, edgeVector) / denominator;
+              if (edgeParameter > 0.000001 && edgeParameter < 0.999999 && triangleEdgeParameter >= -0.000001 && triangleEdgeParameter <= 1.000001) {
+                splitParameters.push(edgeParameter);
+              }
+            }
+          }
+
+          splitParameters.sort((parameterA, parameterB) => parameterA - parameterB);
+          const uniqueSplitParameters = splitParameters.filter((parameter, index) => index === 0 || Math.abs(parameter - splitParameters[index - 1]) > 0.000001);
+          const visibilityRuns = [];
+          let runStartParameter = uniqueSplitParameters[0];
+          let isRunHidden;
+
+          for (let splitIndex = 0; splitIndex < uniqueSplitParameters.length - 1; splitIndex += 1) {
+            const parameterStart = uniqueSplitParameters[splitIndex];
+            const parameterEnd = uniqueSplitParameters[splitIndex + 1];
+            const parameterMiddle = (parameterStart + parameterEnd) / 2;
+            const middleScreen = [edgeStart.screen[0] + edgeVector[0] * parameterMiddle, edgeStart.screen[1] + edgeVector[1] * parameterMiddle];
+            const middleDepth = edgeStart.depth + (edgeEnd.depth - edgeStart.depth) * parameterMiddle;
+            let isHidden = false;
+
+            for (const triangle of triangles) {
+              const triangleA = vertices[triangle[0]];
+              const triangleB = vertices[triangle[1]];
+              const triangleC = vertices[triangle[2]];
+              const denominator = (triangleB.screen[1] - triangleC.screen[1]) * (triangleA.screen[0] - triangleC.screen[0]) + (triangleC.screen[0] - triangleB.screen[0]) * (triangleA.screen[1] - triangleC.screen[1]);
+              if (Math.abs(denominator) < 0.0000001) {
+                continue;
+              }
+              const weightA = ((triangleB.screen[1] - triangleC.screen[1]) * (middleScreen[0] - triangleC.screen[0]) + (triangleC.screen[0] - triangleB.screen[0]) * (middleScreen[1] - triangleC.screen[1])) / denominator;
+              const weightB = ((triangleC.screen[1] - triangleA.screen[1]) * (middleScreen[0] - triangleC.screen[0]) + (triangleA.screen[0] - triangleC.screen[0]) * (middleScreen[1] - triangleC.screen[1])) / denominator;
+              const weightC = 1 - weightA - weightB;
+
+              if (weightA < -0.000001 || weightB < -0.000001 || weightC < -0.000001) {
+                continue;
+              }
+
+              const triangleDepth = triangleA.depth * weightA + triangleB.depth * weightB + triangleC.depth * weightC;
+              if (triangleDepth > middleDepth + 0.000001) {
+                isHidden = true;
+                break;
+              }
+            }
+
+            if (isRunHidden === undefined) {
+              isRunHidden = isHidden;
+            } else if (isHidden !== isRunHidden) {
+              visibilityRuns.push({ parameterStart: runStartParameter, parameterEnd: parameterStart, isHidden: isRunHidden });
+              runStartParameter = parameterStart;
+              isRunHidden = isHidden;
+            }
+          }
+
+          visibilityRuns.push({ parameterStart: runStartParameter, parameterEnd: uniqueSplitParameters[uniqueSplitParameters.length - 1], isHidden: isRunHidden });
+          const hiddenDetailVertexIndices = shouldShrinkSurfaceDetail ? hiddenSurfaceDetailVertexIndices : hiddenFadingSurfaceDetailVertexIndices;
+
+          // Adjacent fragments with the same visibility share one SVG segment so antialiasing cannot leave seams between them.
+          for (const { parameterStart, parameterEnd, isHidden } of visibilityRuns) {
+            const runStart = [edgeStart.screen[0] + edgeVector[0] * parameterStart, edgeStart.screen[1] + edgeVector[1] * parameterStart];
+            const runEnd = [edgeStart.screen[0] + edgeVector[0] * parameterEnd, edgeStart.screen[1] + edgeVector[1] * parameterEnd];
+            const runPathData = `M${formatPoint(runStart)}L${formatPoint(runEnd)}`;
+            if (isHidden) {
+              if (isSurfaceDetail) {
+                if (shouldShrinkSurfaceDetail) {
+                  hiddenSurfaceDetailPathData += runPathData;
+                } else {
+                  hiddenFadingSurfaceDetailPathData += runPathData;
+                }
+              } else {
+                hiddenPathData += runPathData;
+              }
+              if (parameterStart < 0.000001) {
+                (isSurfaceDetail ? hiddenDetailVertexIndices : hiddenVertexIndices).add(edgeStartIndex);
+              }
+              if (parameterEnd > 0.999999) {
+                (isSurfaceDetail ? hiddenDetailVertexIndices : hiddenVertexIndices).add(edgeEndIndex);
+              }
+            } else {
+              if (isSurfaceDetail) {
+                if (shouldShrinkSurfaceDetail) {
+                  visibleSurfaceDetailPathData += runPathData;
+                } else {
+                  visibleFadingSurfaceDetailPathData += runPathData;
+                }
+              } else {
+                visiblePathData += runPathData;
+              }
+              if (parameterStart < 0.000001) {
+                visibleVertexIndices.add(edgeStartIndex);
+              }
+              if (parameterEnd > 0.999999) {
+                visibleVertexIndices.add(edgeEndIndex);
+              }
+            }
+          }
+        }
+
+        const gradientAngleRadians = gradientAngle * Math.PI / 180;
+        const gradientDirectionX = Math.cos(gradientAngleRadians) * VIEW_BOX_SIZE / 2;
+        const gradientDirectionY = Math.sin(gradientAngleRadians) * VIEW_BOX_SIZE / 2;
+        const gradientId = `${renderId}-stroke-gradient`;
+        const glowId = `${renderId}-neon-glow`;
+        const gradientSource = shouldUseStrokeGradient ? `<linearGradient id="${gradientId}" gradientUnits="userSpaceOnUse" x1="${roundCoordinate(CUBE_CENTER - gradientDirectionX)}" y1="${roundCoordinate(CUBE_CENTER - gradientDirectionY)}" x2="${roundCoordinate(CUBE_CENTER + gradientDirectionX)}" y2="${roundCoordinate(CUBE_CENTER + gradientDirectionY)}"><stop offset="0" stop-color="${gradientStartColor}" /><stop offset="1" stop-color="${gradientEndColor}" /></linearGradient>` : "";
+        // TODO: AI-PICKED-VALUE: One-third of the selected radius makes a strong inner halo while the full radius keeps the soft outer glow.
+        const glowInnerRadius = roundCoordinate(glowRadius / 3);
+        const glowDefinitionSource = shouldUseNeonGlow ? `<filter id="${glowId}" filterUnits="userSpaceOnUse" x="0" y="0" width="${VIEW_BOX_SIZE}" height="${VIEW_BOX_SIZE}" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="${glowRadius}" result="outer-blur" /><feGaussianBlur in="SourceAlpha" stdDeviation="${glowInnerRadius}" result="inner-blur" /><feFlood flood-color="${glowColor}" flood-opacity="${glowIntensity}" result="glow-color" /><feComposite in="glow-color" in2="outer-blur" operator="in" result="outer-glow" /><feComposite in="glow-color" in2="inner-blur" operator="in" result="inner-glow" /><feMerge><feMergeNode in="outer-glow" /><feMergeNode in="inner-glow" /><feMergeNode in="SourceGraphic" /></feMerge></filter>` : "";
+        const strokePaint = shouldUseStrokeGradient ? `url(#${gradientId})` : strokeColor;
+        const faces = faceVertexIndices.map((vertexIndices, faceIndex) => ({ faceIndex, vertexIndices, triangleIndices: faceTriangleIndices[faceIndex], depth: vertexIndices.reduce((sum, vertexIndex) => sum + vertices[vertexIndex].depth, 0) / vertexIndices.length })).sort((faceA, faceB) => faceA.depth - faceB.depth);
+        const minimumFaceDepth = faces[0].depth;
+        const maximumFaceDepth = faces[faces.length - 1].depth;
+        const faceDepthRange = maximumFaceDepth - minimumFaceDepth;
+        const minimumVertexDepth = Math.min(...vertices.map(({ depth }) => depth));
+        const maximumVertexDepth = Math.max(...vertices.map(({ depth }) => depth));
+        const vertexDepthRange = maximumVertexDepth - minimumVertexDepth;
+        const faceColorChannels = [1, 3, 5].map((channelStart) => Number.parseInt(faceColor.slice(channelStart, channelStart + 2), 16));
+        const getShadedFaceColor = (shadeAmount) => `#${faceColorChannels.map((channel) => Math.round(channel * (1 - shadeAmount)).toString(16).padStart(2, "0")).join("")}`;
+        const facePaintOfFaceIndex = {};
+        let faceGradientSource = "";
+
+        // Each face receives one paint treatment before its triangles are clipped against every nearer surface.
+        for (const { faceIndex, vertexIndices, depth } of faces) {
+          const depthProgress = faceDepthRange < K_POLYGON_SIMPLIFY_EPSILON ? 1 : (depth - minimumFaceDepth) / faceDepthRange;
+          const shadeAmount = shouldUseDepthShading ? depthShadingAmount * (1 - depthProgress) : 0;
+          let facePaint = getShadedFaceColor(shadeAmount);
+
+          if (shouldUseDepthShading && faceDepthGradientAmount > 0 && vertexDepthRange > K_POLYGON_SIMPLIFY_EPSILON) {
+            const faceDepths = vertexIndices.map((vertexIndex) => vertices[vertexIndex].depth);
+            const minimumDepth = Math.min(...faceDepths);
+            const maximumDepth = Math.max(...faceDepths);
+            const currentFaceDepthRange = maximumDepth - minimumDepth;
+            const vertexA = vertices[vertexIndices[0]];
+            let depthGradientX;
+            let depthGradientY;
+
+            for (let vertexBIndex = 1; vertexBIndex < vertexIndices.length - 1; vertexBIndex += 1) {
+              const vertexB = vertices[vertexIndices[vertexBIndex]];
+              for (let vertexCIndex = vertexBIndex + 1; vertexCIndex < vertexIndices.length; vertexCIndex += 1) {
+                const vertexC = vertices[vertexIndices[vertexCIndex]];
+                const screenBX = vertexB.screen[0] - vertexA.screen[0];
+                const screenBY = vertexB.screen[1] - vertexA.screen[1];
+                const screenCX = vertexC.screen[0] - vertexA.screen[0];
+                const screenCY = vertexC.screen[1] - vertexA.screen[1];
+                const determinant = screenBX * screenCY - screenCX * screenBY;
+                if (Math.abs(determinant) > K_POLYGON_SIMPLIFY_EPSILON) {
+                  const depthB = vertexB.depth - vertexA.depth;
+                  const depthC = vertexC.depth - vertexA.depth;
+                  depthGradientX = (depthB * screenCY - depthC * screenBY) / determinant;
+                  depthGradientY = (screenBX * depthC - screenCX * depthB) / determinant;
+                  break;
+                }
+              }
+              if (depthGradientX !== undefined) {
+                break;
+              }
+            }
+
+            const depthGradientLengthSquared = depthGradientX === undefined ? 0 : depthGradientX * depthGradientX + depthGradientY * depthGradientY;
+            if (currentFaceDepthRange > K_POLYGON_SIMPLIFY_EPSILON && depthGradientLengthSquared > K_POLYGON_SIMPLIFY_EPSILON) {
+              const minimumDepthVertex = vertices[vertexIndices[faceDepths.indexOf(minimumDepth)]];
+              const gradientEndX = minimumDepthVertex.screen[0] + depthGradientX * currentFaceDepthRange / depthGradientLengthSquared;
+              const gradientEndY = minimumDepthVertex.screen[1] + depthGradientY * currentFaceDepthRange / depthGradientLengthSquared;
+              const gradientShadeRange = faceDepthGradientAmount * currentFaceDepthRange / vertexDepthRange;
+              const farFaceColor = getShadedFaceColor(Math.min(1, shadeAmount + gradientShadeRange / 2));
+              const nearFaceColor = getShadedFaceColor(Math.max(0, shadeAmount - gradientShadeRange / 2));
+              const faceGradientId = `${renderId}-face-depth-gradient-${faceIndex}`;
+              faceGradientSource += `<linearGradient id="${faceGradientId}" gradientUnits="userSpaceOnUse" x1="${roundCoordinate(minimumDepthVertex.screen[0])}" y1="${roundCoordinate(minimumDepthVertex.screen[1])}" x2="${roundCoordinate(gradientEndX)}" y2="${roundCoordinate(gradientEndY)}"><stop offset="0" stop-color="${farFaceColor}" /><stop offset="1" stop-color="${nearFaceColor}" /></linearGradient>`;
+              facePaint = `url(#${faceGradientId})`;
+            }
+          }
+
+          facePaintOfFaceIndex[faceIndex] = facePaint;
+        }
+
+        const clipPolygonToDepthSide = (polygonPoints, getValue, minimumValue) => {
+          if (polygonPoints.length === 0) {
+            return [];
+          }
+
+          const clippedPoints = [];
+          let previousPoint = polygonPoints[polygonPoints.length - 1];
+          let previousValue = getValue(previousPoint);
+          let wasPreviousInside = previousValue >= minimumValue;
+
+          for (const currentPoint of polygonPoints) {
+            const currentValue = getValue(currentPoint);
+            const isCurrentInside = currentValue >= minimumValue;
+            if (isCurrentInside !== wasPreviousInside) {
+              const intersectionProgress = (minimumValue - previousValue) / (currentValue - previousValue);
+              clippedPoints.push([previousPoint[0] + (currentPoint[0] - previousPoint[0]) * intersectionProgress, previousPoint[1] + (currentPoint[1] - previousPoint[1]) * intersectionProgress]);
+            }
+            if (isCurrentInside) {
+              clippedPoints.push(currentPoint);
+            }
+            previousPoint = currentPoint;
+            previousValue = currentValue;
+            wasPreviousInside = isCurrentInside;
+          }
+
+          return clippedPoints;
+        };
+
+        const visibleFaceTriangles = [];
+        for (const { faceIndex, triangleIndices } of faces) {
+          for (const triangleIndicesForFace of triangleIndices) {
+            const triangleVertices = triangleIndicesForFace.map((vertexIndex) => vertices[vertexIndex]);
+            const [vertexA, vertexB, vertexC] = triangleVertices;
+            const screenBX = vertexB.screen[0] - vertexA.screen[0];
+            const screenBY = vertexB.screen[1] - vertexA.screen[1];
+            const screenCX = vertexC.screen[0] - vertexA.screen[0];
+            const screenCY = vertexC.screen[1] - vertexA.screen[1];
+            const screenArea = screenBX * screenCY - screenCX * screenBY;
+            if (screenArea <= K_POLYGON_SIMPLIFY_EPSILON) {
+              continue;
+            }
+            const depthB = vertexB.depth - vertexA.depth;
+            const depthC = vertexC.depth - vertexA.depth;
+            const screenPoints = triangleVertices.map(({ screen }) => screen);
+            visibleFaceTriangles.push({
+              faceIndex,
+              screenPoints,
+              vertexA,
+              depthGradientX: (depthB * screenCY - depthC * screenBY) / screenArea,
+              depthGradientY: (screenBX * depthC - screenCX * depthB) / screenArea,
+              minimumDepth: Math.min(...triangleVertices.map(({ depth }) => depth)),
+              maximumDepth: Math.max(...triangleVertices.map(({ depth }) => depth)),
+              minimumScreenX: Math.min(...screenPoints.map(([screenX]) => screenX)),
+              maximumScreenX: Math.max(...screenPoints.map(([screenX]) => screenX)),
+              minimumScreenY: Math.min(...screenPoints.map(([, screenY]) => screenY)),
+              maximumScreenY: Math.max(...screenPoints.map(([, screenY]) => screenY)),
+            });
+          }
+        }
+
+        let faceOcclusionMaskSource = "";
+        const faceSource = shouldUseTransparentFaces ? "" : visibleFaceTriangles.map((faceTriangle, faceTriangleIndex) => {
+          const facePathData = `${faceTriangle.screenPoints.map((screenPoint, index) => `${index === 0 ? "M" : "L"}${formatPoint(screenPoint)}`).join("")}Z`;
+          const getFaceTriangleDepth = ([screenX, screenY]) => faceTriangle.vertexA.depth + faceTriangle.depthGradientX * (screenX - faceTriangle.vertexA.screen[0]) + faceTriangle.depthGradientY * (screenY - faceTriangle.vertexA.screen[1]);
+          let occlusionPathSource = "";
+
+          for (const occludingTriangle of visibleFaceTriangles) {
+            if (occludingTriangle.faceIndex === faceTriangle.faceIndex || occludingTriangle.maximumDepth <= faceTriangle.minimumDepth + K_POLYGON_SIMPLIFY_EPSILON || occludingTriangle.maximumScreenX < faceTriangle.minimumScreenX || occludingTriangle.minimumScreenX > faceTriangle.maximumScreenX || occludingTriangle.maximumScreenY < faceTriangle.minimumScreenY || occludingTriangle.minimumScreenY > faceTriangle.maximumScreenY) {
+              continue;
+            }
+
+            let overlapPolygon = faceTriangle.screenPoints;
+            for (let clipEdgeIndex = 0; clipEdgeIndex < 3 && overlapPolygon.length > 0; clipEdgeIndex += 1) {
+              const clipStart = occludingTriangle.screenPoints[clipEdgeIndex];
+              const clipEnd = occludingTriangle.screenPoints[(clipEdgeIndex + 1) % 3];
+              overlapPolygon = clipPolygonToDepthSide(overlapPolygon, ([screenX, screenY]) => (clipEnd[0] - clipStart[0]) * (screenY - clipStart[1]) - (clipEnd[1] - clipStart[1]) * (screenX - clipStart[0]), -K_POLYGON_SIMPLIFY_EPSILON);
+            }
+
+            if (overlapPolygon.length < 3) {
+              continue;
+            }
+
+            const getOccludingTriangleDepth = ([screenX, screenY]) => occludingTriangle.vertexA.depth + occludingTriangle.depthGradientX * (screenX - occludingTriangle.vertexA.screen[0]) + occludingTriangle.depthGradientY * (screenY - occludingTriangle.vertexA.screen[1]);
+            overlapPolygon = clipPolygonToDepthSide(overlapPolygon, (screenPoint) => getOccludingTriangleDepth(screenPoint) - getFaceTriangleDepth(screenPoint), K_POLYGON_SIMPLIFY_EPSILON);
+            const overlapArea = overlapPolygon.reduce((area, [screenX, screenY], pointIndex) => {
+              const [nextScreenX, nextScreenY] = overlapPolygon[(pointIndex + 1) % overlapPolygon.length];
+              return area + screenX * nextScreenY - nextScreenX * screenY;
+            }, 0);
+            if (Math.abs(overlapArea) > K_POLYGON_SIMPLIFY_EPSILON) {
+              occlusionPathSource += `<path d="${overlapPolygon.map((screenPoint, index) => `${index === 0 ? "M" : "L"}${formatPoint(screenPoint)}`).join("")}Z" fill="black" stroke="black" stroke-width="${FACE_SEAM_STROKE_WIDTH}" stroke-linejoin="round" />`;
+            }
+          }
+
+          let maskAttribute = "";
+          if (occlusionPathSource !== "") {
+            const faceMaskId = `${renderId}-face-occlusion-${faceTriangleIndex}`;
+            faceOcclusionMaskSource += `<mask id="${faceMaskId}" maskUnits="userSpaceOnUse" x="0" y="0" width="${VIEW_BOX_SIZE}" height="${VIEW_BOX_SIZE}"><path d="${facePathData}" fill="white" stroke="white" stroke-width="${FACE_SEAM_STROKE_WIDTH}" stroke-linejoin="round" />${occlusionPathSource}</mask>`;
+            maskAttribute = ` mask="url(#${faceMaskId})"`;
+          }
+
+          const facePaint = facePaintOfFaceIndex[faceTriangle.faceIndex];
+          return `<path d="${facePathData}" fill="${facePaint}" stroke="${facePaint}" stroke-width="${FACE_SEAM_STROKE_WIDTH}" stroke-linejoin="round"${maskAttribute} />`;
+        }).join("");
+        const definitionContent = gradientSource + glowDefinitionSource + faceGradientSource + faceOcclusionMaskSource;
+        const definitionsSource = definitionContent === "" ? "" : `<defs>${definitionContent}</defs>`;
+        const movingSurfaceDetailStrokeWidth = roundCoordinate(strokeWidth * movingStrokeScale);
+        const stationarySurfaceDetailStrokeWidth = roundCoordinate(strokeWidth * stationaryStrokeScale);
+        const hiddenStrokeWidth = roundCoordinate(strokeWidth * hiddenEdgeStrokeScale);
+        const hiddenMovingSurfaceDetailStrokeWidth = roundCoordinate(movingSurfaceDetailStrokeWidth * hiddenEdgeStrokeScale);
+        const hiddenStationarySurfaceDetailStrokeWidth = roundCoordinate(stationarySurfaceDetailStrokeWidth * hiddenEdgeStrokeScale);
+        const hiddenSource = `<path d="${hiddenPathData}" fill="none" stroke="${strokePaint}" stroke-width="${hiddenStrokeWidth}" stroke-linecap="butt" stroke-linejoin="round" />`;
+        const hiddenSurfaceDetailSource = `<path d="${hiddenSurfaceDetailPathData}" fill="none" stroke="${strokePaint}" stroke-width="${hiddenMovingSurfaceDetailStrokeWidth}" stroke-linecap="butt" stroke-linejoin="round" opacity="${movingOpacity}" />`;
+        const hiddenFadingSurfaceDetailSource = `<path d="${hiddenFadingSurfaceDetailPathData}" fill="none" stroke="${strokePaint}" stroke-width="${hiddenStationarySurfaceDetailStrokeWidth}" stroke-linecap="butt" stroke-linejoin="round" opacity="${stationaryOpacity}" />`;
+        const hiddenVertexSource = [...hiddenVertexIndices].map((vertexIndex) => `<circle cx="${roundCoordinate(vertices[vertexIndex].screen[0])}" cy="${roundCoordinate(vertices[vertexIndex].screen[1])}" r="${hiddenStrokeWidth / 2}" fill="${strokePaint}" />`).join("");
+        const hiddenSurfaceDetailVertexSource = [...hiddenSurfaceDetailVertexIndices].filter((vertexIndex) => !hiddenVertexIndices.has(vertexIndex)).map((vertexIndex) => `<circle cx="${roundCoordinate(vertices[vertexIndex].screen[0])}" cy="${roundCoordinate(vertices[vertexIndex].screen[1])}" r="${hiddenMovingSurfaceDetailStrokeWidth / 2}" fill="${strokePaint}" opacity="${movingOpacity}" />`).join("");
+        const hiddenFadingSurfaceDetailVertexSource = [...hiddenFadingSurfaceDetailVertexIndices].filter((vertexIndex) => !hiddenVertexIndices.has(vertexIndex)).map((vertexIndex) => `<circle cx="${roundCoordinate(vertices[vertexIndex].screen[0])}" cy="${roundCoordinate(vertices[vertexIndex].screen[1])}" r="${hiddenStationarySurfaceDetailStrokeWidth / 2}" fill="${strokePaint}" opacity="${stationaryOpacity}" />`).join("");
+        const hiddenGroupSource = shouldShowHiddenEdges ? `<g opacity="${hiddenEdgeOpacity}">${hiddenSource}${hiddenSurfaceDetailSource}${hiddenFadingSurfaceDetailSource}${hiddenVertexSource}${hiddenSurfaceDetailVertexSource}${hiddenFadingSurfaceDetailVertexSource}</g>` : "";
+        const visibleEdgeSource = `<path d="${visiblePathData}" fill="none" stroke="${strokePaint}" stroke-width="${strokeWidth}" stroke-linecap="butt" stroke-linejoin="round" /><path d="${visibleSurfaceDetailPathData}" fill="none" stroke="${strokePaint}" stroke-width="${movingSurfaceDetailStrokeWidth}" stroke-linecap="butt" stroke-linejoin="round" opacity="${movingOpacity}" /><path d="${visibleFadingSurfaceDetailPathData}" fill="none" stroke="${strokePaint}" stroke-width="${stationarySurfaceDetailStrokeWidth}" stroke-linecap="butt" stroke-linejoin="round" opacity="${stationaryOpacity}" />`;
+        const visibleVertexSource = [...visibleVertexIndices].map((vertexIndex) => `<circle cx="${roundCoordinate(vertices[vertexIndex].screen[0])}" cy="${roundCoordinate(vertices[vertexIndex].screen[1])}" r="${strokeWidth / 2}" fill="${strokePaint}" />`).join("");
+        const visibleSource = shouldUseNeonGlow ? `<g filter="url(#${glowId})">${visibleEdgeSource}${visibleVertexSource}</g>` : `${visibleEdgeSource}${visibleVertexSource}`;
+        return `${definitionsSource}${faceSource}${hiddenGroupSource}${visibleSource}`;
+      };
+
+      // -------------------------- Hover studies --------------------------
+
+      // TODO: AI-PICKED-VALUE: 650 milliseconds makes each effect easy to follow while keeping hover feedback responsive.
+      const EFFECT_TRANSITION_MILLISECONDS = 650;
+      // Each user-selected click stage lasts 350 milliseconds: geometry closes first, then the remaining detail edges shrink.
+      const EFFECT_CLICK_STAGE_MILLISECONDS = 350;
+      const EFFECT_CLICK_TOTAL_BEFORE_RETURN_MILLISECONDS = 2000;
+      const EFFECT_CLICK_CUBE_HOLD_MILLISECONDS = EFFECT_CLICK_TOTAL_BEFORE_RETURN_MILLISECONDS - EFFECT_CLICK_STAGE_MILLISECONDS * 2;
+      // TODO: AI-PICKED-VALUE: Thirty percent depth is enough to read as extruded while leaving clear room for the full-depth transition.
+      const EFFECT_PARTIAL_EXTRUSION = 0.3;
+      // TODO: AI-PICKED-VALUE: This side view keeps the K readable while making its full extrusion unmistakable.
+      const EFFECT_SIDE_TOP_ANGLE = 22;
+      const EFFECT_HEAD_ON_HORIZONTAL_ANGLE = 90;
+      const EFFECT_SIDE_HORIZONTAL_ANGLE = 25;
+      // TODO: AI-PICKED-VALUE: Eight degrees of top view and twelve degrees of side view keep the clone close to head-on while exposing some starting depth.
+      const EFFECT_ANGLED_START_TOP_ANGLE = 8;
+      const EFFECT_ANGLED_START_HORIZONTAL_ANGLE = 78;
+      const EFFECT_REVERSE_BOX_START_TOP_ANGLE = 22;
+      const EFFECT_REVERSE_BOX_START_HORIZONTAL_ANGLE = 45;
+      const EFFECT_REVERSE_K_END_TOP_ANGLE = 12.5;
+      const EFFECT_REVERSE_K_END_HORIZONTAL_ANGLE = 76;
+      // Pointer movement spans the user-selected thirty degrees on each axis.
+      const EFFECT_POINTER_ANGLE_RANGE = 30;
+      const EFFECT_POINTER_HORIZONTAL_CENTER_ANGLE = 90;
+      // TODO: AI-PICKED-VALUE: A ten-degree center gives twenty-five degrees of top view and only five degrees of bottom view.
+      const EFFECT_POINTER_VERTICAL_CENTER_ANGLE = 10;
+      // TODO: AI-PICKED-VALUE: Five degrees from head-on on each axis keeps the resting pointer cards nearly flat while preserving visible depth.
+      const EFFECT_POINTER_START_TOP_ANGLE = 5;
+      const EFFECT_POINTER_START_HORIZONTAL_ANGLE = 85;
+      const EFFECT_POINTER_SIDE_TOP_CENTER_ANGLE = 22;
+      const EFFECT_POINTER_SIDE_HORIZONTAL_CENTER_ANGLE = 45;
+      // TODO: AI-PICKED-VALUE: Two to ten seconds produces a mix of short turns and long drifting runs without making either dominate.
+      const EFFECT_CONTINUOUS_TARGET_MIN_MILLISECONDS = 2000;
+      const EFFECT_CONTINUOUS_TARGET_MAX_MILLISECONDS = 10000;
+      // TODO: AI-PICKED-VALUE: A 0.65-second response keeps the velocity changes obvious but prevents abrupt turns.
+      const EFFECT_INERTIAL_RESPONSE_SECONDS = 0.65;
+      // TODO: AI-PICKED-VALUE: Eighteen to fifty-five degrees per second keeps the random motion readable without letting it stall or whip around.
+      const EFFECT_INERTIAL_MIN_SPEED = 18;
+      const EFFECT_INERTIAL_MAX_SPEED = 55;
+      // TODO: AI-PICKED-VALUE: Forty to ninety-five degrees per second makes the faster clone clearly distinct while keeping its faces readable.
+      const EFFECT_INERTIAL_FAST_MIN_SPEED = 40;
+      const EFFECT_INERTIAL_FAST_MAX_SPEED = 95;
+      // TODO: AI-PICKED-VALUE: An eighty percent camera-up component stays larger than all tilt components combined while leaving room for 3D wandering.
+      const EFFECT_INERTIAL_MIN_RIGHTWARD_COMPONENT = 0.8;
+      // TODO: AI-PICKED-VALUE: Unequal axis speeds create a calm continuous rotation that does not look locked to one screen direction.
+      const EFFECT_AMBIENT_ANGULAR_VELOCITY = [13, 19, 7];
+      // TODO: AI-PICKED-VALUE: The first half completes the rotation before the second half closes the K into a cube.
+      const EFFECT_HEAD_ON_BOX_ROTATION_END = 0.5;
+      // TODO: AI-PICKED-VALUE: The morph uses seventy percent of its time for movement, then immediately uses the remaining thirty percent to shrink the surface edges.
+      const EFFECT_MORPH_GEOMETRY_END = 0.7;
+      const transitioningEffectCards = new Set();
+      const clickMorphEffectCards = new Set();
+      const headOnPointerAngles = { startTopAngle: EFFECT_POINTER_START_TOP_ANGLE, startHorizontalAngle: EFFECT_POINTER_START_HORIZONTAL_ANGLE, centerTopAngle: EFFECT_POINTER_VERTICAL_CENTER_ANGLE, centerHorizontalAngle: EFFECT_POINTER_HORIZONTAL_CENTER_ANGLE };
+      const sidePointerAngles = { startTopAngle: EFFECT_POINTER_SIDE_TOP_CENTER_ANGLE, startHorizontalAngle: EFFECT_POINTER_SIDE_HORIZONTAL_CENTER_ANGLE, centerTopAngle: EFFECT_POINTER_SIDE_TOP_CENTER_ANGLE, centerHorizontalAngle: EFFECT_POINTER_SIDE_HORIZONTAL_CENTER_ANGLE };
+      const pointerAnglesOfEffectName = { "pointer-angle": headOnPointerAngles, "pointer-box-click": headOnPointerAngles, "pointer-angle-side": sidePointerAngles, "pointer-box-click-side": sidePointerAngles };
+      const pointerEffectNames = new Set(Object.keys(pointerAnglesOfEffectName));
+      const pointerCubeMorphEffectNames = new Set(["pointer-box-click", "pointer-box-click-side"]);
+      const selectedViewReverseCubeMorphEffectNames = new Set(["reverse-cube-morph-selected-view", "reverse-cube-morph-selected-view-hidden-edge-grow"]);
+      const hiddenEdgeGrowReverseCubeMorphEffectNames = new Set(["reverse-cube-morph-hidden-edge-grow", "reverse-cube-morph-selected-view-hidden-edge-grow"]);
+      const reverseCubeMorphEffectNames = new Set(["reverse-cube-morph", ...selectedViewReverseCubeMorphEffectNames, "reverse-cube-morph-hidden-edge-grow"]);
+      const reverseMorphClickEffectNames = new Set([...reverseCubeMorphEffectNames, ...pointerEffectNames]);
+      const bodyDiagonalAxisOfEffectName = { "body-diagonal-spin": [1, 1, 1], "body-diagonal-spin-001-110": [1, 1, -1], "body-diagonal-spin-010-101": [1, -1, 1], "body-diagonal-spin-011-100": [-1, 1, 1] };
+      const bodyDiagonalSpinEffectNames = new Set(Object.keys(bodyDiagonalAxisOfEffectName));
+      const inertialSpeedRangeOfEffectName = { "inertial-cube-wander": [EFFECT_INERTIAL_MIN_SPEED, EFFECT_INERTIAL_MAX_SPEED], "inertial-cube-wander-fast": [EFFECT_INERTIAL_FAST_MIN_SPEED, EFFECT_INERTIAL_FAST_MAX_SPEED], "inertial-cube-wander-free": [EFFECT_INERTIAL_MIN_SPEED, EFFECT_INERTIAL_MAX_SPEED], "inertial-cube-wander-fast-free": [EFFECT_INERTIAL_FAST_MIN_SPEED, EFFECT_INERTIAL_FAST_MAX_SPEED] };
+      const inertialEffectNames = new Set(Object.keys(inertialSpeedRangeOfEffectName));
+      const unrestrictedInertialEffectNames = new Set(["inertial-cube-wander-free", "inertial-cube-wander-fast-free"]);
+      const continuousEffectNames = new Set(["ambient-cube-spin", ...inertialEffectNames]);
+      const continuousEffectCards = effectCards.filter((effectCard) => continuousEffectNames.has(effectCard.dataset.effect));
+      const transitionStateOfEffectCard = new WeakMap();
+      const clickMorphStateOfEffectCard = new WeakMap();
+      const pointerAnglesOfEffectCard = new WeakMap();
+      const continuousRotationStateOfEffectCard = new WeakMap();
+      let effectAnimationFrameId;
+
+      const getEasedEffectProgress = (progress) => progress * progress * (3 - 2 * progress);
+
+      // A random target stays in the positive-Y hemisphere so every direction keeps a rightward horizontal-spin component.
+      // Positive Y is measured around the camera's up axis, and its minimum size prevents the other components from looking like a reversal.
+      // The free copies pass negative one as the minimum component, which expands the same sampling across the full rotation sphere.
+      const getRandomAngularVelocity = (minimumSpeed, maximumSpeed, projectionAxisOfName, minimumCameraUpComponent) => {
+        const directionScreenY = minimumCameraUpComponent + Math.random() * (1 - minimumCameraUpComponent);
+        const directionLongitude = Math.random() * Math.PI * 2;
+        const directionHorizontalLength = Math.sqrt(1 - directionScreenY * directionScreenY);
+        const directionScreenX = Math.cos(directionLongitude) * directionHorizontalLength;
+        const directionDepth = Math.sin(directionLongitude) * directionHorizontalLength;
+        const speed = minimumSpeed + Math.random() * (maximumSpeed - minimumSpeed);
+        return [
+          (projectionAxisOfName.screenX.x * directionScreenX + projectionAxisOfName.screenY.x * directionScreenY + projectionAxisOfName.depth.x * directionDepth) * speed,
+          (projectionAxisOfName.screenX.y * directionScreenX + projectionAxisOfName.screenY.y * directionScreenY + projectionAxisOfName.depth.y * directionDepth) * speed,
+          (projectionAxisOfName.screenX.z * directionScreenX + projectionAxisOfName.screenY.z * directionScreenY + projectionAxisOfName.depth.z * directionDepth) * speed,
+        ];
+      };
+
+      // Each frame adds a small world-space rotation to the stored orientation and normalizes it to prevent long-running drift.
+      const getUpdatedRotationQuaternion = (rotationQuaternion, angularVelocity, elapsedSeconds) => {
+        const angularSpeed = Math.hypot(...angularVelocity);
+        if (angularSpeed < Number.EPSILON) {
+          return rotationQuaternion;
+        }
+        const halfRotationRadians = angularSpeed * elapsedSeconds * Math.PI / 360;
+        const rotationScale = Math.sin(halfRotationRadians) / angularSpeed;
+        const [incrementX, incrementY, incrementZ, incrementW] = [angularVelocity[0] * rotationScale, angularVelocity[1] * rotationScale, angularVelocity[2] * rotationScale, Math.cos(halfRotationRadians)];
+        const [rotationX, rotationY, rotationZ, rotationW] = rotationQuaternion;
+        const updatedRotationQuaternion = [
+          incrementW * rotationX + incrementX * rotationW + incrementY * rotationZ - incrementZ * rotationY,
+          incrementW * rotationY - incrementX * rotationZ + incrementY * rotationW + incrementZ * rotationX,
+          incrementW * rotationZ + incrementX * rotationY - incrementY * rotationX + incrementZ * rotationW,
+          incrementW * rotationW - incrementX * rotationX - incrementY * rotationY - incrementZ * rotationZ,
+        ];
+        const quaternionLength = Math.hypot(...updatedRotationQuaternion);
+        return updatedRotationQuaternion.map((component) => component / quaternionLength);
+      };
+
+      // A single morph calculation keeps the cut geometry and the shrinking surface edges in the same order in both directions.
+      const getCubeMorphState = (boxProgress) => ({
+        kGeometryScale: 1 - Math.min(1, boxProgress / EFFECT_MORPH_GEOMETRY_END),
+        surfaceDetailStrokeScale: 1 - Math.min(1, boxProgress / EFFECT_MORPH_GEOMETRY_END),
+        twoStepSurfaceDetailScale: 1 - Math.max(0, (boxProgress - EFFECT_MORPH_GEOMETRY_END) / (1 - EFFECT_MORPH_GEOMETRY_END)),
+      });
+
+      // Every morph uses one crease transition so changing the control affects hover and click animations in both directions.
+      const getCreaseTransition = (shouldAnimate, transitionMode, cubeMorphState) => {
+        if (!shouldAnimate) {
+          const endpointVisibility = cubeMorphState.kGeometryScale === 0 ? 0 : 1;
+          return { movingStrokeScale: endpointVisibility, movingOpacity: 1, stationaryStrokeScale: 1, stationaryOpacity: endpointVisibility };
+        }
+        if (transitionMode === "fade") {
+          return { movingStrokeScale: 1, movingOpacity: cubeMorphState.surfaceDetailStrokeScale, stationaryStrokeScale: 1, stationaryOpacity: cubeMorphState.surfaceDetailStrokeScale };
+        }
+        if (transitionMode === "shrink") {
+          return { movingStrokeScale: cubeMorphState.surfaceDetailStrokeScale, movingOpacity: 1, stationaryStrokeScale: cubeMorphState.surfaceDetailStrokeScale, stationaryOpacity: 1 };
+        }
+        if (transitionMode === "two-step") {
+          return { movingStrokeScale: cubeMorphState.twoStepSurfaceDetailScale, movingOpacity: cubeMorphState.twoStepSurfaceDetailScale, stationaryStrokeScale: cubeMorphState.twoStepSurfaceDetailScale, stationaryOpacity: cubeMorphState.twoStepSurfaceDetailScale };
+        }
+        if (transitionMode === "mixed") {
+          return { movingStrokeScale: cubeMorphState.surfaceDetailStrokeScale, movingOpacity: 1, stationaryStrokeScale: 1, stationaryOpacity: cubeMorphState.surfaceDetailStrokeScale };
+        }
+        throw new Error("The crease transition mode is invalid.");
+      };
+
+      const renderEffectCard = (effectCard, transitionProgress) => {
+        const effectName = effectCard.dataset.effect;
+        const parameterValues = {};
+        let topAngleDegrees = Number(topAngleInput.value);
+        let horizontalAngleDegrees = Number(horizontalAngleInput.value);
+        const reverseKEndTopAngle = selectedViewReverseCubeMorphEffectNames.has(effectName) ? topAngleDegrees : EFFECT_REVERSE_K_END_TOP_ANGLE;
+        const reverseKEndHorizontalAngle = selectedViewReverseCubeMorphEffectNames.has(effectName) ? horizontalAngleDegrees : EFFECT_REVERSE_K_END_HORIZONTAL_ANGLE;
+        const reverseBoxStartTopAngle = selectedViewReverseCubeMorphEffectNames.has(effectName) ? reverseKEndTopAngle + EFFECT_REVERSE_BOX_START_TOP_ANGLE - EFFECT_REVERSE_K_END_TOP_ANGLE : EFFECT_REVERSE_BOX_START_TOP_ANGLE;
+        const reverseBoxStartHorizontalAngle = selectedViewReverseCubeMorphEffectNames.has(effectName) ? reverseKEndHorizontalAngle + EFFECT_REVERSE_BOX_START_HORIZONTAL_ANGLE - EFFECT_REVERSE_K_END_HORIZONTAL_ANGLE : EFFECT_REVERSE_BOX_START_HORIZONTAL_ANGLE;
+        let extrusionDepth = Number(extrusionDepthInput.value);
+        let strokeWidth = Number(strokeWidthInput.value);
+        const strokeColor = strokeColorInput.value;
+        const faceColor = faceColorInput.value;
+        let depthShadingScale = 1;
+        let hiddenEdgeStrokeScale = 1;
+        let creaseTransition = fullCreaseTransition;
+        let inletPointCenterProgress = 0;
+        let boxProgress;
+        const pointerAngles = pointerAnglesOfEffectCard.get(effectCard);
+        const continuousRotationState = continuousRotationStateOfEffectCard.get(effectCard);
+        const clickMorphState = clickMorphStateOfEffectCard.get(effectCard);
+        const pointerEffectAngles = pointerAnglesOfEffectName[effectName];
+        const clickMorphProgress = clickMorphState === undefined ? 0 : getEasedEffectProgress(clickMorphState.progress / 2);
+
+        for (const parameterName of parameterNames) {
+          parameterValues[parameterName] = Number(inputOfParameter[parameterName].value);
+        }
+
+        if (pointerEffectAngles !== undefined) {
+          topAngleDegrees = pointerEffectAngles.startTopAngle;
+          horizontalAngleDegrees = pointerEffectAngles.startHorizontalAngle;
+        }
+
+        if (pointerAngles !== undefined) {
+          topAngleDegrees = pointerAngles.topAngleDegrees;
+          horizontalAngleDegrees = pointerAngles.horizontalAngleDegrees;
+        }
+
+        if (pointerCubeMorphEffectNames.has(effectName) && clickMorphState === undefined) {
+          boxProgress = 1;
+        }
+
+        if (continuousRotationState !== undefined) {
+          boxProgress = 1;
+        }
+
+        if (effectName === "cube-morph") {
+          boxProgress = transitionProgress;
+        } else if (reverseCubeMorphEffectNames.has(effectName) && clickMorphState === undefined) {
+          boxProgress = 1 - transitionProgress;
+          topAngleDegrees = reverseKEndTopAngle + (reverseBoxStartTopAngle - reverseKEndTopAngle) * boxProgress;
+          horizontalAngleDegrees = reverseKEndHorizontalAngle + (reverseBoxStartHorizontalAngle - reverseKEndHorizontalAngle) * boxProgress;
+        } else if (effectName === "head-on-box") {
+          const rotationProgress = Math.min(1, transitionProgress / EFFECT_HEAD_ON_BOX_ROTATION_END);
+          boxProgress = Math.max(0, (transitionProgress - EFFECT_HEAD_ON_BOX_ROTATION_END) / (1 - EFFECT_HEAD_ON_BOX_ROTATION_END));
+          topAngleDegrees = EFFECT_SIDE_TOP_ANGLE * rotationProgress;
+          horizontalAngleDegrees = EFFECT_HEAD_ON_HORIZONTAL_ANGLE + (EFFECT_SIDE_HORIZONTAL_ANGLE - EFFECT_HEAD_ON_HORIZONTAL_ANGLE) * rotationProgress;
+        } else if (effectName === "extrude") {
+          extrusionDepth = EFFECT_PARTIAL_EXTRUSION + (1 - EFFECT_PARTIAL_EXTRUSION) * transitionProgress;
+        } else if (effectName === "stroke-pulse") {
+          strokeWidth *= 1 + transitionProgress * 0.2;
+        } else if (effectName === "stroke-shrink") {
+          strokeWidth *= 1 - transitionProgress * 0.2;
+        } else if (effectName === "head-on-extrude") {
+          topAngleDegrees = EFFECT_SIDE_TOP_ANGLE * transitionProgress;
+          horizontalAngleDegrees = EFFECT_HEAD_ON_HORIZONTAL_ANGLE + (EFFECT_SIDE_HORIZONTAL_ANGLE - EFFECT_HEAD_ON_HORIZONTAL_ANGLE) * transitionProgress;
+          extrusionDepth = EFFECT_PARTIAL_EXTRUSION + (1 - EFFECT_PARTIAL_EXTRUSION) * transitionProgress;
+        } else if (effectName === "angled-head-on-extrude") {
+          topAngleDegrees = EFFECT_ANGLED_START_TOP_ANGLE + (EFFECT_SIDE_TOP_ANGLE - EFFECT_ANGLED_START_TOP_ANGLE) * transitionProgress;
+          horizontalAngleDegrees = EFFECT_ANGLED_START_HORIZONTAL_ANGLE + (EFFECT_SIDE_HORIZONTAL_ANGLE - EFFECT_ANGLED_START_HORIZONTAL_ANGLE) * transitionProgress;
+          extrusionDepth = EFFECT_PARTIAL_EXTRUSION + (1 - EFFECT_PARTIAL_EXTRUSION) * transitionProgress;
+        } else if (effectName === "horizontal-spin") {
+          horizontalAngleDegrees += transitionProgress * 360;
+        } else if (effectName === "vertical-spin") {
+          topAngleDegrees += transitionProgress * 360;
+        }
+
+        if (clickMorphState !== undefined) {
+          if (pointerCubeMorphEffectNames.has(effectName)) {
+            boxProgress = 1 - clickMorphProgress;
+          } else {
+            boxProgress = clickMorphProgress;
+            if (reverseCubeMorphEffectNames.has(effectName)) {
+              topAngleDegrees = reverseKEndTopAngle + (reverseBoxStartTopAngle - reverseKEndTopAngle) * boxProgress;
+              horizontalAngleDegrees = reverseKEndHorizontalAngle + (reverseBoxStartHorizontalAngle - reverseKEndHorizontalAngle) * boxProgress;
+            }
+          }
+        }
+
+        if (boxProgress !== undefined) {
+          const cubeMorphState = getCubeMorphState(boxProgress);
+          extrusionDepth += (1 - extrusionDepth) * boxProgress;
+          parameterValues.b0 *= cubeMorphState.kGeometryScale;
+          parameterValues.d0 *= cubeMorphState.kGeometryScale;
+          parameterValues.e0 *= cubeMorphState.kGeometryScale;
+          depthShadingScale = shadeFinalCubeInput.checked ? 1 : cubeMorphState.kGeometryScale;
+          hiddenEdgeStrokeScale = hiddenEdgeGrowReverseCubeMorphEffectNames.has(effectName) ? cubeMorphState.kGeometryScale : 1;
+          creaseTransition = getCreaseTransition(animateCreaseEdgesInput.checked, creaseTransitionModeInput.value, cubeMorphState);
+          inletPointCenterProgress = 1 - cubeMorphState.kGeometryScale;
+        }
+
+        const bodyDiagonalAxis = bodyDiagonalAxisOfEffectName[effectName];
+        let cubeGeometry;
+        if (continuousRotationState !== undefined) {
+          cubeGeometry = getCubeGeometryWithQuaternionRotation(topAngleDegrees, horizontalAngleDegrees, continuousRotationState.rotationQuaternion);
+        } else {
+          cubeGeometry = bodyDiagonalAxis === undefined ? getCubeGeometry(topAngleDegrees, horizontalAngleDegrees) : getCubeGeometryWithAxisRotation(topAngleDegrees, horizontalAngleDegrees, transitionProgress * 360, bodyDiagonalAxis);
+        }
+        const cubePathData = getCubePathData(cubeGeometry);
+        const kPolygonPoints = getKPolygonPoints(parameterValues, inletPointCenterProgress);
+        const cubeGuideSource = hideCubeGuideInput.checked ? "" : `<path d="${cubePathData}" fill="none" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" opacity="${CUBE_GUIDE_OPACITY}" />`;
+        const edgeEffects = getEdgeEffects(`gallery-${effectName}`);
+        edgeEffects.shouldUseDepthShading = edgeEffects.shouldUseDepthShading && depthShadingScale > 0;
+        edgeEffects.depthShadingAmount *= depthShadingScale;
+        edgeEffects.faceDepthGradientAmount *= depthShadingScale;
+        const shouldShowHiddenEdges = showHiddenEdgesInput.checked || hiddenEdgeGrowReverseCubeMorphEffectNames.has(effectName);
+        const prismSource = getKPrismSvgSource(kPolygonPoints, "left", extrusionDepth, extrusionAlignmentInput.value, cubeGeometry, shouldShowHiddenEdges, HIDDEN_EDGE_OPACITY, hiddenEdgeStrokeScale, creaseTransition, strokeWidth, strokeColor, faceColor, edgeEffects);
+        effectCard.querySelector(".effect-render").innerHTML = `${cubeGuideSource}${prismSource}`;
+      };
+
+      const renderEffectGallery = () => {
+        for (const effectCard of effectCards) {
+          const transitionState = transitionStateOfEffectCard.get(effectCard);
+          const transitionProgress = transitionState === undefined ? 0 : transitionState.progress;
+          renderEffectCard(effectCard, getEasedEffectProgress(transitionProgress));
+        }
+      };
+
+      const animateEffectGallery = (currentTime) => {
+        for (const effectCard of continuousEffectCards) {
+          const continuousRotationState = continuousRotationStateOfEffectCard.get(effectCard);
+          const elapsedSeconds = Math.min(0.064, (currentTime - continuousRotationState.lastTime) / 1000);
+          const inertialSpeedRange = inertialSpeedRangeOfEffectName[effectCard.dataset.effect];
+          if (inertialSpeedRange !== undefined) {
+            if (currentTime >= continuousRotationState.targetChangeTime) {
+              const projectionAxisOfName = getCubeProjectionAxes(Number(topAngleInput.value), Number(horizontalAngleInput.value));
+              const minimumCameraUpComponent = unrestrictedInertialEffectNames.has(effectCard.dataset.effect) ? -1 : EFFECT_INERTIAL_MIN_RIGHTWARD_COMPONENT;
+              continuousRotationState.targetAngularVelocity = getRandomAngularVelocity(...inertialSpeedRange, projectionAxisOfName, minimumCameraUpComponent);
+              continuousRotationState.targetChangeTime = currentTime + EFFECT_CONTINUOUS_TARGET_MIN_MILLISECONDS + Math.random() * (EFFECT_CONTINUOUS_TARGET_MAX_MILLISECONDS - EFFECT_CONTINUOUS_TARGET_MIN_MILLISECONDS);
+            }
+            const velocityBlend = 1 - Math.exp(-elapsedSeconds / EFFECT_INERTIAL_RESPONSE_SECONDS);
+            for (let axisIndex = 0; axisIndex < 3; axisIndex += 1) {
+              continuousRotationState.angularVelocity[axisIndex] += (continuousRotationState.targetAngularVelocity[axisIndex] - continuousRotationState.angularVelocity[axisIndex]) * velocityBlend;
+            }
+          }
+          continuousRotationState.rotationQuaternion = getUpdatedRotationQuaternion(continuousRotationState.rotationQuaternion, continuousRotationState.angularVelocity, elapsedSeconds);
+          continuousRotationState.lastTime = currentTime;
+          renderEffectCard(effectCard, 0);
+        }
+
+        for (const effectCard of transitioningEffectCards) {
+          const transitionState = transitionStateOfEffectCard.get(effectCard);
+          const elapsedMilliseconds = Math.min(64, currentTime - transitionState.lastTime);
+          const progressChange = elapsedMilliseconds / EFFECT_TRANSITION_MILLISECONDS * (transitionState.isActive ? 1 : -1);
+          transitionState.progress = Math.min(1, Math.max(0, transitionState.progress + progressChange));
+          transitionState.lastTime = currentTime;
+          renderEffectCard(effectCard, getEasedEffectProgress(transitionState.progress));
+
+          if (transitionState.progress === (transitionState.isActive ? 1 : 0)) {
+            transitioningEffectCards.delete(effectCard);
+          }
+        }
+
+        for (const effectCard of clickMorphEffectCards) {
+          const clickMorphState = clickMorphStateOfEffectCard.get(effectCard);
+          const elapsedMilliseconds = Math.min(64, currentTime - clickMorphState.lastTime);
+          if (clickMorphState.direction === 0 && currentTime >= clickMorphState.holdUntil) {
+            clickMorphState.direction = -1;
+          }
+          clickMorphState.progress = Math.min(2, Math.max(0, clickMorphState.progress + elapsedMilliseconds / EFFECT_CLICK_STAGE_MILLISECONDS * clickMorphState.direction));
+          clickMorphState.lastTime = currentTime;
+          renderEffectCard(effectCard, 0);
+
+          if (clickMorphState.progress === 2 && clickMorphState.direction === 1) {
+            clickMorphState.direction = 0;
+            clickMorphState.holdUntil = currentTime + EFFECT_CLICK_CUBE_HOLD_MILLISECONDS;
+          } else if (clickMorphState.progress === 0 && clickMorphState.direction === -1) {
+            clickMorphEffectCards.delete(effectCard);
+            clickMorphStateOfEffectCard.delete(effectCard);
+          }
+        }
+
+        if (continuousEffectCards.length > 0 || transitioningEffectCards.size > 0 || clickMorphEffectCards.size > 0) {
+          effectAnimationFrameId = requestAnimationFrame(animateEffectGallery);
+        } else {
+          effectAnimationFrameId = undefined;
+        }
+      };
+
+      const startEffectAnimation = (effectCard) => {
+        let transitionState = transitionStateOfEffectCard.get(effectCard);
+        if (transitionState === undefined) {
+          transitionState = { progress: 0, isActive: true, lastTime: performance.now() };
+          transitionStateOfEffectCard.set(effectCard, transitionState);
+        } else {
+          transitionState.isActive = true;
+          transitionState.lastTime = performance.now();
+        }
+
+        transitioningEffectCards.add(effectCard);
+        if (effectAnimationFrameId === undefined) {
+          effectAnimationFrameId = requestAnimationFrame(animateEffectGallery);
+        }
+      };
+
+      const stopEffectAnimation = (effectCard) => {
+        if (effectCard.matches(":hover") || document.activeElement === effectCard) {
+          return;
+        }
+
+        let transitionState = transitionStateOfEffectCard.get(effectCard);
+        const isSpinEffect = effectCard.dataset.effect === "horizontal-spin" || effectCard.dataset.effect === "vertical-spin" || bodyDiagonalSpinEffectNames.has(effectCard.dataset.effect);
+        if (isSpinEffect && transitionState?.progress === 1) {
+          transitionState.progress = 0;
+          transitionState.isActive = false;
+          transitioningEffectCards.delete(effectCard);
+          renderEffectCard(effectCard, 0);
+          return;
+        }
+
+        if (transitionState === undefined) {
+          transitionState = { progress: 0, isActive: false, lastTime: performance.now() };
+          transitionStateOfEffectCard.set(effectCard, transitionState);
+        } else {
+          transitionState.isActive = false;
+          transitionState.lastTime = performance.now();
+        }
+
+        transitioningEffectCards.add(effectCard);
+        if (effectAnimationFrameId === undefined) {
+          effectAnimationFrameId = requestAnimationFrame(animateEffectGallery);
+        }
+      };
+
+      const startClickMorphAnimation = (effectCard) => {
+        let clickMorphState = clickMorphStateOfEffectCard.get(effectCard);
+        if (clickMorphState === undefined) {
+          let progress = 0;
+          if (reverseCubeMorphEffectNames.has(effectCard.dataset.effect)) {
+            const transitionState = transitionStateOfEffectCard.get(effectCard);
+            progress = transitionState === undefined ? 2 : (1 - transitionState.progress) * 2;
+          }
+          clickMorphState = { progress, direction: 1, lastTime: performance.now(), holdUntil: 0 };
+          clickMorphStateOfEffectCard.set(effectCard, clickMorphState);
+        } else {
+          clickMorphState.direction = 1;
+          clickMorphState.lastTime = performance.now();
+        }
+
+        clickMorphEffectCards.add(effectCard);
+        if (effectAnimationFrameId === undefined) {
+          effectAnimationFrameId = requestAnimationFrame(animateEffectGallery);
+        }
+      };
+
+      // Pointer position directly controls the view while the click animation changes only the K shape.
+      const updatePointerEffectAngles = (effectCard, pointerEvent) => {
+        const bounds = effectCard.getBoundingClientRect();
+        const pointerEffectAngles = pointerAnglesOfEffectName[effectCard.dataset.effect];
+        const horizontalProgress = Math.min(1, Math.max(0, (pointerEvent.clientX - bounds.left) / bounds.width));
+        const verticalProgress = Math.min(1, Math.max(0, (pointerEvent.clientY - bounds.top) / bounds.height));
+        pointerAnglesOfEffectCard.set(effectCard, {
+          topAngleDegrees: pointerEffectAngles.centerTopAngle + (verticalProgress - 0.5) * EFFECT_POINTER_ANGLE_RANGE,
+          horizontalAngleDegrees: pointerEffectAngles.centerHorizontalAngle + (horizontalProgress - 0.5) * EFFECT_POINTER_ANGLE_RANGE,
+        });
+        renderEffectCard(effectCard, 0);
+      };
+
+      // -------------------------- Controls and export --------------------------
+
+      const updateRotationRanges = () => {
+        const isFullRotation = fullRotationInput.checked;
+        topAngleInput.max = isFullRotation ? "360" : "90";
+        horizontalAngleInput.min = isFullRotation ? "-180" : "0";
+        horizontalAngleInput.max = "180";
+        topAngleInput.value = isFullRotation ? topAngleInput.value : String(Math.min(90, Number(topAngleInput.value)));
+        horizontalAngleInput.value = isFullRotation ? horizontalAngleInput.value : String(Math.min(180, Math.max(0, Number(horizontalAngleInput.value))));
+        topAngleNoteStart.textContent = isFullRotation ? "0°" : "No top";
+        topAngleNoteMiddle.textContent = isFullRotation ? "180°" : "";
+        topAngleNoteEnd.textContent = isFullRotation ? "360°" : "Top only";
+        horizontalAngleNoteStart.textContent = isFullRotation ? "−180°" : "0°";
+        horizontalAngleNoteMiddle.textContent = isFullRotation ? "0°" : "90°";
+        horizontalAngleNoteEnd.textContent = "180°";
+      };
+
+      const updateCube = () => {
+        const topAngleDegrees = Number(topAngleInput.value);
+        const horizontalAngleDegrees = Number(horizontalAngleInput.value);
+        const extrusionDepth = Number(extrusionDepthInput.value);
+        const strokeWidth = Number(strokeWidthInput.value);
+        const strokeColor = strokeColorInput.value;
+        const faceColor = faceColorInput.value;
+        const cubeGeometry = getCubeGeometry(topAngleDegrees, horizontalAngleDegrees);
+        const cubePathData = getCubePathData(cubeGeometry);
+        const parameterValues = {};
+        const isTopParallel = parallelTopInput.checked;
+        const isBottomParallel = parallelBottomInput.checked;
+        const areInletStartsAligned = alignInletStartsInput.checked;
+        const e1Input = inputOfParameter.e1;
+
+        strokeColorInput.disabled = strokeGradientInput.checked;
+        faceColorInput.disabled = transparentFacesInput.checked;
+        depthShadingInput.disabled = transparentFacesInput.checked;
+        depthShadingAmountInput.disabled = transparentFacesInput.checked || !depthShadingInput.checked;
+        faceDepthGradientAmountInput.disabled = transparentFacesInput.checked || !depthShadingInput.checked;
+        shadeFinalCubeInput.disabled = transparentFacesInput.checked || !depthShadingInput.checked;
+
+        // Parallel cuts derive a1 or c1. Their neighboring depth range shrinks only when needed to keep the endpoint on the face.
+        e1Input.min = isTopParallel ? "0.01" : "0";
+        e1Input.max = isBottomParallel ? "0.99" : "1";
+        e1Input.value = String(Math.min(Number(e1Input.max), Math.max(Number(e1Input.min), Number(e1Input.value))));
+        inputOfParameter.a1.disabled = isTopParallel;
+        inputOfParameter.c1.disabled = isBottomParallel;
+        inputOfParameter.c0.disabled = areInletStartsAligned;
+        inputOfParameter.b0.max = "1";
+        inputOfParameter.d0.max = "1";
+
+        if (areInletStartsAligned) {
+          inputOfParameter.c0.value = inputOfParameter.a0.value;
+        }
+
+        if (isTopParallel) {
+          const a0 = Number(inputOfParameter.a0.value);
+          const b0 = Number(inputOfParameter.b0.value);
+          const e0 = Number(inputOfParameter.e0.value);
+          const e1 = Number(e1Input.value);
+          const horizontalDistance = e0;
+          const maximumB0 = horizontalDistance === 0 ? 1 : Math.min(1, (1 - a0) * e1 / horizontalDistance);
+          const limitedB0 = Math.min(b0, maximumB0);
+          inputOfParameter.b0.max = String(maximumB0);
+          inputOfParameter.b0.value = String(limitedB0);
+          inputOfParameter.a1.value = String(Math.min(1, a0 + limitedB0 * horizontalDistance / e1));
+        }
+
+        if (isBottomParallel) {
+          const c0 = Number(inputOfParameter.c0.value);
+          const d0 = Number(inputOfParameter.d0.value);
+          const e0 = Number(inputOfParameter.e0.value);
+          const e1 = Number(e1Input.value);
+          const horizontalDistance = e0;
+          const maximumD0 = horizontalDistance === 0 ? 1 : Math.min(1, (1 - c0) * (1 - e1) / horizontalDistance);
+          const limitedD0 = Math.min(d0, maximumD0);
+          inputOfParameter.d0.max = String(maximumD0);
+          inputOfParameter.d0.value = String(limitedD0);
+          inputOfParameter.c1.value = String(Math.min(1, c0 + limitedD0 * horizontalDistance / (1 - e1)));
+        }
+
+        for (const parameterName of parameterNames) {
+          parameterValues[parameterName] = Number(inputOfParameter[parameterName].value);
+          outputOfParameter[parameterName].value = parameterValues[parameterName].toFixed(2);
+        }
+
+        const kPolygonPoints = getKPolygonPoints(parameterValues, 0);
+
+        for (const cubePath of cubePaths) {
+          cubePath.setAttribute("d", cubePathData);
+          cubePath.style.opacity = hideCubeGuideInput.checked ? "0" : String(CUBE_GUIDE_OPACITY);
+          cubePath.setAttribute("stroke", strokeColor);
+          cubePath.setAttribute("stroke-width", String(strokeWidth));
+        }
+
+        kLeftRender.innerHTML = getKPrismSvgSource(kPolygonPoints, "left", extrusionDepth, extrusionAlignmentInput.value, cubeGeometry, showHiddenEdgesInput.checked, HIDDEN_EDGE_OPACITY, 1, fullCreaseTransition, strokeWidth, strokeColor, faceColor, getEdgeEffects("main-preview"));
+        topAngleOutput.value = `${topAngleDegrees}°`;
+        horizontalAngleOutput.value = `${horizontalAngleDegrees}°`;
+        extrusionDepthOutput.value = extrusionDepth.toFixed(2);
+        strokeWidthOutput.value = strokeWidth.toFixed(1);
+        depthShadingAmountOutput.value = Number(depthShadingAmountInput.value).toFixed(2);
+        faceDepthGradientAmountOutput.value = Number(faceDepthGradientAmountInput.value).toFixed(2);
+        glowRadiusOutput.value = Number(glowRadiusInput.value).toFixed(1);
+        glowIntensityOutput.value = Number(glowIntensityInput.value).toFixed(2);
+        gradientAngleOutput.value = `${Number(gradientAngleInput.value)}°`;
+        configurationStatus.textContent = "";
+        configurationTextArea.value = JSON.stringify({
+          version: 6,
+          topAngle: topAngleDegrees,
+          horizontalAngle: horizontalAngleDegrees,
+          extrusionDepth,
+          extrusionAlignment: extrusionAlignmentInput.value,
+          strokeWidth,
+          strokeColor,
+          faceColor,
+          shouldUseTransparentFaces: transparentFacesInput.checked,
+          shouldUseDepthShading: depthShadingInput.checked,
+          depthShadingAmount: Number(depthShadingAmountInput.value),
+          faceDepthGradientAmount: Number(faceDepthGradientAmountInput.value),
+          shouldUseNeonGlow: neonGlowInput.checked,
+          glowRadius: Number(glowRadiusInput.value),
+          glowIntensity: Number(glowIntensityInput.value),
+          glowColor: glowColorInput.value,
+          shouldUseStrokeGradient: strokeGradientInput.checked,
+          gradientStartColor: gradientStartColorInput.value,
+          gradientEndColor: gradientEndColorInput.value,
+          gradientAngle: Number(gradientAngleInput.value),
+          shouldHideCubeGuide: hideCubeGuideInput.checked,
+          showHiddenEdges: showHiddenEdgesInput.checked,
+          fullRotation: fullRotationInput.checked,
+          parallelTop: isTopParallel,
+          parallelBottom: isBottomParallel,
+          alignInletStarts: areInletStartsAligned,
+          parameters: parameterValues,
+        });
+        renderEffectGallery();
+      };
+
+      // A pasted configuration restores the same input state that produced the copied JSON.
+      const applyConfigurationText = (configurationText) => {
+        let configuration;
+
+        try {
+          configuration = JSON.parse(configurationText);
+        } catch {
+          throw new Error("That configuration is not valid JSON.");
+        }
+
+        if (configuration === null || typeof configuration !== "object" || Array.isArray(configuration) || configuration.version !== 6 || configuration.parameters === null || typeof configuration.parameters !== "object" || Array.isArray(configuration.parameters)) {
+          throw new Error("That configuration is not supported.");
+        }
+
+        const checkboxEntries = [
+          ["shouldHideCubeGuide", hideCubeGuideInput],
+          ["showHiddenEdges", showHiddenEdgesInput],
+          ["fullRotation", fullRotationInput],
+          ["parallelTop", parallelTopInput],
+          ["parallelBottom", parallelBottomInput],
+          ["alignInletStarts", alignInletStartsInput],
+          ["shouldUseDepthShading", depthShadingInput],
+          ["shouldUseNeonGlow", neonGlowInput],
+          ["shouldUseStrokeGradient", strokeGradientInput],
+          ["shouldUseTransparentFaces", transparentFacesInput],
+        ];
+
+        // Validate the complete payload before changing any controls.
+        for (const [configurationKey] of checkboxEntries) {
+          if (typeof configuration[configurationKey] !== "boolean") {
+            throw new Error(`The ${configurationKey} setting is invalid.`);
+          }
+        }
+
+        const numberEntries = [
+          ["topAngle", topAngleInput, 0, configuration.fullRotation ? 360 : 90],
+          ["horizontalAngle", horizontalAngleInput, configuration.fullRotation ? -180 : 0, 180],
+          ["extrusionDepth", extrusionDepthInput, 0, 1],
+          ["strokeWidth", strokeWidthInput, 0, 24],
+          ["depthShadingAmount", depthShadingAmountInput, 0, 1],
+          ["faceDepthGradientAmount", faceDepthGradientAmountInput, 0, 0.5],
+          ["glowRadius", glowRadiusInput, 0, 20],
+          ["glowIntensity", glowIntensityInput, 0, 1],
+          ["gradientAngle", gradientAngleInput, 0, 360],
+        ];
+
+        for (const [configurationKey, , minimum, maximum] of numberEntries) {
+          const value = configuration[configurationKey];
+          if (typeof value !== "number" || !Number.isFinite(value) || value < minimum || value > maximum) {
+            throw new Error(`The ${configurationKey} setting is invalid.`);
+          }
+        }
+
+        if (configuration.extrusionAlignment !== "front" && configuration.extrusionAlignment !== "center" && configuration.extrusionAlignment !== "back") {
+          throw new Error("The extrusionAlignment setting is invalid.");
+        }
+
+        for (const parameterName of parameterNames) {
+          const value = configuration.parameters[parameterName];
+          if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 1) {
+            throw new Error(`The ${parameterName} setting is invalid.`);
+          }
+        }
+
+        const colorEntries = [["strokeColor", strokeColorInput], ["faceColor", faceColorInput], ["glowColor", glowColorInput], ["gradientStartColor", gradientStartColorInput], ["gradientEndColor", gradientEndColorInput]];
+        for (const [configurationKey] of colorEntries) {
+          const value = configuration[configurationKey];
+          if (typeof value !== "string" || !/^#[0-9a-f]{6}$/i.test(value)) {
+            throw new Error(`The ${configurationKey} setting is invalid.`);
+          }
+        }
+
+        for (const [configurationKey, input] of checkboxEntries) {
+          input.checked = configuration[configurationKey];
+        }
+        updateRotationRanges();
+        for (const [configurationKey, input] of numberEntries) {
+          input.value = String(configuration[configurationKey]);
+        }
+        extrusionAlignmentInput.value = configuration.extrusionAlignment;
+        for (const parameterName of parameterNames) {
+          inputOfParameter[parameterName].value = String(configuration.parameters[parameterName]);
+        }
+        for (const [configurationKey, input] of colorEntries) {
+          input.value = configuration[configurationKey];
+        }
+        updateCube();
+      };
+
+      topAngleInput.addEventListener("input", updateCube);
+      horizontalAngleInput.addEventListener("input", updateCube);
+      extrusionDepthInput.addEventListener("input", updateCube);
+      extrusionAlignmentInput.addEventListener("change", updateCube);
+      strokeWidthInput.addEventListener("input", updateCube);
+      strokeColorInput.addEventListener("input", updateCube);
+      faceColorInput.addEventListener("input", updateCube);
+      depthShadingInput.addEventListener("change", updateCube);
+      transparentFacesInput.addEventListener("change", updateCube);
+      depthShadingAmountInput.addEventListener("input", updateCube);
+      faceDepthGradientAmountInput.addEventListener("input", updateCube);
+      neonGlowInput.addEventListener("change", updateCube);
+      glowRadiusInput.addEventListener("input", updateCube);
+      glowIntensityInput.addEventListener("input", updateCube);
+      glowColorInput.addEventListener("input", updateCube);
+      strokeGradientInput.addEventListener("change", updateCube);
+      gradientStartColorInput.addEventListener("input", updateCube);
+      gradientEndColorInput.addEventListener("input", updateCube);
+      gradientAngleInput.addEventListener("input", updateCube);
+      hideCubeGuideInput.addEventListener("change", updateCube);
+      showHiddenEdgesInput.addEventListener("change", updateCube);
+      fullRotationInput.addEventListener("change", () => {
+        updateRotationRanges();
+        updateCube();
+      });
+      parallelTopInput.addEventListener("change", updateCube);
+      parallelBottomInput.addEventListener("change", updateCube);
+      alignInletStartsInput.addEventListener("change", updateCube);
+      animateCreaseEdgesInput.addEventListener("change", () => {
+        creaseTransitionModeInput.disabled = !animateCreaseEdgesInput.checked;
+        updateCube();
+      });
+      shadeFinalCubeInput.addEventListener("change", updateCube);
+      creaseTransitionModeInput.addEventListener("change", updateCube);
+      for (const parameterName of parameterNames) {
+        inputOfParameter[parameterName].addEventListener("input", updateCube);
+      }
+      for (const strokeWidthPresetButton of strokeWidthPresetButtons) {
+        strokeWidthPresetButton.addEventListener("click", () => {
+          strokeWidthInput.value = strokeWidthPresetButton.dataset.strokeWidth;
+          updateCube();
+        });
+      }
+      for (const colorPresetButton of colorPresetButtons) {
+        colorPresetButton.addEventListener("click", () => {
+          const colorConfiguration = colorConfigurationOfPresetName[colorPresetButton.dataset.colorPreset];
+          for (const [configurationKey, input] of Object.entries(inputOfColorConfigurationKey)) {
+            if (input.type === "checkbox") {
+              input.checked = colorConfiguration[configurationKey];
+            } else {
+              input.value = String(colorConfiguration[configurationKey]);
+            }
+          }
+          updateCube();
+          configurationStatus.textContent = `Applied ${colorPresetButton.textContent}.`;
+        });
+      }
+      for (const kShapePresetButton of kShapePresetButtons) {
+        kShapePresetButton.addEventListener("click", () => {
+          const kShapeConfiguration = kShapeConfigurationOfPresetName[kShapePresetButton.dataset.kShapePreset];
+          parallelTopInput.checked = kShapeConfiguration.parallelTop;
+          parallelBottomInput.checked = kShapeConfiguration.parallelBottom;
+          alignInletStartsInput.checked = kShapeConfiguration.alignInletStarts;
+          for (const parameterName of parameterNames) {
+            inputOfParameter[parameterName].value = String(kShapeConfiguration.parameters[parameterName]);
+          }
+          updateCube();
+          configurationStatus.textContent = `Applied ${kShapePresetButton.textContent}.`;
+        });
+      }
+      const continuousAnimationStartTime = performance.now();
+      for (const effectCard of continuousEffectCards) {
+        continuousRotationStateOfEffectCard.set(effectCard, {
+          rotationQuaternion: [0, 0, 0, 1],
+          angularVelocity: effectCard.dataset.effect === "ambient-cube-spin" ? EFFECT_AMBIENT_ANGULAR_VELOCITY : [0, 0, 0],
+          targetAngularVelocity: [0, 0, 0],
+          targetChangeTime: 0,
+          lastTime: continuousAnimationStartTime,
+        });
+      }
+      for (const effectCard of effectCards) {
+        if (continuousEffectNames.has(effectCard.dataset.effect)) {
+          continue;
+        }
+        const isPointerEffect = pointerEffectNames.has(effectCard.dataset.effect);
+        if (isPointerEffect) {
+          effectCard.addEventListener("pointermove", (event) => updatePointerEffectAngles(effectCard, event));
+          effectCard.addEventListener("pointerleave", () => {
+            pointerAnglesOfEffectCard.delete(effectCard);
+            renderEffectCard(effectCard, 0);
+          });
+        } else {
+          effectCard.addEventListener("pointerenter", () => startEffectAnimation(effectCard));
+          effectCard.addEventListener("pointerleave", () => stopEffectAnimation(effectCard));
+          effectCard.addEventListener("focus", () => startEffectAnimation(effectCard));
+          effectCard.addEventListener("blur", () => stopEffectAnimation(effectCard));
+        }
+
+        if (reverseMorphClickEffectNames.has(effectCard.dataset.effect)) {
+          effectCard.addEventListener("click", () => startClickMorphAnimation(effectCard));
+          effectCard.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              startClickMorphAnimation(effectCard);
+            }
+          });
+        }
+      }
+
+      downloadButton.addEventListener("click", () => {
+        const topAngleDegrees = Number(topAngleInput.value);
+        const horizontalAngleDegrees = Number(horizontalAngleInput.value);
+        const extrusionDepth = Number(extrusionDepthInput.value);
+        const strokeWidth = Number(strokeWidthInput.value);
+        const strokeColor = strokeColorInput.value;
+        const faceColor = faceColorInput.value;
+        const cubeGeometry = getCubeGeometry(topAngleDegrees, horizontalAngleDegrees);
+        const cubePathData = getCubePathData(cubeGeometry);
+        const parameterValues = {};
+
+        for (const parameterName of parameterNames) {
+          parameterValues[parameterName] = Number(inputOfParameter[parameterName].value);
+        }
+
+        const kPolygonPoints = getKPolygonPoints(parameterValues, 0);
+        const prismSource = getKPrismSvgSource(kPolygonPoints, "left", extrusionDepth, extrusionAlignmentInput.value, cubeGeometry, showHiddenEdgesInput.checked, HIDDEN_EDGE_OPACITY, 1, fullCreaseTransition, strokeWidth, strokeColor, faceColor, getEdgeEffects("cube-k"));
+        const cubeGuideSource = hideCubeGuideInput.checked ? "" : `<path d="${cubePathData}" fill="none" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" opacity="${CUBE_GUIDE_OPACITY}" />`;
+        const svgSource = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEW_BOX_SIZE} ${VIEW_BOX_SIZE}" fill="none">${cubeGuideSource}${prismSource}</svg>`;
+        const downloadUrl = URL.createObjectURL(new Blob([svgSource], { type: "image/svg+xml" }));
+        const downloadLink = document.createElement("a");
+        downloadLink.href = downloadUrl;
+        downloadLink.download = "cube-k.svg";
+        downloadLink.click();
+        URL.revokeObjectURL(downloadUrl);
+      });
+
+      copyConfigurationButton.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(configurationTextArea.value);
+          configurationStatus.textContent = "Copied";
+        } catch {
+          configurationTextArea.select();
+          configurationStatus.textContent = "Selected — press Copy";
+        }
+      });
+
+      pasteConfigurationButton.addEventListener("click", async () => {
+        try {
+          applyConfigurationText(await navigator.clipboard.readText());
+          configurationStatus.textContent = "Restored";
+        } catch (error) {
+          configurationStatus.textContent = error instanceof Error ? error.message : "Could not paste configuration.";
+        }
+      });
+
+      configurationTextArea.addEventListener("paste", (event) => {
+        event.preventDefault();
+        try {
+          applyConfigurationText(event.clipboardData.getData("text"));
+          configurationStatus.textContent = "Restored";
+        } catch (error) {
+          configurationStatus.textContent = error instanceof Error ? error.message : "Could not paste configuration.";
+        }
+      });
+
+      updateRotationRanges();
+      updateCube();
+      effectAnimationFrameId = requestAnimationFrame(animateEffectGallery);
+    </script>
+  </body>
+</html>

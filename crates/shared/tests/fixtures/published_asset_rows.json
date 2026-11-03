@@ -1,0 +1,713 @@
+[
+  {
+    "asset_id": 52,
+    "version_num": 3,
+    "name": "All Object Types",
+    "created_at": "2026-09-10T20:36:23.682118+00:00",
+    "asset_type": "Object",
+    "data_json": {
+      "Object": {
+        "objectOfId": {
+          "100": {
+            "id": 100,
+            "info": {
+              "Brick": {
+                "material": {
+                  "tileSizeU": 2.0,
+                  "tileSizeV": 3.0,
+                  "tileOffsetU": 0.25,
+                  "tileOffsetV": 0.5,
+                  "materialInfoId": 104
+                },
+                "visualSettings": {
+                  "color": {
+                    "b": 0.5,
+                    "g": 0.5,
+                    "r": 0.5
+                  },
+                  "opacity": 1.0,
+                  "isAlwaysOnTop": false
+                }
+              }
+            },
+            "name": "brick-100"
+          },
+          "101": {
+            "id": 101,
+            "info": {
+              "Ball": {
+                "material": {
+                  "tileSizeU": 3.0,
+                  "tileSizeV": 2.0,
+                  "tileOffsetU": 0.5,
+                  "tileOffsetV": 0.25,
+                  "materialInfoId": 104
+                },
+                "visualSettings": {
+                  "color": {
+                    "b": 0.5,
+                    "g": 0.5,
+                    "r": 0.5
+                  },
+                  "opacity": 1.0,
+                  "isAlwaysOnTop": false
+                }
+              }
+            },
+            "name": "ball-101"
+          },
+          "102": {
+            "id": 102,
+            "info": {
+              "Cylinder": {
+                "material": {
+                  "tileSizeU": 4.0,
+                  "tileSizeV": 2.0,
+                  "tileOffsetU": 0.75,
+                  "tileOffsetV": 0.25,
+                  "materialInfoId": 104
+                },
+                "visualSettings": {
+                  "color": {
+                    "b": 0.5,
+                    "g": 0.5,
+                    "r": 0.5
+                  },
+                  "opacity": 1.0,
+                  "isAlwaysOnTop": false
+                }
+              }
+            },
+            "name": "cylinder-102"
+          },
+          "103": {
+            "id": 103,
+            "info": {
+              "Clock": {
+                "speed": 0.75,
+                "clockState": {
+                  "Paused": {
+                    "animationTimeSecs": 0.25
+                  }
+                },
+                "shouldLoop": true
+              }
+            },
+            "name": "clock-103"
+          },
+          "104": {
+            "id": 104,
+            "info": {
+              "Material": {
+                "alphaMode": {
+                  "Mask": {
+                    "cutoff": 0.25
+                  }
+                },
+                "isDoubleSided": false,
+                "albedoTextureDataId": 439,
+                "normalTextureDataId": 439,
+                "metallicTextureDataId": 439,
+                "roughnessTextureDataId": 439
+              }
+            },
+            "name": "material-104"
+          },
+          "105": {
+            "id": 105,
+            "info": {
+              "Skeleton": {}
+            },
+            "name": "skeleton-105"
+          },
+          "106": {
+            "id": 106,
+            "info": {
+              "SkJoint": {
+                "restPose": {
+                  "position": [
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                }
+              }
+            },
+            "name": "joint"
+          },
+          "107": {
+            "id": 107,
+            "info": {
+              "LocalGroup": {}
+            },
+            "name": "local-group-107"
+          },
+          "108": {
+            "id": 108,
+            "info": {
+              "RigidGroup": {
+                "followSkeletonId": 105
+              }
+            },
+            "name": "rigid-group-108"
+          },
+          "109": {
+            "id": 109,
+            "info": {
+              "Script": {
+                "objectLocation": "Server"
+              }
+            },
+            "name": "script-109"
+          },
+          "110": {
+            "id": 110,
+            "info": {
+              "Label": {
+                "text": "Every object type",
+                "maxWidth": 8.0,
+                "lineHeight": 0.75,
+                "billboardMode": "None",
+                "isConstantSize": true,
+                "visualSettings": {
+                  "color": {
+                    "b": 1.0,
+                    "g": 1.0,
+                    "r": 1.0
+                  },
+                  "opacity": 0.75,
+                  "isAlwaysOnTop": true
+                },
+                "backgroundColor": {
+                  "b": 0.0,
+                  "g": 0.0,
+                  "r": 0.0
+                },
+                "horizontalAlign": "Left",
+                "offsetFromObject": [
+                  0.0,
+                  2.0,
+                  0.0
+                ],
+                "physicalObjectId": 100,
+                "backgroundOpacity": 0.5,
+                "rotationFromObject": [
+                  0.0,
+                  0.24740396440029144,
+                  0.0,
+                  0.9689124226570129
+                ]
+              }
+            },
+            "name": "label-110"
+          },
+          "111": {
+            "id": 111,
+            "info": {
+              "Mesh": {
+                "scale": [
+                  0.5,
+                  0.75,
+                  1.0
+                ],
+                "material": {
+                  "materialInfoId": 104
+                },
+                "meshDataId": 136,
+                "visualSettings": {
+                  "color": {
+                    "b": 0.5,
+                    "g": 0.5,
+                    "r": 0.5
+                  },
+                  "opacity": 1.0,
+                  "isAlwaysOnTop": false
+                },
+                "followSkeletonId": 105,
+                "physicalObjectId": 108
+              }
+            },
+            "name": "mesh-111"
+          },
+          "112": {
+            "id": 112,
+            "info": {
+              "Player": {
+                "userid": "catalog-test-player",
+                "username": "Catalog Test Player",
+                "headObjectId": 102,
+                "physicsControls": {
+                  "speed": 9.0,
+                  "jumpHeight": 3.0,
+                  "stepHeight": 0.10000000149011612,
+                  "acceleration": 160.0
+                },
+                "characterObjectId": 101
+              }
+            },
+            "name": "player-112"
+          },
+          "113": {
+            "id": 113,
+            "info": {
+              "SoundPlayer": {
+                "volume": 0.3499999940395355,
+                "clockId": 103,
+                "soundDataId": 35
+              }
+            },
+            "name": "sound-player-113"
+          },
+          "114": {
+            "id": 114,
+            "info": {
+              "SkAnimation": {
+                "duration": 2.5,
+                "interpolationStyle": "Linear"
+              }
+            },
+            "name": "joint-animation-114"
+          },
+          "115": {
+            "id": 115,
+            "info": {
+              "SkKeyframe": {
+                "time": 1.25
+              }
+            },
+            "name": "joint-keyframe-115"
+          },
+          "116": {
+            "id": 116,
+            "info": {
+              "SkKeyframePose": {
+                "jointName": "joint",
+                "localPose": {
+                  "position": [
+                    0.0,
+                    1.5,
+                    0.0
+                  ],
+                  "quaternion": [
+                    0.0,
+                    0.0,
+                    0.1246747300028801,
+                    0.9921976923942566
+                  ]
+                }
+              }
+            },
+            "name": "joint-pose-116"
+          },
+          "117": {
+            "id": 117,
+            "info": {
+              "SkAttachment": {
+                "objectId": 102,
+                "jointName": "joint",
+                "offsetFromJoint": {
+                  "position": [
+                    0.0,
+                    0.5,
+                    0.0
+                  ],
+                  "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                }
+              }
+            },
+            "name": "joint-attachment-117"
+          },
+          "118": {
+            "id": 118,
+            "info": {
+              "SkAnimator": {
+                "weight": 75.0,
+                "clockId": 103,
+                "priority": 2,
+                "skeletonId": 105,
+                "skAnimationId": 114,
+                "weightTransition": {
+                  "easing": "EaseIn",
+                  "initValue": 25.0,
+                  "durationMs": 500.0,
+                  "finalValue": 75.0,
+                  "startedAtMs": 0.0,
+                  "timeLocation": "Server"
+                }
+              }
+            },
+            "name": "joint-animator-118"
+          },
+          "119": {
+            "id": 119,
+            "info": {
+              "PropertyAnimation": {
+                "duration": 3.5,
+                "interpolationStyle": "EaseOut"
+              }
+            },
+            "name": "property-animation-119"
+          },
+          "120": {
+            "id": 120,
+            "info": {
+              "PropertyKeyframe": {
+                "time": 1.5,
+                "value": 0.5
+              }
+            },
+            "name": "property-keyframe-120"
+          },
+          "121": {
+            "id": 121,
+            "info": {
+              "PropertyAnimator": {
+                "weight": 50.0,
+                "clockId": 103,
+                "priority": 3,
+                "propertyPath": [
+                  "opacity"
+                ],
+                "targetObjectId": 101,
+                "weightTransition": {
+                  "easing": "EaseOut",
+                  "initValue": 0.0,
+                  "durationMs": 750.0,
+                  "finalValue": 50.0,
+                  "startedAtMs": 0.0,
+                  "timeLocation": "Server"
+                },
+                "propertyAnimationId": 119
+              }
+            },
+            "name": "property-animator-121"
+          },
+          "122": {
+            "id": 122,
+            "info": {
+              "WorldLighting": {
+                "sunColor": {
+                  "b": 0.8888888955116272,
+                  "g": 0.9333333373069763,
+                  "r": 1.0
+                },
+                "skyTopColor": {
+                  "b": 0.8500000238418579,
+                  "g": 0.5099999904632568,
+                  "r": 0.28999999165534973
+                },
+                "sunIntensity": 2.5,
+                "skyBottomColor": {
+                  "b": 0.20000000298023224,
+                  "g": 0.2199999988079071,
+                  "r": 0.23999999463558197
+                },
+                "sunOrientation": {
+                  "phi": -1.0413269996643066,
+                  "theta": 1.0303767919540405
+                },
+                "ambientTopColor": {
+                  "b": 0.07999999821186066,
+                  "g": 0.05999999865889549,
+                  "r": 0.05000000074505806
+                },
+                "skyHorizonColor": {
+                  "b": 0.9399999976158142,
+                  "g": 0.8600000143051147,
+                  "r": 0.75
+                },
+                "ambientIntensity": 1.0,
+                "ambientBottomColor": {
+                  "b": 0.019999999552965164,
+                  "g": 0.02500000037252903,
+                  "r": 0.029999999329447746
+                },
+                "skyboxTextureDataId": 439,
+                "skyboxTextureOpacity": 0.5
+              }
+            },
+            "name": "world-lighting-122"
+          },
+          "123": {
+            "id": 123,
+            "info": {
+              "LocalGroup": {}
+            },
+            "name": "All-Object-Types"
+          }
+        },
+        "childrenOfId": {
+          "100": [
+            119,
+            101,
+            103,
+            109,
+            121,
+            110,
+            108,
+            104,
+            111,
+            112,
+            105,
+            102,
+            107,
+            122,
+            113
+          ],
+          "101": [],
+          "102": [],
+          "103": [],
+          "104": [],
+          "105": [
+            106,
+            118,
+            114,
+            117
+          ],
+          "106": [],
+          "107": [],
+          "108": [],
+          "109": [],
+          "110": [],
+          "111": [],
+          "112": [],
+          "113": [],
+          "114": [
+            115
+          ],
+          "115": [
+            116
+          ],
+          "116": [],
+          "117": [],
+          "118": [],
+          "119": [
+            120
+          ],
+          "120": [],
+          "121": [],
+          "122": [],
+          "123": [
+            100
+          ]
+        },
+        "rootObjectId": 123,
+        "physicsInfo3DOfId": {
+          "100": {
+            "location": {
+              "position": [
+                0.0,
+                2.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            "movement": {
+              "velocity": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angularVelocity": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "101": {
+            "location": {
+              "position": [
+                -3.0,
+                4.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            "movement": {
+              "velocity": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angularVelocity": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "102": {
+            "location": {
+              "position": [
+                3.0,
+                4.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            "movement": {
+              "velocity": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angularVelocity": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "108": {
+            "location": {
+              "position": [
+                0.0,
+                5.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            "movement": {
+              "velocity": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "angularVelocity": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          }
+        },
+        "scriptRawCodeOfId": {
+          "109": "console.log('Asset object script loaded');"
+        },
+        "worldSchemaVersion": 75,
+        "physicsToggles3DOfId": {
+          "100": {
+            "density": 2.0,
+            "isAnchored": true,
+            "isWalkthrough": false
+          },
+          "101": {
+            "density": 1.0,
+            "isAnchored": true,
+            "isWalkthrough": false
+          },
+          "102": {
+            "density": 1.0,
+            "isAnchored": true,
+            "isWalkthrough": false
+          }
+        },
+        "primitiveSettingsOfId": {
+          "100": {
+            "Brick": {
+              "size": [
+                2.0,
+                2.0,
+                2.0
+              ]
+            }
+          },
+          "101": {
+            "Ball": {
+              "radius": 1.0
+            }
+          },
+          "102": {
+            "Cylinder": {
+              "length": 2.0,
+              "radius": 1.0
+            }
+          }
+        },
+        "fallback_camera_location": {
+          "position": [
+            0.0,
+            -10.0,
+            0.0
+          ],
+          "orientation": {
+            "phi": 0.7853981852531433,
+            "theta": 0.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "asset_id": 113,
+    "version_num": 1,
+    "name": "Glass: Glass Window 003",
+    "created_at": "2026-08-01T17:01:06+00:00",
+    "asset_type": "Material",
+    "data_json": {
+      "Material": {
+        "worldSchemaVersion": 84,
+        "material": {
+          "alphaMode": "Blend",
+          "isDoubleSided": false,
+          "albedoTextureDataId": 522,
+          "normalTextureDataId": 525,
+          "metallicTextureDataId": 523,
+          "roughnessTextureDataId": 524
+        }
+      }
+    }
+  },
+  {
+    "asset_id": 131,
+    "version_num": 1,
+    "name": "Metal: Metal Plate",
+    "created_at": "2026-08-01T17:02:22+00:00",
+    "asset_type": "Material",
+    "data_json": {
+      "Material": {
+        "worldSchemaVersion": 84,
+        "material": {
+          "alphaMode": "Opaque",
+          "isDoubleSided": false,
+          "albedoTextureDataId": 567,
+          "normalTextureDataId": 570,
+          "metallicTextureDataId": 568,
+          "roughnessTextureDataId": 569
+        }
+      }
+    }
+  }
+]

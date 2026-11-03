@@ -1,0 +1,60 @@
+name = "kube-new"
+product-name = "Kube.new"
+identifier = "new.kube.client"
+publisher = "Glass Devtools, Inc."
+description = "Kube.new"
+copyright = "Copyright (C) Glass Devtools, Inc."
+# version = "" # <-- THIS IS AUTO-FILLED-IN BY OUR GH ACTIONS PIPELINE
+binaries-dir = "../../target/release"
+out-dir = "../../dist"
+formats = ["nsis"]
+
+icons = ["assets/windows/icon.ico"]
+
+[[binaries]]
+path = "client"
+main = true
+
+[[deep-link-protocols]]
+name = "Kube.new Links"
+schemes = ["kube-new"]
+
+[windows]
+# CI signing is handled by azure/artifact-signing-action.
+# Local Windows packaging still relies on the helper script's Azure signing setup.
+# Keep cargo-packager signing fields empty here unless we move that setup into this config.
+
+[nsis]
+installer-icon = "assets/windows/icon.ico"
+# The game GUI is drawn by WebView2, which comes with Windows 11 and most of Windows 10. When it is missing, this
+# downloads Microsoft's bootstrapper and installs it silently, the same check and install Tauri's installers use.
+preinstall-section = '''
+Section WebView2
+  ${If} ${RunningX64}
+    ReadRegStr $4 HKLM "SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" "pv"
+  ${Else}
+    ReadRegStr $4 HKLM "SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" "pv"
+  ${EndIf}
+  ${If} $4 == ""
+  ${OrIf} $4 == "0.0.0.0"
+    ReadRegStr $4 HKCU "SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" "pv"
+  ${EndIf}
+  ${If} $4 == ""
+  ${OrIf} $4 == "0.0.0.0"
+    Delete "$TEMP\MicrosoftEdgeWebview2Setup.exe"
+    DetailPrint "Downloading the WebView2 Runtime"
+    NSISdl::download "https://go.microsoft.com/fwlink/p/?LinkId=2124703" "$TEMP\MicrosoftEdgeWebview2Setup.exe"
+    Pop $0
+    ${If} $0 != "success"
+      Abort "Kube.new needs the Microsoft WebView2 Runtime, which could not be downloaded. Check your internet connection and run the installer again."
+    ${EndIf}
+    DetailPrint "Installing the WebView2 Runtime"
+    ExecWait '"$TEMP\MicrosoftEdgeWebview2Setup.exe" /silent /install' $1
+    ${If} $1 <> 0
+      Abort "Kube.new needs the Microsoft WebView2 Runtime, which could not be installed."
+    ${EndIf}
+  ${EndIf}
+SectionEnd
+'''
+# header-image = "assets/windows/nsis-header.bmp"
+# sidebar-image = "assets/windows/nsis-sidebar.bmp"

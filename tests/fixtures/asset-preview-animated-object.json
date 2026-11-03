@@ -1,0 +1,709 @@
+{
+  "Object": {
+    "childrenOfId": {
+      "1": [
+        2,
+        18,
+        34,
+        36
+      ],
+      "10": [],
+      "11": [
+        12,
+        14
+      ],
+      "12": [
+        13
+      ],
+      "13": [],
+      "14": [
+        15
+      ],
+      "15": [],
+      "16": [
+        17
+      ],
+      "17": [],
+      "18": [
+        19,
+        20,
+        25,
+        27,
+        32
+      ],
+      "19": [],
+      "2": [
+        3,
+        4,
+        9,
+        11,
+        16
+      ],
+      "20": [
+        21,
+        23
+      ],
+      "21": [
+        22
+      ],
+      "22": [],
+      "23": [
+        24
+      ],
+      "24": [],
+      "25": [
+        26
+      ],
+      "26": [],
+      "27": [
+        28,
+        30
+      ],
+      "28": [
+        29
+      ],
+      "29": [],
+      "3": [],
+      "30": [
+        31
+      ],
+      "31": [],
+      "32": [
+        33
+      ],
+      "33": [],
+      "34": [
+        35
+      ],
+      "35": [],
+      "36": [],
+      "4": [
+        5,
+        7
+      ],
+      "5": [
+        6
+      ],
+      "6": [],
+      "7": [
+        8
+      ],
+      "8": [],
+      "9": [
+        10
+      ]
+    },
+    "fallback_camera_location": {
+      "orientation": {
+        "phi": 0.0,
+        "theta": 0.0
+      },
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "objectOfId": {
+      "1": {
+        "id": 1,
+        "info": {
+          "LocalGroup": {}
+        },
+        "name": "Animated object"
+      },
+      "10": {
+        "id": 10,
+        "info": {
+          "Clock": {
+            "clockState": {
+              "Playing": {
+                "localStartMs": 0.0,
+                "timeLocation": "Client"
+              }
+            },
+            "shouldLoop": true,
+            "speed": 1.0
+          }
+        },
+        "name": "clock_1"
+      },
+      "11": {
+        "id": 11,
+        "info": {
+          "SkAnimation": {
+            "duration": 1.0,
+            "interpolationStyle": "Linear"
+          }
+        },
+        "name": "Pose"
+      },
+      "12": {
+        "id": 12,
+        "info": {
+          "SkKeyframe": {
+            "time": 0.0
+          }
+        },
+        "name": "keyframe_0"
+      },
+      "13": {
+        "id": 13,
+        "info": {
+          "SkKeyframePose": {
+            "jointName": "root",
+            "localPose": {
+              "position": [
+                0.800000011920929,
+                0.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        "name": "root"
+      },
+      "14": {
+        "id": 14,
+        "info": {
+          "SkKeyframe": {
+            "time": 1.0
+          }
+        },
+        "name": "keyframe_1"
+      },
+      "15": {
+        "id": 15,
+        "info": {
+          "SkKeyframePose": {
+            "jointName": "root",
+            "localPose": {
+              "position": [
+                0.800000011920929,
+                0.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        "name": "root"
+      },
+      "16": {
+        "id": 16,
+        "info": {
+          "SkAnimator": {
+            "clockId": 17,
+            "priority": 0,
+            "skAnimationId": 11,
+            "skeletonId": 2,
+            "weight": 0.0,
+            "weightTransition": null
+          }
+        },
+        "name": "Pose_animator"
+      },
+      "17": {
+        "id": 17,
+        "info": {
+          "Clock": {
+            "clockState": {
+              "Playing": {
+                "localStartMs": 0.0,
+                "timeLocation": "Client"
+              }
+            },
+            "shouldLoop": true,
+            "speed": 1.0
+          }
+        },
+        "name": "clock_2"
+      },
+      "18": {
+        "id": 18,
+        "info": {
+          "Skeleton": {}
+        },
+        "name": "skeleton_2"
+      },
+      "19": {
+        "id": 19,
+        "info": {
+          "SkJoint": {
+            "restPose": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        "name": "root"
+      },
+      "2": {
+        "id": 2,
+        "info": {
+          "Skeleton": {}
+        },
+        "name": "skeleton_1"
+      },
+      "20": {
+        "id": 20,
+        "info": {
+          "SkAnimation": {
+            "duration": 1.0,
+            "interpolationStyle": "Linear"
+          }
+        },
+        "name": "Move"
+      },
+      "21": {
+        "id": 21,
+        "info": {
+          "SkKeyframe": {
+            "time": 0.0
+          }
+        },
+        "name": "keyframe_0"
+      },
+      "22": {
+        "id": 22,
+        "info": {
+          "SkKeyframePose": {
+            "jointName": "root",
+            "localPose": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        "name": "root"
+      },
+      "23": {
+        "id": 23,
+        "info": {
+          "SkKeyframe": {
+            "time": 1.0
+          }
+        },
+        "name": "keyframe_1"
+      },
+      "24": {
+        "id": 24,
+        "info": {
+          "SkKeyframePose": {
+            "jointName": "root",
+            "localPose": {
+              "position": [
+                0.4000000059604645,
+                0.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        "name": "root"
+      },
+      "25": {
+        "id": 25,
+        "info": {
+          "SkAnimator": {
+            "clockId": 26,
+            "priority": 0,
+            "skAnimationId": 20,
+            "skeletonId": 18,
+            "weight": 100.0,
+            "weightTransition": null
+          }
+        },
+        "name": "Move_animator"
+      },
+      "26": {
+        "id": 26,
+        "info": {
+          "Clock": {
+            "clockState": {
+              "Playing": {
+                "localStartMs": 0.0,
+                "timeLocation": "Client"
+              }
+            },
+            "shouldLoop": true,
+            "speed": 1.0
+          }
+        },
+        "name": "clock_1"
+      },
+      "27": {
+        "id": 27,
+        "info": {
+          "SkAnimation": {
+            "duration": 1.0,
+            "interpolationStyle": "Linear"
+          }
+        },
+        "name": "Pose"
+      },
+      "28": {
+        "id": 28,
+        "info": {
+          "SkKeyframe": {
+            "time": 0.0
+          }
+        },
+        "name": "keyframe_0"
+      },
+      "29": {
+        "id": 29,
+        "info": {
+          "SkKeyframePose": {
+            "jointName": "root",
+            "localPose": {
+              "position": [
+                0.800000011920929,
+                0.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        "name": "root"
+      },
+      "3": {
+        "id": 3,
+        "info": {
+          "SkJoint": {
+            "restPose": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        "name": "root"
+      },
+      "30": {
+        "id": 30,
+        "info": {
+          "SkKeyframe": {
+            "time": 1.0
+          }
+        },
+        "name": "keyframe_1"
+      },
+      "31": {
+        "id": 31,
+        "info": {
+          "SkKeyframePose": {
+            "jointName": "root",
+            "localPose": {
+              "position": [
+                0.800000011920929,
+                0.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        "name": "root"
+      },
+      "32": {
+        "id": 32,
+        "info": {
+          "SkAnimator": {
+            "clockId": 33,
+            "priority": 0,
+            "skAnimationId": 27,
+            "skeletonId": 18,
+            "weight": 0.0,
+            "weightTransition": null
+          }
+        },
+        "name": "Pose_animator"
+      },
+      "33": {
+        "id": 33,
+        "info": {
+          "Clock": {
+            "clockState": {
+              "Playing": {
+                "localStartMs": 0.0,
+                "timeLocation": "Client"
+              }
+            },
+            "shouldLoop": true,
+            "speed": 1.0
+          }
+        },
+        "name": "clock_2"
+      },
+      "34": {
+        "id": 34,
+        "info": {
+          "RigidGroup": {
+            "followSkeletonId": null
+          }
+        },
+        "name": "physics_collider"
+      },
+      "35": {
+        "id": 35,
+        "info": {
+          "Ball": {
+            "material": null,
+            "visualSettings": {
+              "color": {
+                "b": 0.5,
+                "g": 0.5,
+                "r": 0.5
+              },
+              "glow": 0.0,
+              "isAlwaysOnTop": false,
+              "opacity": 0.0
+            }
+          }
+        },
+        "name": "physics_collider_child"
+      },
+      "36": {
+        "id": 36,
+        "info": {
+          "Mesh": {
+            "followSkeletonId": 2,
+            "material": null,
+            "meshDataId": 2,
+            "physicalObjectId": 34,
+            "scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "visualSettings": {
+              "color": {
+                "b": 0.5,
+                "g": 0.5,
+                "r": 0.5
+              },
+              "glow": 0.0,
+              "isAlwaysOnTop": false,
+              "opacity": 1.0
+            }
+          }
+        },
+        "name": "mesh_1"
+      },
+      "4": {
+        "id": 4,
+        "info": {
+          "SkAnimation": {
+            "duration": 1.0,
+            "interpolationStyle": "Linear"
+          }
+        },
+        "name": "Move"
+      },
+      "5": {
+        "id": 5,
+        "info": {
+          "SkKeyframe": {
+            "time": 0.0
+          }
+        },
+        "name": "keyframe_0"
+      },
+      "6": {
+        "id": 6,
+        "info": {
+          "SkKeyframePose": {
+            "jointName": "root",
+            "localPose": {
+              "position": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        "name": "root"
+      },
+      "7": {
+        "id": 7,
+        "info": {
+          "SkKeyframe": {
+            "time": 1.0
+          }
+        },
+        "name": "keyframe_1"
+      },
+      "8": {
+        "id": 8,
+        "info": {
+          "SkKeyframePose": {
+            "jointName": "root",
+            "localPose": {
+              "position": [
+                0.4000000059604645,
+                0.0,
+                0.0
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          }
+        },
+        "name": "root"
+      },
+      "9": {
+        "id": 9,
+        "info": {
+          "SkAnimator": {
+            "clockId": 10,
+            "priority": 0,
+            "skAnimationId": 4,
+            "skeletonId": 2,
+            "weight": 100.0,
+            "weightTransition": null
+          }
+        },
+        "name": "Move_animator"
+      }
+    },
+    "physicsInfo3DOfId": {
+      "34": {
+        "location": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quaternion": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "movement": {
+          "angularVelocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "35": {
+        "location": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quaternion": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "movement": {
+          "angularVelocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "physicsToggles3DOfId": {
+      "35": {
+        "density": 1.0,
+        "isPushable": true,
+        "isWalkthrough": false
+      }
+    },
+    "primitiveSettingsOfId": {
+      "35": {
+        "Ball": {
+          "radius": 0.5
+        }
+      }
+    },
+    "rootObjectId": 1,
+    "scriptRawCodeOfId": {},
+    "worldSchemaVersion": 91
+  }
+}

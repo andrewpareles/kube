@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <!-- TODO: AI-PICKED-VALUE: The 12-unit stroke keeps the cube clear at small app-icon sizes. -->
+  <path
+    d="M128 24 216 75v102l-88 51-88-51V75l88-51Zm0 102 88-51M128 126 40 75m88 51v102"
+    stroke="currentColor"
+    stroke-width="12"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

@@ -1,0 +1,42 @@
+name = "kube-new"
+product-name = "Kube.new"
+identifier = "new.kube.client" 
+copyright = "Copyright (C) Glass Devtools, Inc."
+# version = "" # <-- THIS IS AUTO-FILLED-IN BY OUR GH ACTIONS PIPELINE
+binaries-dir = "../../target/release"
+out-dir = "../../dist"
+before-packaging-command = "cargo build -p client --release"
+formats = ["app", "dmg"]
+ 
+icons = [
+  "generated-icons/icon.icns",
+]
+
+[[binaries]]
+path = "client"
+main = true
+
+[[deep-link-protocols]]
+name = "Kube.new Links"
+schemes = ["kube-new"]
+role = "editor" # role = "editor" is a keyword for mac, not related to the fact that this repo is called "editor"
+
+[macos]
+# The game GUI uses Tailwind v4, which needs Safari 16.4.
+minimum-system-version = "13.3"
+# Required for built-in codesign:
+signing-identity = "Developer ID Application: Glass Devtools, Inc. (ZUZ6WG9BCN)"
+entitlements = "entitlements.plist"
+# Optional provider short name:
+# provider-short-name = "TEAMID"
+
+[dmg]
+# Optional bg image:
+# background = "assets/macos/macos-dmg-background.jpg"
+
+# Optional icon positions:
+# app-position = { x = 180, y = 170 }
+# app-folder-position = { x = 380, y = 170 }
+
+# Optional window size:
+# window-size = { width = 560, height = 360 }

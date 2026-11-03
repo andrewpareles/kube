@@ -1,0 +1,96 @@
+{
+  "worldSchemaVersion": 29,
+  "fallback_camera_location": {
+    "position": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "orientation": {
+      "theta": 0.0,
+      "phi": 0.7853982
+    }
+  },
+  "objectOfId": {
+    "1": {
+      "id": 1,
+      "name": "root",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "4": {
+      "id": 4,
+      "name": "Baseplate",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.55,
+              "g": 0.75,
+              "b": 0.55
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    }
+  },
+  "rootObjectId": 1,
+  "childrenOfId": {
+    "4": [],
+    "1": [
+      4
+    ]
+  },
+  "scriptRawCodeOfId": {},
+  "physicsInfo3DOfId": {
+    "4": {
+      "location": {
+        "position": [
+          0.0,
+          0.5,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "physicsToggles3DOfId": {
+    "4": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    }
+  },
+  "primitiveSettingsOfId": {
+    "4": {
+      "Brick": {
+        "size": [
+          100.0,
+          1.0,
+          100.0
+        ]
+      }
+    }
+  }
+}

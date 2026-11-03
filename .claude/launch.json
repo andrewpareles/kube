@@ -1,0 +1,31 @@
+{
+    "version": "0.0.1",
+    "configurations": [
+        {
+            "name": "website",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["--prefix", "packages/website", "run", "dev"],
+            "port": 3000,
+            "autoPort": true
+        },
+        {
+            "name": "website-only",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["--prefix", "packages/website", "run", "--ignore-scripts", "dev"],
+            "port": 3000,
+            "autoPort": true
+        },
+        {
+            "name": "website-with-editor",
+            "runtimeExecutable": "node",
+            "runtimeArgs": ["scripts/run_website.mjs"],
+            "port": 3000
+        },
+        {
+            "name": "website-catalog-preview",
+            "runtimeExecutable": "env",
+            "runtimeArgs": ["DRIZZLE_DATABASE_URL=postgres://postgres@localhost:6543/postgres", "node", "packages/website/node_modules/next/dist/bin/next", "dev", "packages/website", "-p", "3217"],
+            "port": 3217
+        }
+    ]
+}

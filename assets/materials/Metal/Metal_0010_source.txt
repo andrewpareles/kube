@@ -1,0 +1,6 @@
+Source: TextureCan
+Page: https://www.texturecan.com/details/67/
+License: CC0 1.0
+Downloaded maps: albedo, roughness, metallic, normal, ao
+Missing requested maps: none
+Notes: Downloaded the 1K archive for Metal 0010. Normal map uses the OpenGL file. Source JPG maps were converted to PNG for the upload folder.

@@ -1,0 +1,38 @@
+[workspace]
+members = [
+    "crates/client",
+    "crates/server",
+    "crates/editor_server",
+    "crates/editor_server/linux-sandbox",
+    "crates/shared",
+    "crates/game_types",
+    "crates/profanity",
+    "crates/render_core",
+    "crates/render_web",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.136"
+
+[patch.crates-io]
+# Upstream dropped the hardcoded "Visual Studio 17 2022" cmake generator (which breaks
+# on runners that ship a different Visual Studio) but has not published a release since.
+# This points at our public mirror of AllenDang/ktx2-rw at that same commit, so anything
+# that builds the workspace fetches it anonymously and needs no credentials. Drop this
+# once a version above 0.2.4 lands on crates.io.
+ktx2-rw = { git = "https://github.com/andrewpareles/ktx2-rw", rev = "a827fb8440dfd65b52e50dacde053a2db4969a52" }
+
+# Physics must run at real speed even in dev builds: debug-built rapier takes ~20ms per step on the
+# island world, which starves the 60Hz client sim loop into its catch-up spiral.
+[profile.dev.package.rapier3d]
+opt-level = 3
+[profile.dev.package.parry3d]
+opt-level = 3
+[profile.dev.package.nalgebra]
+opt-level = 3
+[profile.dev.package.simba]
+opt-level = 3
+# Every static mesh gets its simpler copies as it loads, which debug-built mesh simplification makes ten times slower.
+[profile.dev.package.meshoptimizer-rs]
+opt-level = 3

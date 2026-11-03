@@ -1,0 +1,37 @@
+{
+  "name": "kube-ts-api",
+  "version": "0.0.1",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/kube-ts-api.bundle.js"
+    },
+    "./jsx-runtime": {
+      "types": "./dist/types/jsx-runtime.d.ts",
+      "default": "./dist/jsx-runtime.js"
+    }
+  },
+  "types": "./dist/types/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build-js": "rimraf ./dist && mkdirp ./dist && npm run build-js-root && npm run build-js-jsx-runtime",
+    "build-js-root": "esbuild src/index.ts --bundle --format=esm --platform=neutral --target=es2022 --minify --outfile=./dist/kube-ts-api.bundle.js",
+    "build-js-jsx-runtime": "esbuild src/jsx-runtime.ts --bundle --format=esm --platform=neutral --target=es2022 --minify --outfile=./dist/jsx-runtime.js",
+    "build-types": "rimraf ./dist/types && tsc -p tsconfig.types.json",
+    "build-api-d-ts-file": "api-extractor run --local --config ./api-extractor.json",
+    "bundle": "npm run build-js && npm run build-types && npm run build-api-d-ts-file"
+  },
+  "author": "Glass Devtools, Inc.",
+  "devDependencies": {
+    "@microsoft/api-extractor": "^7.58.2",
+    "esbuild": "^0.27.3",
+    "mkdirp": "^3.0.1",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "superjson": "^2.2.6"
+  }
+}

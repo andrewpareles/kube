@@ -1,0 +1,7 @@
+Source: 3DTextures.me
+Page: https://3dtextures.me/2017/12/28/water-001/
+License: CC0
+Downloaded maps: albedo, normal, ao, displacement, specular
+Generated maps: metallic
+Missing requested maps: roughness
+Notes: Downloaded through the public Google Drive folder link on the source page. The uploaded specular, displacement, and ao maps are not used by MaterialInfo.

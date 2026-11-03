@@ -1,0 +1,6 @@
+Source: ambientCG
+Page: https://ambientcg.com/a/Snow015
+License: CC0 1.0
+Downloaded maps: albedo, roughness, normal, ao
+Missing requested maps: metallic
+Notes: Normal map uses the NormalGL file when the source includes both NormalGL and NormalDX.

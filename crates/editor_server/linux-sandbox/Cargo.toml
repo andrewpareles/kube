@@ -1,0 +1,25 @@
+[package]
+name = "linux_sandbox"
+version.workspace = true
+edition = "2024"
+
+[[bin]]
+name = "linux_sandbox_worker"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+base64 = "0.22"
+gltf = { version = "1.4", default-features = false }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+libc = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tempfile = "3"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+landlock = "0.4.4"
+seccompiler = "0.5"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["process", "io-util", "time", "macros", "rt"] }
