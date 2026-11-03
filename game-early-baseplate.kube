@@ -1,0 +1,701 @@
+{
+  "worldSchemaVersion": 61,
+  "fallback_camera_location": {
+    "position": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "orientation": {
+      "theta": 0.0,
+      "phi": 0.7853982
+    }
+  },
+  "objectOfId": {
+    "114": {
+      "id": 114,
+      "name": "wall1",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "111": {
+      "id": 111,
+      "name": "ClientScript",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "110": {
+      "id": 110,
+      "name": "ServerScript",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "4": {
+      "id": 4,
+      "name": "ball_yellow",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 113,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.2,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 0.5,
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 0.0
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "107": {
+      "id": 107,
+      "name": "ground",
+      "info": {
+        "Brick": {
+          "material": {
+            "materialInfoId": 116,
+            "tileSizeU": 2.0,
+            "tileSizeV": 2.0,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 0.8,
+            "color": {
+              "r": 0.1,
+              "g": 0.3,
+              "b": 0.04
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "117": {
+      "id": 117,
+      "name": "ball_red",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 113,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.4,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 1.0,
+              "g": 0.0,
+              "b": 0.0
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "113": {
+      "id": 113,
+      "name": "ball_texture_material",
+      "info": {
+        "Material": {
+          "albedoTextureDataId": 1,
+          "metallicTextureDataId": null,
+          "roughnessTextureDataId": null,
+          "normalTextureDataId": null,
+          "alphaMode": "Opaque"
+        }
+      }
+    },
+    "3": {
+      "id": 3,
+      "name": "player_join_avatar_script",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "2": {
+      "id": 2,
+      "name": "brick1",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 0.5,
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "116": {
+      "id": 116,
+      "name": "grass_material",
+      "info": {
+        "Material": {
+          "albedoTextureDataId": null,
+          "metallicTextureDataId": null,
+          "roughnessTextureDataId": 1,
+          "normalTextureDataId": null,
+          "alphaMode": "Opaque"
+        }
+      }
+    },
+    "115": {
+      "id": 115,
+      "name": "orbit_script",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "105": {
+      "id": 105,
+      "name": "ball1",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 113,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.47,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "106": {
+      "id": 106,
+      "name": "client_hello_script",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "5": {
+      "id": 5,
+      "name": "ball_blue",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 113,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.075,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.0,
+              "g": 0.0,
+              "b": 1.0
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "1": {
+      "id": 1,
+      "name": "root",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "109": {
+      "id": 109,
+      "name": "ScriptGroup",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "112": {
+      "id": 112,
+      "name": "lower_baseplate",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.8,
+              "g": 0.8,
+              "b": 0.86
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "108": {
+      "id": 108,
+      "name": "ball_green",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 113,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.2,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.0,
+              "g": 1.0,
+              "b": 0.0
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    }
+  },
+  "rootObjectId": 1,
+  "childrenOfId": {
+    "1": [
+      108,
+      105,
+      3,
+      116,
+      107,
+      115,
+      113,
+      106,
+      2,
+      4,
+      112,
+      117,
+      5,
+      109,
+      114
+    ],
+    "116": [],
+    "108": [],
+    "110": [],
+    "2": [],
+    "113": [],
+    "114": [],
+    "3": [],
+    "112": [],
+    "4": [],
+    "5": [],
+    "105": [],
+    "117": [],
+    "106": [],
+    "107": [],
+    "111": [],
+    "109": [
+      111,
+      110
+    ],
+    "115": []
+  },
+  "scriptRawCodeOfId": {
+    "3": "import {y} from './orbit_script'\ny()\nconst createVec3 = (x, y, z) => ({ x, y, z });\nconst addVec3 = (left, right) => createVec3(left.x + right.x, left.y + right.y, left.z + right.z);\nconst subtractVec3 = (left, right) => createVec3(left.x - right.x, left.y - right.y, left.z - right.z);\nconst multiplyVec3 = (vector, scalar) => createVec3(vector.x * scalar, vector.y * scalar, vector.z * scalar);\nconst scaleVec3AroundPoint = (position, scaleMultiplier, centerPoint) => {\n  return addVec3(centerPoint, multiplyVec3(subtractVec3(position, centerPoint), scaleMultiplier));\n};\nconst createPhysicsInfo = (position) => ({\n  location: { position, rotation: createVec3(0.0, 0.0, 0.0) },\n  movement: {\n    velocity: createVec3(0.0, 0.0, 0.0),\n    angularVelocity: createVec3(0.0, 0.0, 0.0),\n  },\n});\n\nconst rootObjectId = game.world.id;\nconsole.log('[player_join_avatar_script] loaded rootObjectId', rootObjectId);\n\n// --- PIG SETTINGS ---\nconst pigColorBody = { r: 0.96, g: 0.67, b: 0.74 };\nconst pigColorDark = { r: 0.82, g: 0.43, b: 0.57 };\n\n// --- HUMAN SETTINGS ---\nconst skinColor = { r: 0.9, g: 0.7, b: 0.5 };\nconst shirtColor = { r: 0.1, g: 0.3, b: 0.8 };\nconst pantsColor = { r: 0.2, g: 0.2, b: 0.2 };\n\nconst brickDensityFromMassAndSize = (size, mass) => {\n  const volume = Math.abs(size.x * size.y * size.z);\n  if (volume === 0) return 0;\n  return mass / volume;\n};\n\nconst ballDensityFromMassAndRadius = (radius, mass) => {\n  const volume = Math.abs((4.0 / 3.0) * Math.PI * radius * radius * radius);\n  if (volume === 0) return 0;\n  return mass / volume;\n};\n\nconst createAvatarBrick = (name, size, position, mass, color, parentId) => {\n  return game.objectService.createObject(name, {\n    type: 'brick',\n    material: null,\n    opacity: 1.0,\n    color,\n    isAlwaysOnTop: false,\n    size,\n    isWalkthrough: false,\n    isAnchored: false,\n    density: brickDensityFromMassAndSize(size, mass),\n    ...createPhysicsInfo(position),\n  }, parentId).id;\n};\n\nconst createAvatarBall = (name, radius, position, mass, color, parentId) => {\n  return game.objectService.createObject(name, {\n    type: 'ball',\n    material: null,\n    opacity: 1.0,\n    color,\n    isAlwaysOnTop: false,\n    radius,\n    isWalkthrough: false,\n    isAnchored: false,\n    density: ballDensityFromMassAndRadius(radius, mass),\n    ...createPhysicsInfo(position),\n  }, parentId).id;\n};\n\nconst scaleRigidGroupAroundPoint = (rigidGroupId, scaleMultiplier, centerPoint) => {\n  const rigidGroup = game.world.getChildren().find((child) => child.id === rigidGroupId);\n  if (rigidGroup === undefined) return;\n  if (rigidGroup.type !== 'rigidGroup') return;\n\n  rigidGroup.location.position = scaleVec3AroundPoint(rigidGroup.location.position, scaleMultiplier, centerPoint);\n  for (const child of rigidGroup.getChildren()) {\n    game.objectService.scaleObject(child.id, scaleMultiplier, centerPoint);\n  }\n};\n\nconst createPigAvatar = (playerId, groupPosition) => {\n  const rigidGroupId = game.objectService.createObject('player_pig', {\n    type: 'rigidGroup',\n    followSkeletonId: null,\n    followJointNameOfChildName: null,\n    attachmentOffsetOfChildName: {},\n    ...createPhysicsInfo(groupPosition),\n  }, rootObjectId).id;\n  \n  createAvatarBrick('pig_body', createVec3(2.6, 1.7, 4.2), addVec3(groupPosition, createVec3(0.0, 0.0, 0.0)), 6.0, pigColorBody, rigidGroupId);\n  const pigHeadId = createAvatarBall('pig_head', 1.05, addVec3(groupPosition, createVec3(0.0, 0.55, 2.85)), 1.5, pigColorBody, rigidGroupId);\n  createAvatarBrick('pig_snout', createVec3(1.15, 0.8, 0.9), addVec3(groupPosition, createVec3(0.0, 0.35, 3.85)), 0.6, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_left_ear', createVec3(0.45, 0.7, 0.45), addVec3(groupPosition, createVec3(-0.55, 1.55, 2.65)), 0.3, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_right_ear', createVec3(0.45, 0.7, 0.45), addVec3(groupPosition, createVec3(0.55, 1.55, 2.65)), 0.3, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_front_left_leg', createVec3(0.45, 1.4, 0.45), addVec3(groupPosition, createVec3(-0.9, -1.3, 1.15)), 0.8, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_front_right_leg', createVec3(0.45, 1.4, 0.45), addVec3(groupPosition, createVec3(0.9, -1.3, 1.15)), 0.8, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_back_left_leg', createVec3(0.45, 1.4, 0.45), addVec3(groupPosition, createVec3(-0.9, -1.3, -1.15)), 0.8, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_back_right_leg', createVec3(0.45, 1.4, 0.45), addVec3(groupPosition, createVec3(0.9, -1.3, -1.15)), 0.8, pigColorDark, rigidGroupId);\n  createAvatarBall('pig_tail', 0.32, addVec3(groupPosition, createVec3(0.0, 0.55, -2.45)), 0.2, pigColorDark, rigidGroupId);\n  \n  return { rigidGroupId, headId: pigHeadId };\n};\n\nconst createHumanAvatar = (playerId, groupPosition) => {\n  const rigidGroupId = game.objectService.createObject('player_human', {\n    type: 'rigidGroup',\n    followSkeletonId: null,\n    followJointNameOfChildName: null,\n    attachmentOffsetOfChildName: {},\n    ...createPhysicsInfo(groupPosition),\n  }, rootObjectId).id;\n  \n  // Torso\n  createAvatarBrick('human_torso', createVec3(2.0, 3.0, 1.0), addVec3(groupPosition, createVec3(0.0, 0.0, 0.0)), 4.0, shirtColor, rigidGroupId);\n  // Head\n  const headId = createAvatarBrick('human_head', createVec3(1.5, 1.5, 1.5), addVec3(groupPosition, createVec3(0.0, 2.25, 0.0)), 1.5, skinColor, rigidGroupId);\n  // Arms\n  createAvatarBrick('human_left_arm', createVec3(1.0, 3.0, 1.0), addVec3(groupPosition, createVec3(-1.5, 0.0, 0.0)), 1.5, skinColor, rigidGroupId);\n  createAvatarBrick('human_right_arm', createVec3(1.0, 3.0, 1.0), addVec3(groupPosition, createVec3(1.5, 0.0, 0.0)), 1.5, skinColor, rigidGroupId);\n  // Legs\n  createAvatarBrick('human_left_leg', createVec3(1.0, 3.0, 1.0), addVec3(groupPosition, createVec3(-0.5, -3.0, 0.0)), 2.0, pantsColor, rigidGroupId);\n  createAvatarBrick('human_right_leg', createVec3(1.0, 3.0, 1.0), addVec3(groupPosition, createVec3(0.5, -3.0, 0.0)), 2.0, pantsColor, rigidGroupId);\n  \n  return { rigidGroupId, headId };\n};\n\nlet spawnedFirstCharacter = false;\n\ngame.objectService.addObjectCreatedListener((player) => {\n  console.log('[player_join_avatar_script] join callback fired', player.id);\n  if (player.type !== 'player') return;\n  if (player.characterObjectId !== null) return;\n  \n  const spawnColumn = player.id % 4;\n  const spawnRow = Math.floor(player.id / 4) % 3;\n  const groupPosition = createVec3((spawnColumn - 1.5) * 8.0, 8.0, spawnRow * 8.0 - 8.0);\n\n  let avatar;\n  if (!spawnedFirstCharacter) {\n    spawnedFirstCharacter = true;\n    avatar = createHumanAvatar(player.id, groupPosition);\n  } else {\n    avatar = createPigAvatar(player.id, groupPosition);\n  }\n  \n  player.headObjectId = avatar.headId;\n  player.characterObjectId = avatar.rigidGroupId;\n\n  const scaleLater = async () => {\n    const startTime = Date.now();\n    while (Date.now() - startTime < 5000) {\n      await tick();\n    }\n    const controlsObj = game.world.getChildren().find((child) => child.id === avatar.rigidGroupId);\n    if (controlsObj) {\n      game.objectService.scaleObject(avatar.rigidGroupId, 0.5, createVec3(0.0, 0.0, 0.0));\n      console.log('Scaled player down by 50% from the world origin');\n    }\n  };\n  scaleLater();\n}, \"player\");\n\nawait tick()",
+    "115": " const movingObject = game.world.getChildren().find((child) => child.name === 'ball1');\nlet angle = 0;\n\n\nlet x = () => {\n\n}\n\nconsole.log('aaaaa11111')\nlet y = () => {\n\n  console.log('bbbbbbbb111111')\n  // let o2 = game.objectService.cloneObject(movingObject.id, \"movingobject2\");\n  // game.objectService.scaleObject(o2, 10, {x:0,y:0,z:0})\n  x()\n}\n\nexport { y }\n\n\n\n// while (true) {\n//   if (movingObject !== undefined && movingObject.type === 'ball') {\n//     movingObject.location.position.x = Math.cos(angle) * 6.0;\n//     movingObject.location.position.y = 5.0;\n//     movingObject.location.position.z = Math.sin(angle) * 6.0;\n//     angle += 0.05;\n//   }\n//   await tick();\n// }\n",
+    "106": "console.log('local script is running and says hello');\n",
+    "110": "'use server'\n\nconsole.log('QQQQQQQQQQQ22222')\nexport const x = async (banana) => {\n\nconsole.log('SERVER RECEIVED!!!!', banana)\n\nreturn banana+10\n}",
+    "111": "const Nested = ({x,setX})=>{\n  return <div className=\"border border-red-500 p-2\" onClick={()=>{setX(v=>v-1)}}>{x}</div>\n}\n\nconst StateTest=  ({init})=>{\n  const [x,setX] = useState(init)\n\n  return <div onClick={()=>{setX(v=>v+1)}}>{x}</div>\n\n}\n\nconst WelcomeUI = () => {\n  const [isOpen, setIsOpen] = useState(true);\n  const [count, setCount] = useState(1)\n  if (!isOpen) {\n    return <div className=\"border border-red-500\"></div>;\n  }\n\n  return (\n    <div className=\"bg-slate-900 border border-red-500 p-8 rounded-xl flex flex-col items-center justify-center gap-6\">\n      <div className=\"text-3xl font-sans text-white border border-red-500 p-2\">Welcome to the Game!</div>\n      <div className=\"text-lg font-sans text-slate-300 border border-red-500 p-2\">We are glad you are here.</div>\n      <div \n        className=\"bg-blue-700 hover:scale-105 transition-transform duration-150 px-8 py-3 rounded-lg text-white font-sans text-xl border border-red-500\"\n        onClick={() => setIsOpen(false)}\n      >\n        Play\n      </div>\n      <Nested x={count} setX={setCount} /> \n      <StateTest init={0}/>\n      <StateTest init={6}/>\n    </div>\n  );\n};\n\ngame.guiService.show(\"welcome_ui\", WelcomeUI, \"center\");"
+  },
+  "physicsInfo3DOfId": {
+    "107": {
+      "location": {
+        "position": [
+          0.0,
+          -0.5,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "5": {
+      "location": {
+        "position": [
+          0.0,
+          4.9,
+          2.4
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "117": {
+      "location": {
+        "position": [
+          -3.4,
+          4.5,
+          0.6
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "2": {
+      "location": {
+        "position": [
+          3.0,
+          3.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "4": {
+      "location": {
+        "position": [
+          6.0,
+          6.0,
+          2.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "105": {
+      "location": {
+        "position": [
+          0.0,
+          3.8,
+          -2.2
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "112": {
+      "location": {
+        "position": [
+          0.0,
+          -1.6,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "108": {
+      "location": {
+        "position": [
+          0.0,
+          4.2,
+          0.1
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "114": {
+      "location": {
+        "position": [
+          0.0,
+          2.0,
+          -8.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "physicsToggles3DOfId": {
+    "112": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 0.0
+    },
+    "108": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 0.23873241463784303
+    },
+    "117": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 0.170523153312745
+    },
+    "2": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 0.125
+    },
+    "105": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 0.2030037539437441
+    },
+    "4": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 0.23873241463784303
+    },
+    "114": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 0.0
+    },
+    "5": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 0.2122065907891938
+    },
+    "107": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 0.0
+    }
+  },
+  "primitiveSettingsOfId": {
+    "108": {
+      "Ball": {
+        "radius": 1.0
+      }
+    },
+    "5": {
+      "Ball": {
+        "radius": 2.0
+      }
+    },
+    "107": {
+      "Brick": {
+        "size": [
+          40.0,
+          1.0,
+          40.0
+        ]
+      }
+    },
+    "114": {
+      "Brick": {
+        "size": [
+          10.0,
+          4.0,
+          1.0
+        ]
+      }
+    },
+    "2": {
+      "Brick": {
+        "size": [
+          2.0,
+          2.0,
+          2.0
+        ]
+      }
+    },
+    "4": {
+      "Ball": {
+        "radius": 1.0
+      }
+    },
+    "105": {
+      "Ball": {
+        "radius": 1.4
+      }
+    },
+    "117": {
+      "Ball": {
+        "radius": 2.0
+      }
+    },
+    "112": {
+      "Brick": {
+        "size": [
+          48.0,
+          1.0,
+          48.0
+        ]
+      }
+    }
+  }
+}

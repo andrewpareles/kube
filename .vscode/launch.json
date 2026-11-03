@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "./scripts/run_server_and_clients.sh",
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
+

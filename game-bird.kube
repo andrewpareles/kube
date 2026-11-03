@@ -1,0 +1,701 @@
+{
+  "worldSchemaVersion": 61,
+  "fallback_camera_location": {
+    "position": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "orientation": {
+      "theta": 0.0,
+      "phi": 0.7853982
+    }
+  },
+  "objectOfId": {
+    "1": {
+      "id": 1,
+      "name": "root",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "2": {
+      "id": 2,
+      "name": "ball_red",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 28,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.4,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1,
+            "color": {
+              "r": 1,
+              "g": 0,
+              "b": 0
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "3": {
+      "id": 3,
+      "name": "grass_material",
+      "info": {
+        "Material": {
+          "albedoTextureDataId": null,
+          "metallicTextureDataId": null,
+          "roughnessTextureDataId": 1,
+          "normalTextureDataId": null,
+          "alphaMode": "Opaque"
+        }
+      }
+    },
+    "4": {
+      "id": 4,
+      "name": "lower_baseplate",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1,
+            "color": {
+              "r": 0.8,
+              "g": 0.8,
+              "b": 0.86
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "5": {
+      "id": 5,
+      "name": "brick1",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 0.5,
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "6": {
+      "id": 6,
+      "name": "wall1",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1,
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "7": {
+      "id": 7,
+      "name": "player_join_avatar_script",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "8": {
+      "id": 8,
+      "name": "ScriptGroup",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "9": {
+      "id": 9,
+      "name": "ClientScript",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "10": {
+      "id": 10,
+      "name": "ServerScript",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "11": {
+      "id": 11,
+      "name": "ball_blue",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 28,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.075,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1,
+            "color": {
+              "r": 0,
+              "g": 0,
+              "b": 1
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "12": {
+      "id": 12,
+      "name": "ball_yellow",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 28,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.2,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 0.5,
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 0
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "23": {
+      "id": 23,
+      "name": "orbit_script",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "24": {
+      "id": 24,
+      "name": "ball1",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 28,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.47,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1,
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "25": {
+      "id": 25,
+      "name": "ball_green",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 28,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.2,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1,
+            "color": {
+              "r": 0,
+              "g": 1,
+              "b": 0
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "26": {
+      "id": 26,
+      "name": "ground",
+      "info": {
+        "Brick": {
+          "material": {
+            "materialInfoId": 3,
+            "tileSizeU": 2,
+            "tileSizeV": 2,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 0.8,
+            "color": {
+              "r": 0.1,
+              "g": 0.3,
+              "b": 0.04
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "27": {
+      "id": 27,
+      "name": "client_hello_script",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "28": {
+      "id": 28,
+      "name": "ball_texture_material",
+      "info": {
+        "Material": {
+          "albedoTextureDataId": 1,
+          "metallicTextureDataId": null,
+          "roughnessTextureDataId": null,
+          "normalTextureDataId": null,
+          "alphaMode": "Opaque"
+        }
+      }
+    }
+  },
+  "rootObjectId": 1,
+  "childrenOfId": {
+    "1": [
+      28,
+      3,
+      5,
+      11,
+      6,
+      8,
+      23,
+      24,
+      7,
+      25,
+      12,
+      26,
+      27,
+      2,
+      4
+    ],
+    "2": [],
+    "3": [],
+    "4": [],
+    "5": [],
+    "6": [],
+    "7": [],
+    "8": [
+      10,
+      9
+    ],
+    "9": [],
+    "10": [],
+    "11": [],
+    "12": [],
+    "23": [],
+    "24": [],
+    "25": [],
+    "26": [],
+    "27": [],
+    "28": []
+  },
+  "scriptRawCodeOfId": {
+    "7": "import {y} from './orbit_script'\ny()\nconst createVec3 = (x, y, z) => ({ x, y, z });\nconst addVec3 = (left, right) => createVec3(left.x + right.x, left.y + right.y, left.z + right.z);\nconst subtractVec3 = (left, right) => createVec3(left.x - right.x, left.y - right.y, left.z - right.z);\nconst multiplyVec3 = (vector, scalar) => createVec3(vector.x * scalar, vector.y * scalar, vector.z * scalar);\nconst scaleVec3AroundPoint = (position, scaleMultiplier, centerPoint) => {\n  return addVec3(centerPoint, multiplyVec3(subtractVec3(position, centerPoint), scaleMultiplier));\n};\nconst createPhysicsInfo = (position) => ({\n  location: { position, rotation: createVec3(0.0, 0.0, 0.0) },\n  movement: {\n    velocity: createVec3(0.0, 0.0, 0.0),\n    angularVelocity: createVec3(0.0, 0.0, 0.0),\n  },\n});\n\nconst rootObjectId = game.world.id;\nconsole.log('[player_join_avatar_script] loaded rootObjectId', rootObjectId);\n\n// --- PIG SETTINGS ---\nconst pigColorBody = { r: 0.96, g: 0.67, b: 0.74 };\nconst pigColorDark = { r: 0.82, g: 0.43, b: 0.57 };\n\n// --- HUMAN SETTINGS ---\nconst skinColor = { r: 0.9, g: 0.7, b: 0.5 };\nconst shirtColor = { r: 0.1, g: 0.3, b: 0.8 };\nconst pantsColor = { r: 0.2, g: 0.2, b: 0.2 };\n\nconst brickDensityFromMassAndSize = (size, mass) => {\n  const volume = Math.abs(size.x * size.y * size.z);\n  if (volume === 0) return 0;\n  return mass / volume;\n};\n\nconst ballDensityFromMassAndRadius = (radius, mass) => {\n  const volume = Math.abs((4.0 / 3.0) * Math.PI * radius * radius * radius);\n  if (volume === 0) return 0;\n  return mass / volume;\n};\n\nconst createAvatarBrick = (name, size, position, mass, color, parentId) => {\n  return game.objectService.createObject(name, {\n    type: 'brick',\n    material: null,\n    opacity: 1.0,\n    color,\n    isAlwaysOnTop: false,\n    size,\n    isWalkthrough: false,\n    isAnchored: false,\n    density: brickDensityFromMassAndSize(size, mass),\n    ...createPhysicsInfo(position),\n  }, parentId).id;\n};\n\nconst createAvatarBall = (name, radius, position, mass, color, parentId) => {\n  return game.objectService.createObject(name, {\n    type: 'ball',\n    material: null,\n    opacity: 1.0,\n    color,\n    isAlwaysOnTop: false,\n    radius,\n    isWalkthrough: false,\n    isAnchored: false,\n    density: ballDensityFromMassAndRadius(radius, mass),\n    ...createPhysicsInfo(position),\n  }, parentId).id;\n};\n\nconst scaleRigidGroupAroundPoint = (rigidGroupId, scaleMultiplier, centerPoint) => {\n  const rigidGroup = game.world.getChildren().find((child) => child.id === rigidGroupId);\n  if (rigidGroup === undefined) return;\n  if (rigidGroup.type !== 'rigidGroup') return;\n\n  rigidGroup.location.position = scaleVec3AroundPoint(rigidGroup.location.position, scaleMultiplier, centerPoint);\n  for (const child of rigidGroup.getChildren()) {\n    game.objectService.scaleObject(child.id, scaleMultiplier, centerPoint);\n  }\n};\n\nconst createPigAvatar = (playerId, groupPosition) => {\n  const rigidGroupId = game.objectService.createObject('player_pig', {\n    type: 'rigidGroup',\n    followSkeletonId: null,\n    followJointNameOfChildName: null,\n    attachmentOffsetOfChildName: {},\n    ...createPhysicsInfo(groupPosition),\n  }, rootObjectId).id;\n  \n  createAvatarBrick('pig_body', createVec3(2.6, 1.7, 4.2), addVec3(groupPosition, createVec3(0.0, 0.0, 0.0)), 6.0, pigColorBody, rigidGroupId);\n  const pigHeadId = createAvatarBall('pig_head', 1.05, addVec3(groupPosition, createVec3(0.0, 0.55, 2.85)), 1.5, pigColorBody, rigidGroupId);\n  createAvatarBrick('pig_snout', createVec3(1.15, 0.8, 0.9), addVec3(groupPosition, createVec3(0.0, 0.35, 3.85)), 0.6, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_left_ear', createVec3(0.45, 0.7, 0.45), addVec3(groupPosition, createVec3(-0.55, 1.55, 2.65)), 0.3, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_right_ear', createVec3(0.45, 0.7, 0.45), addVec3(groupPosition, createVec3(0.55, 1.55, 2.65)), 0.3, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_front_left_leg', createVec3(0.45, 1.4, 0.45), addVec3(groupPosition, createVec3(-0.9, -1.3, 1.15)), 0.8, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_front_right_leg', createVec3(0.45, 1.4, 0.45), addVec3(groupPosition, createVec3(0.9, -1.3, 1.15)), 0.8, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_back_left_leg', createVec3(0.45, 1.4, 0.45), addVec3(groupPosition, createVec3(-0.9, -1.3, -1.15)), 0.8, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_back_right_leg', createVec3(0.45, 1.4, 0.45), addVec3(groupPosition, createVec3(0.9, -1.3, -1.15)), 0.8, pigColorDark, rigidGroupId);\n  createAvatarBall('pig_tail', 0.32, addVec3(groupPosition, createVec3(0.0, 0.55, -2.45)), 0.2, pigColorDark, rigidGroupId);\n  \n  return { rigidGroupId, headId: pigHeadId };\n};\n\nconst createHumanAvatar = (playerId, groupPosition) => {\n  const rigidGroupId = game.objectService.createObject('player_human', {\n    type: 'rigidGroup',\n    followSkeletonId: null,\n    followJointNameOfChildName: null,\n    attachmentOffsetOfChildName: {},\n    ...createPhysicsInfo(groupPosition),\n  }, rootObjectId).id;\n  \n  // Torso\n  createAvatarBrick('human_torso', createVec3(2.0, 3.0, 1.0), addVec3(groupPosition, createVec3(0.0, 0.0, 0.0)), 4.0, shirtColor, rigidGroupId);\n  // Head\n  const headId = createAvatarBrick('human_head', createVec3(1.5, 1.5, 1.5), addVec3(groupPosition, createVec3(0.0, 2.25, 0.0)), 1.5, skinColor, rigidGroupId);\n  // Arms\n  createAvatarBrick('human_left_arm', createVec3(1.0, 3.0, 1.0), addVec3(groupPosition, createVec3(-1.5, 0.0, 0.0)), 1.5, skinColor, rigidGroupId);\n  createAvatarBrick('human_right_arm', createVec3(1.0, 3.0, 1.0), addVec3(groupPosition, createVec3(1.5, 0.0, 0.0)), 1.5, skinColor, rigidGroupId);\n  // Legs\n  createAvatarBrick('human_left_leg', createVec3(1.0, 3.0, 1.0), addVec3(groupPosition, createVec3(-0.5, -3.0, 0.0)), 2.0, pantsColor, rigidGroupId);\n  createAvatarBrick('human_right_leg', createVec3(1.0, 3.0, 1.0), addVec3(groupPosition, createVec3(0.5, -3.0, 0.0)), 2.0, pantsColor, rigidGroupId);\n  \n  return { rigidGroupId, headId };\n};\n\nlet spawnedFirstCharacter = false;\n\ngame.objectService.addObjectCreatedListener((player) => {\n  console.log('[player_join_avatar_script] join callback fired', player.id);\n  if (player.type !== 'player') return;\n  if (player.characterObjectId !== null) return;\n  \n  const spawnColumn = player.id % 4;\n  const spawnRow = Math.floor(player.id / 4) % 3;\n  const groupPosition = createVec3((spawnColumn - 1.5) * 8.0, 8.0, spawnRow * 8.0 - 8.0);\n\n  let avatar;\n  if (!spawnedFirstCharacter) {\n    spawnedFirstCharacter = true;\n    avatar = createHumanAvatar(player.id, groupPosition);\n  } else {\n    avatar = createPigAvatar(player.id, groupPosition);\n  }\n  \n  player.headObjectId = avatar.headId;\n  player.characterObjectId = avatar.rigidGroupId;\n\n  const scaleLater = async () => {\n    const startTime = Date.now();\n    while (Date.now() - startTime < 5000) {\n      await tick();\n    }\n    const controlsObj = game.world.getChildren().find((child) => child.id === avatar.rigidGroupId);\n    if (controlsObj) {\n      game.objectService.scaleObject(avatar.rigidGroupId, 0.5, createVec3(0.0, 0.0, 0.0));\n      console.log('Scaled player down by 50% from the world origin');\n    }\n  };\n  scaleLater();\n}, \"player\");\n\nawait tick()",
+    "9": "// import {x} from './ServerScript'\n// console.log('QQQQQQQQQQQ11111111')\n// let y = await x(1555)\n// console.log('CLIENT RESULT!!!!', y)\n\n",
+    "10": "'use server'\n\nconsole.log('QQQQQQQQQQQ22222')\nexport const x = async (banana) => {\n\nconsole.log('SERVER RECEIVED!!!!', banana)\n\nreturn banana+10\n}",
+    "23": " const movingObject = game.world.getChildren().find((child) => child.name === 'ball1');\nlet angle = 0;\n\n\nlet x = () => {\n\n}\n\nconsole.log('aaaaa11111')\nlet y = () => {\n\n  console.log('bbbbbbbb111111')\n  // let o2 = game.objectService.cloneObject(movingObject.id, \"movingobject2\");\n  // game.objectService.scaleObject(o2, 10, {x:0,y:0,z:0})\n  x()\n}\n\nexport { y }\n\n\n\n// while (true) {\n//   if (movingObject !== undefined && movingObject.type === 'ball') {\n//     movingObject.location.position.x = Math.cos(angle) * 6.0;\n//     movingObject.location.position.y = 5.0;\n//     movingObject.location.position.z = Math.sin(angle) * 6.0;\n//     angle += 0.05;\n//   }\n//   await tick();\n// }\n",
+    "27": "console.log('local script is running and says hello');\n"
+  },
+  "physicsInfo3DOfId": {
+    "2": {
+      "location": {
+        "position": [
+          -3.4,
+          4.5,
+          0.6
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "angularVelocity": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "4": {
+      "location": {
+        "position": [
+          0,
+          -1.6,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "angularVelocity": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "5": {
+      "location": {
+        "position": [
+          3,
+          3,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "angularVelocity": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "6": {
+      "location": {
+        "position": [
+          0,
+          2,
+          -8
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "angularVelocity": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "11": {
+      "location": {
+        "position": [
+          0,
+          4.9,
+          2.4
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "angularVelocity": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "12": {
+      "location": {
+        "position": [
+          6,
+          6,
+          2
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "angularVelocity": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "24": {
+      "location": {
+        "position": [
+          0,
+          3.8,
+          -2.2
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "angularVelocity": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "25": {
+      "location": {
+        "position": [
+          0,
+          4.2,
+          0.1
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "angularVelocity": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "26": {
+      "location": {
+        "position": [
+          0,
+          -0.5,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "angularVelocity": [
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "physicsToggles3DOfId": {
+    "2": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 0.170523153312745
+    },
+    "4": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 0.0
+    },
+    "5": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 0.125
+    },
+    "6": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 0.0
+    },
+    "11": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 0.2122065907891938
+    },
+    "12": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 0.23873241463784303
+    },
+    "24": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 0.2030037539437441
+    },
+    "25": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 0.23873241463784303
+    },
+    "26": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 0.0
+    }
+  },
+  "primitiveSettingsOfId": {
+    "2": {
+      "Ball": {
+        "radius": 2.0
+      }
+    },
+    "4": {
+      "Brick": {
+        "size": [
+          48,
+          1,
+          48
+        ]
+      }
+    },
+    "5": {
+      "Brick": {
+        "size": [
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    "6": {
+      "Brick": {
+        "size": [
+          10,
+          4,
+          1
+        ]
+      }
+    },
+    "11": {
+      "Ball": {
+        "radius": 2.0
+      }
+    },
+    "12": {
+      "Ball": {
+        "radius": 1.0
+      }
+    },
+    "24": {
+      "Ball": {
+        "radius": 1.4
+      }
+    },
+    "25": {
+      "Ball": {
+        "radius": 1.0
+      }
+    },
+    "26": {
+      "Brick": {
+        "size": [
+          40,
+          1,
+          40
+        ]
+      }
+    }
+  }
+}

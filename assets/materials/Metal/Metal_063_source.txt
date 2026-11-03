@@ -1,0 +1,6 @@
+Source: ambientCG
+Page: https://ambientcg.com/a/Metal063
+License: CC0 1.0
+Downloaded maps: albedo, roughness, metallic, normal
+Missing requested maps: ao
+Notes: Normal map uses the NormalGL file when the source includes both NormalGL and NormalDX.

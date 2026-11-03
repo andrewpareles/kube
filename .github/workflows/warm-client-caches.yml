@@ -1,0 +1,151 @@
+name: Warm Client Caches
+
+# A release reuses the third-party crates cached here, and recompiles our own crates either way, so the cache is only
+# rebuilt when those crates change in Cargo.lock (a version bump changes only ours), and once a week for a new stable
+# Rust, which starts the cache over.
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - Cargo.lock
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: warm-client-caches-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-third-party-crates:
+    name: Check Third-Party Crates
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.compare.outputs.changed }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      # Only third-party crates have checksum and source lines.
+      - name: Compare with the previous push
+        id: compare
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -n "$BEFORE" ] && git fetch --depth=1 origin "$BEFORE" && git diff --quiet -G'^(checksum|source) = ' "$BEFORE" HEAD -- Cargo.lock; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  warm-macos-client-caches:
+    name: Warm Mac Client Caches
+    needs: check-third-party-crates
+    if: needs.check-third-party-crates.outputs.changed == 'true'
+    runs-on: macos-15
+    permissions:
+      contents: read
+    env:
+      # Use the git CLI so the deploy key and insteadOf rewrite below apply to cargo's fetch.
+      CARGO_NET_GIT_FETCH_WITH_CLI: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            packages/kube-ts-api/package-lock.json
+            packages/play-webview/package-lock.json
+
+      - name: Install JS dependencies
+        run: |
+          npm ci --prefix packages/kube-ts-api
+          npm ci --prefix packages/play-webview
+
+      - name: Bundle embedded JS assets
+        run: |
+          npm --prefix packages/kube-ts-api run bundle
+          npm --prefix packages/play-webview run bundle
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+
+      - name: Rust cache # caches cargo dependencies
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          shared-key: client-macos-release
+          cache-on-failure: true
+          cache-workspace-crates: true
+          save-if: ${{ github.ref == 'refs/heads/master' }}
+
+      - name: Install cargo-packager
+        run: cargo install cargo-packager --locked
+
+      - name: Install tauri-cli
+        run: cargo install tauri-cli --locked
+
+      - name: Build Mac binary
+        run: cargo build -p client --release
+
+  warm-windows-client-caches:
+    name: Warm Windows Client Caches
+    needs: check-third-party-crates
+    if: needs.check-third-party-crates.outputs.changed == 'true'
+    # Must match the release workflow's runner, otherwise this job cannot catch
+    # a build that only breaks on the image the release actually uses.
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    env:
+      # Use the git CLI so the deploy key and insteadOf rewrite below apply to cargo's fetch.
+      CARGO_NET_GIT_FETCH_WITH_CLI: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            packages/kube-ts-api/package-lock.json
+            packages/play-webview/package-lock.json
+
+      - name: Install JS dependencies
+        run: |
+          npm ci --prefix packages/kube-ts-api
+          npm ci --prefix packages/play-webview
+
+      - name: Bundle embedded JS assets
+        run: |
+          npm --prefix packages/kube-ts-api run bundle
+          npm --prefix packages/play-webview run bundle
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+
+      - name: Rust cache # caches cargo dependencies
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          shared-key: client-windows-release
+          cache-on-failure: true
+          cache-workspace-crates: true
+          save-if: ${{ github.ref == 'refs/heads/master' }}
+
+      - name: Install cargo-packager
+        run: cargo install cargo-packager --locked
+
+      - name: Install tauri-cli
+        run: cargo install tauri-cli --locked
+
+      - name: Build Windows binary
+        run: cargo build -p client --release

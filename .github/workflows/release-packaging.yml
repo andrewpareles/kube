@@ -1,0 +1,422 @@
+name: Package And Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+env:
+  EDGEGAP_APPLICATION_NAME: kube-new-server
+  EDGEGAP_DEPLOY_VERSION_NAME: prod
+  EDGEGAP_REGISTRY_URL: registry.edgegap.com
+  EDGEGAP_REGISTRY_PROJECT: candy-cane-games-yonqr3v74kch
+  EDGEGAP_IMAGE_NAME: kube-new-server
+  EDGEGAP_EDITOR_APPLICATION_NAME: kube-new-editor-server
+  EDGEGAP_EDITOR_DEPLOY_VERSION_NAME: prod
+  EDGEGAP_EDITOR_IMAGE_NAME: kube-new-editor-server
+
+jobs:
+  build-macos:
+    name: Build Mac DMG
+    runs-on: macos-15
+    environment: release
+    permissions:
+      contents: read
+    env:
+      # Use the git CLI so the deploy key and insteadOf rewrite below apply to cargo's fetch.
+      CARGO_NET_GIT_FETCH_WITH_CLI: true
+      APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+      APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+      APPLE_API_KEY_P8_BASE64: ${{ secrets.APPLE_API_KEY_P8_BASE64 }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            packages/kube-ts-api/package-lock.json
+            packages/play-webview/package-lock.json
+
+      - name: Read release version from Cargo
+        id: read_release_version
+        run: |
+          RELEASE_VERSION="$(node scripts/get_release_version.mjs)"
+          echo "release_version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> "$GITHUB_ENV"
+          if [[ "v${RELEASE_VERSION}" != "${GITHUB_REF_NAME}" ]]; then
+            echo "Git tag ${GITHUB_REF_NAME} does not match Cargo release version v${RELEASE_VERSION}." >&2
+            exit 1
+          fi
+
+      - name: Install JS dependencies
+        run: |
+          npm ci --prefix packages/kube-ts-api
+          npm ci --prefix packages/play-webview
+
+      - name: Bundle embedded JS assets
+        run: |
+          npm --prefix packages/kube-ts-api run bundle
+          npm --prefix packages/play-webview run bundle
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+
+      - name: Rust cache # caches cargo dependencies
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          shared-key: client-macos-release
+          cache-on-failure: true
+          cache-workspace-crates: true
+
+      - name: Install cargo-packager
+        run: cargo install cargo-packager --locked
+
+      - name: Install tauri-cli
+        run: cargo install tauri-cli --locked
+
+      - name: Prepare App Store Connect key
+        run: |
+          API_KEY_PATH="$RUNNER_TEMP/AuthKey_${APPLE_API_KEY}.p8"
+          echo "$APPLE_API_KEY_P8_BASE64" | base64 -D > "$API_KEY_PATH"
+          chmod 600 "$API_KEY_PATH"
+          echo "APPLE_API_KEY_PATH=$API_KEY_PATH" >> "$GITHUB_ENV"
+
+      - name: Stamp Mac package version from Cargo
+        run: |
+          sed -i '' -E 's/^[[:space:]]*#?[[:space:]]*version[[:space:]]*=[[:space:]]*".*".*$/version = "'"$RELEASE_VERSION"'"/' packaging/client/Packager.macos.toml
+          grep -nE '^[[:space:]]*version[[:space:]]*=' packaging/client/Packager.macos.toml
+
+      - name: Generate client icons
+        run: cargo tauri icon scripts/icon-gen/icon-source.png --output packaging/client/generated-icons
+
+      - name: Package Mac artifacts
+        run: cargo packager --release --config packaging/client/Packager.macos.toml
+        env:
+          CARGO_PACKAGER_SIGN_PRIVATE_KEY: ${{ secrets.CARGO_PACKAGER_SIGN_PRIVATE_KEY }}
+          CARGO_PACKAGER_SIGN_PRIVATE_KEY_PASSWORD: ${{ secrets.CARGO_PACKAGER_SIGN_PRIVATE_KEY_PASSWORD }}
+
+      - name: Rename Mac release artifact files
+        id: rename_macos_artifact
+        run: |
+          MACOS_ARTIFACT_PATH="dist/Kube-new_arm64.dmg"
+          ORIGINAL_MACOS_DMG_PATH="$(find dist -maxdepth 1 -name '*.dmg' | head -n 1)"
+          if [[ -z "$ORIGINAL_MACOS_DMG_PATH" ]]; then
+            echo "Failed to find packaged macOS DMG in dist." >&2
+            exit 1
+          fi
+          mv "$ORIGINAL_MACOS_DMG_PATH" "$MACOS_ARTIFACT_PATH"
+          echo "artifact_path=$MACOS_ARTIFACT_PATH" >> "$GITHUB_OUTPUT"
+
+          ORIGINAL_MACOS_UPDATER_BUNDLE_PATH="$(find dist -maxdepth 1 -name '*.app.tar.gz' | head -n 1)"
+          if [[ -z "$ORIGINAL_MACOS_UPDATER_BUNDLE_PATH" ]]; then
+            echo "Failed to find packaged macOS updater bundle in dist." >&2
+            exit 1
+          fi
+          if [[ ! -f "${ORIGINAL_MACOS_UPDATER_BUNDLE_PATH}.sig" ]]; then
+            echo "Failed to find the macOS updater bundle signature in dist." >&2
+            exit 1
+          fi
+          MACOS_UPDATER_BUNDLE_PATH="dist/Kube-new_arm64.app.tar.gz"
+          mv "$ORIGINAL_MACOS_UPDATER_BUNDLE_PATH" "$MACOS_UPDATER_BUNDLE_PATH"
+          mv "${ORIGINAL_MACOS_UPDATER_BUNDLE_PATH}.sig" "${MACOS_UPDATER_BUNDLE_PATH}.sig"
+          echo "updater_bundle_path=$MACOS_UPDATER_BUNDLE_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Mac artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: Kube-new_arm64.dmg
+          path: |
+            ${{ steps.rename_macos_artifact.outputs.artifact_path }}
+            ${{ steps.rename_macos_artifact.outputs.updater_bundle_path }}
+            ${{ steps.rename_macos_artifact.outputs.updater_bundle_path }}.sig
+          if-no-files-found: error
+
+  build-windows:
+    name: Build Windows NSIS
+    runs-on: windows-latest
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      # Use the git CLI so the deploy key and insteadOf rewrite below apply to cargo's fetch.
+      CARGO_NET_GIT_FETCH_WITH_CLI: true
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARTIFACT_SIGNING_ENDPOINT: ${{ secrets.ARTIFACT_SIGNING_ENDPOINT }}
+      ARTIFACT_SIGNING_ACCOUNT: ${{ secrets.ARTIFACT_SIGNING_ACCOUNT }}
+      ARTIFACT_SIGNING_PROFILE: ${{ secrets.ARTIFACT_SIGNING_PROFILE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            packages/kube-ts-api/package-lock.json
+            packages/play-webview/package-lock.json
+
+      - name: Read release version from Cargo
+        id: read_release_version
+        shell: bash
+        run: |
+          RELEASE_VERSION="$(node scripts/get_release_version.mjs)"
+          echo "release_version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> "$GITHUB_ENV"
+          if [[ "v${RELEASE_VERSION}" != "${GITHUB_REF_NAME}" ]]; then
+            echo "Git tag ${GITHUB_REF_NAME} does not match Cargo release version v${RELEASE_VERSION}." >&2
+            exit 1
+          fi
+
+      - name: Install JS dependencies
+        run: |
+          npm ci --prefix packages/kube-ts-api
+          npm ci --prefix packages/play-webview
+
+      - name: Bundle embedded JS assets
+        run: |
+          npm --prefix packages/kube-ts-api run bundle
+          npm --prefix packages/play-webview run bundle
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+
+      - name: Rust cache # caches cargo dependencies
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          shared-key: client-windows-release
+          cache-on-failure: true
+          cache-workspace-crates: true
+
+      - name: Install cargo-packager
+        run: cargo install cargo-packager --locked
+
+      - name: Build Windows binary
+        run: cargo build -p client --release
+
+      - name: Azure login
+        uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
+
+      - name: Sign Windows app binary
+        uses: azure/artifact-signing-action@b443cf8ea4124818d2ea9f043cba29fc3ec47b16 # v1.2.0
+        with:
+          endpoint: ${{ env.ARTIFACT_SIGNING_ENDPOINT }}
+          signing-account-name: ${{ env.ARTIFACT_SIGNING_ACCOUNT }}
+          certificate-profile-name: ${{ env.ARTIFACT_SIGNING_PROFILE }}
+          files: ${{ github.workspace }}\target\release\client.exe
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+          exclude-environment-credential: true
+          exclude-workload-identity-credential: true
+          exclude-managed-identity-credential: true
+          exclude-shared-token-cache-credential: true
+          exclude-visual-studio-credential: true
+          exclude-visual-studio-code-credential: true
+          exclude-azure-cli-credential: false
+          exclude-azure-powershell-credential: true
+          exclude-azure-developer-cli-credential: true
+          exclude-interactive-browser-credential: true
+
+      - name: Stamp Windows package version from Cargo
+        shell: pwsh
+        run: |
+          (Get-Content 'packaging/client/Packager.windows.toml') `
+            -replace '^\s*#?\s*version\s*=\s*".*".*$', "version = `"$env:RELEASE_VERSION`"" `
+            | Set-Content 'packaging/client/Packager.windows.toml'
+          $versionLine = Select-String -Path 'packaging/client/Packager.windows.toml' -Pattern '^version = '
+          if (-not $versionLine) {
+            throw 'Failed to stamp version in packaging/client/Packager.windows.toml'
+          }
+          $versionLine
+
+      - name: Package Windows artifacts
+        run: cargo packager --release --config packaging/client/Packager.windows.toml
+
+      - name: Rename Windows installer artifact file
+        id: rename_windows_artifact
+        shell: pwsh
+        run: |
+          $windowsArtifactPath = "dist/Kube-new_x64.exe"
+          $windowsArtifactFullPath = Join-Path $PWD $windowsArtifactPath
+          $originalWindowsInstallerPath = Get-ChildItem -Path 'dist' -Filter '*.exe' | Select-Object -First 1 -ExpandProperty FullName
+          if (-not $originalWindowsInstallerPath) {
+            throw 'Failed to find packaged Windows installer in dist.'
+          }
+          Move-Item -LiteralPath $originalWindowsInstallerPath -Destination $windowsArtifactPath -Force
+          "artifact_path=$windowsArtifactPath" >> $env:GITHUB_OUTPUT
+          "artifact_full_path=$windowsArtifactFullPath" >> $env:GITHUB_OUTPUT
+
+      - name: Sign Windows installer
+        uses: azure/artifact-signing-action@b443cf8ea4124818d2ea9f043cba29fc3ec47b16 # v1.2.0
+        with:
+          endpoint: ${{ env.ARTIFACT_SIGNING_ENDPOINT }}
+          signing-account-name: ${{ env.ARTIFACT_SIGNING_ACCOUNT }}
+          certificate-profile-name: ${{ env.ARTIFACT_SIGNING_PROFILE }}
+          files: ${{ steps.rename_windows_artifact.outputs.artifact_full_path }}
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+          exclude-environment-credential: true
+          exclude-workload-identity-credential: true
+          exclude-managed-identity-credential: true
+          exclude-shared-token-cache-credential: true
+          exclude-visual-studio-credential: true
+          exclude-visual-studio-code-credential: true
+          exclude-azure-cli-credential: false
+          exclude-azure-powershell-credential: true
+          exclude-azure-developer-cli-credential: true
+          exclude-interactive-browser-credential: true
+
+      - name: Sign Windows updater bundle
+        shell: pwsh
+        run: cargo packager signer sign "${{ steps.rename_windows_artifact.outputs.artifact_path }}"
+        env:
+          CARGO_PACKAGER_SIGN_PRIVATE_KEY: ${{ secrets.CARGO_PACKAGER_SIGN_PRIVATE_KEY }}
+          CARGO_PACKAGER_SIGN_PRIVATE_KEY_PASSWORD: ${{ secrets.CARGO_PACKAGER_SIGN_PRIVATE_KEY_PASSWORD }}
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: Kube-new_x64.exe
+          path: |
+            ${{ steps.rename_windows_artifact.outputs.artifact_path }}
+            ${{ steps.rename_windows_artifact.outputs.artifact_path }}.sig
+          if-no-files-found: error
+
+  publish-server-edgegap:
+    name: Build Server And Publish To Edgegap
+    # Repointing prod must not happen unless both clients built. Otherwise a failed
+    # client build leaves prod serving a build that no released client can pair with.
+    needs: [build-macos, build-windows]
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set Edgegap version names
+        run: |
+          echo "EDGEGAP_RELEASE_VERSION_NAME=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+          echo "EDGEGAP_IMAGE_PATH=${EDGEGAP_REGISTRY_URL}/${EDGEGAP_REGISTRY_PROJECT}/${EDGEGAP_IMAGE_NAME}:${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Log in to Edgegap registry
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          registry: ${{ env.EDGEGAP_REGISTRY_URL }}
+          username: ${{ secrets.EDGEGAP_REGISTRY_USERNAME }}
+          password: ${{ secrets.EDGEGAP_REGISTRY_TOKEN }}
+
+      - name: Build and push Edgegap server image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: packaging/server/Dockerfile
+          push: true
+          tags: ${{ env.EDGEGAP_IMAGE_PATH }}
+
+      - name: Point Edgegap prod version at the release image
+        env:
+          EDGEGAP_API_TOKEN: ${{ secrets.EDGEGAP_API_TOKEN }}
+        run: ./scripts/point_edgegap_version_at_image.sh "${EDGEGAP_APPLICATION_NAME}" "${EDGEGAP_DEPLOY_VERSION_NAME}" "${EDGEGAP_REGISTRY_PROJECT}/${EDGEGAP_IMAGE_NAME}" "${EDGEGAP_RELEASE_VERSION_NAME}"
+
+      - name: Delete old Edgegap server images
+        env:
+          EDGEGAP_API_TOKEN: ${{ secrets.EDGEGAP_API_TOKEN }}
+        run: ./scripts/delete_old_edgegap_image_tags.sh "${EDGEGAP_IMAGE_NAME}" 2
+
+  publish-editor-server-edgegap:
+    name: Build Editor Server And Publish To Edgegap
+    # The editor pairs with the website rather than the desktop clients, so it does not wait for their builds.
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set Edgegap editor image path
+        run: echo "EDGEGAP_EDITOR_IMAGE_PATH=${EDGEGAP_REGISTRY_URL}/${EDGEGAP_REGISTRY_PROJECT}/${EDGEGAP_EDITOR_IMAGE_NAME}:${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Log in to Edgegap registry
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          registry: ${{ env.EDGEGAP_REGISTRY_URL }}
+          username: ${{ secrets.EDGEGAP_REGISTRY_USERNAME }}
+          password: ${{ secrets.EDGEGAP_REGISTRY_TOKEN }}
+
+      - name: Build and push Edgegap editor server image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: packaging/editor-server/Dockerfile
+          push: true
+          tags: ${{ env.EDGEGAP_EDITOR_IMAGE_PATH }}
+
+      - name: Create the Edgegap editor prod version the first time
+        env:
+          EDGEGAP_API_TOKEN: ${{ secrets.EDGEGAP_API_TOKEN }}
+          EDGEGAP_REGISTRY_USERNAME: ${{ secrets.EDGEGAP_REGISTRY_USERNAME }}
+          EDGEGAP_REGISTRY_TOKEN: ${{ secrets.EDGEGAP_REGISTRY_TOKEN }}
+          EDGEGAP_IMAGE_NAME: ${{ env.EDGEGAP_EDITOR_IMAGE_NAME }}
+        run: ./scripts/configure_editor_edgegap_version.sh "${EDGEGAP_EDITOR_DEPLOY_VERSION_NAME}" "${GITHUB_REF_NAME}"
+
+      - name: Point Edgegap editor prod version at the release image
+        env:
+          EDGEGAP_API_TOKEN: ${{ secrets.EDGEGAP_API_TOKEN }}
+        run: ./scripts/point_edgegap_version_at_image.sh "${EDGEGAP_EDITOR_APPLICATION_NAME}" "${EDGEGAP_EDITOR_DEPLOY_VERSION_NAME}" "${EDGEGAP_REGISTRY_PROJECT}/${EDGEGAP_EDITOR_IMAGE_NAME}" "${GITHUB_REF_NAME}"
+
+      - name: Delete old Edgegap editor server images
+        env:
+          EDGEGAP_API_TOKEN: ${{ secrets.EDGEGAP_API_TOKEN }}
+        run: ./scripts/delete_old_edgegap_image_tags.sh "${EDGEGAP_EDITOR_IMAGE_NAME}" 2
+
+  release:
+    name: Create GitHub Release
+    needs: [build-macos, build-windows, publish-server-edgegap]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download release artifacts
+        uses: actions/download-artifact@v7
+        with:
+          path: release-assets
+          pattern: Kube-new_*
+          merge-multiple: true
+
+      - name: Publish release
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          generate_release_notes: true
+          files: |
+            release-assets/*.app.tar.gz
+            release-assets/*.app.tar.gz.sig
+            release-assets/Kube-new_arm64.dmg
+            release-assets/Kube-new_x64.exe
+            release-assets/Kube-new_x64.exe.sig

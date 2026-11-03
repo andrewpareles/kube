@@ -1,0 +1,6 @@
+Source: 3DTextures.me
+Page: https://3dtextures.me/2021/06/15/glass-window-003/
+License: CC0
+Downloaded maps: albedo, roughness, metallic, normal, ao, opacity
+Missing requested maps: none
+Notes: Downloaded through the public Google Drive link on the source page.

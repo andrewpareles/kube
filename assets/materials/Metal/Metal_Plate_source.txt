@@ -1,0 +1,6 @@
+Source: Poly Haven
+Page: https://polyhaven.com/a/metal_plate
+License: CC0
+Downloaded maps: albedo, roughness, metallic, normal, ao
+Missing requested maps: none
+Notes: Normal map uses Poly Haven nor_gl.

@@ -1,0 +1,16 @@
+{
+  "Mesh": {
+    "version": 6,
+    "blender_id": null,
+    "import_scale": 1.0,
+    "dehydrated_meshes": [
+      {
+        "name": "mesh_1",
+        "mesh_data_id": 1,
+        "skinned_skeleton_index": null,
+        "material": null
+      }
+    ],
+    "dehydrated_skeletons": []
+  }
+}

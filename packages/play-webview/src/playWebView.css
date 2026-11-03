@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+/* The fonts themselves are loaded once in index.tsx, since this stylesheet is rebuilt whenever the page gets a new class. */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  /* The page sits on top of the game, so everything it does not draw has to stay see-through. */
+  html,
+  body {
+    background: transparent;
+    overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  #root {
+    position: fixed;
+    inset: 0;
+  }
+
+  img {
+    -webkit-user-drag: none;
+  }
+
+  /* A GUI root covers the whole screen so `w-full` means the screen, but only what a script draws can be under the pointer. */
+  [data-script-gui-root] > * {
+    pointer-events: auto;
+  }
+
+  /* WebKit cuts off the parts of letters that lean past their box, like the top of an italic 1, when the text has a filter like a drop-shadow or is fading. It counts a text shadow as part of the letters, so these see-through shadows keep those parts drawn. */
+  /* TODO: AI-PICKED-VALUE: 0.25em is about how far the top of a fake-italic letter leans past its box. */
+  [data-script-gui-root],
+  [data-script-gui-root] * {
+    text-shadow: 0.25em 0 transparent, -0.25em 0 transparent;
+  }
+}

@@ -1,0 +1,6 @@
+Source: Poliigon
+Page: https://www.poliigon.com/texture/clean-galvanized-zinc-metal-texture/7184
+License: Poliigon asset license
+Downloaded maps: none
+Missing requested maps: albedo, roughness, metallic, normal, ao
+Notes: Not downloaded or packaged because the current Poliigon terms restrict redistribution or repackaging of assets and restrict use in design software or games where users have direct or indirect access to the assets. Needs license confirmation before upload.

@@ -1,0 +1,269 @@
+{
+  "Mesh": {
+    "version": 6,
+    "blender_id": null,
+    "import_scale": 1,
+    "dehydrated_meshes": [
+      {
+        "name": "mesh_1",
+        "mesh_data_id": 2,
+        "skinned_skeleton_index": 0,
+        "material": null
+      }
+    ],
+    "dehydrated_skeletons": [
+      {
+        "skeleton_index": 0,
+        "jointOfIndex": [
+          {
+            "name": "root",
+            "parent_joint_index": null,
+            "rest_pose": {
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "quaternion": [
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          }
+        ],
+        "animations": [
+          {
+            "name": "Move",
+            "sk_animation_info": {
+              "duration": 1,
+              "interpolationStyle": "Linear"
+            },
+            "sk_keyframes": [
+              {
+                "time": 0,
+                "skKeyframePoses": [
+                  {
+                    "jointName": "root",
+                    "localPose": {
+                      "position": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "quaternion": [
+                        0,
+                        0,
+                        0,
+                        1
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "time": 1,
+                "skKeyframePoses": [
+                  {
+                    "jointName": "root",
+                    "localPose": {
+                      "position": [
+                        0.4,
+                        0,
+                        0
+                      ],
+                      "quaternion": [
+                        0,
+                        0,
+                        0,
+                        1
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Pose",
+            "sk_animation_info": {
+              "duration": 1,
+              "interpolationStyle": "Linear"
+            },
+            "sk_keyframes": [
+              {
+                "time": 0,
+                "skKeyframePoses": [
+                  {
+                    "jointName": "root",
+                    "localPose": {
+                      "position": [
+                        0.8,
+                        0,
+                        0
+                      ],
+                      "quaternion": [
+                        0,
+                        0,
+                        0,
+                        1
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "time": 1,
+                "skKeyframePoses": [
+                  {
+                    "jointName": "root",
+                    "localPose": {
+                      "position": [
+                        0.8,
+                        0,
+                        0
+                      ],
+                      "quaternion": [
+                        0,
+                        0,
+                        0,
+                        1
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "skeleton_index": 1,
+        "jointOfIndex": [
+          {
+            "name": "root",
+            "parent_joint_index": null,
+            "rest_pose": {
+              "position": [
+                0,
+                0,
+                0
+              ],
+              "quaternion": [
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          }
+        ],
+        "animations": [
+          {
+            "name": "Move",
+            "sk_animation_info": {
+              "duration": 1,
+              "interpolationStyle": "Linear"
+            },
+            "sk_keyframes": [
+              {
+                "time": 0,
+                "skKeyframePoses": [
+                  {
+                    "jointName": "root",
+                    "localPose": {
+                      "position": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "quaternion": [
+                        0,
+                        0,
+                        0,
+                        1
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "time": 1,
+                "skKeyframePoses": [
+                  {
+                    "jointName": "root",
+                    "localPose": {
+                      "position": [
+                        0.4,
+                        0,
+                        0
+                      ],
+                      "quaternion": [
+                        0,
+                        0,
+                        0,
+                        1
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Pose",
+            "sk_animation_info": {
+              "duration": 1,
+              "interpolationStyle": "Linear"
+            },
+            "sk_keyframes": [
+              {
+                "time": 0,
+                "skKeyframePoses": [
+                  {
+                    "jointName": "root",
+                    "localPose": {
+                      "position": [
+                        0.8,
+                        0,
+                        0
+                      ],
+                      "quaternion": [
+                        0,
+                        0,
+                        0,
+                        1
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "time": 1,
+                "skKeyframePoses": [
+                  {
+                    "jointName": "root",
+                    "localPose": {
+                      "position": [
+                        0.8,
+                        0,
+                        0
+                      ],
+                      "quaternion": [
+                        0,
+                        0,
+                        0,
+                        1
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

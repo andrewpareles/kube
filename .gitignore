@@ -1,0 +1,11 @@
+/target
+dist/
+node_modules
+.DS_Store
+gen/
+/packaging/client/Azure.CodeSigning.Dlib.dll
+/packaging/client/generated-icons/
+ 
+# Python bytecode from scripts/
+__pycache__/
+*.pyc

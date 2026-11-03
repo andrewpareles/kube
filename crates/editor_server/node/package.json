@@ -1,0 +1,39 @@
+{
+  "name": "editor-node",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --import tsx src/index.ts",
+    "check": "npm run format:check && tsc --noEmit",
+    "format": "prettier --write \"{src,tests}/**/*.{js,mjs,cjs,ts}\"",
+    "format:check": "prettier --check \"{src,tests}/**/*.{js,mjs,cjs,ts}\"",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:sandbox": "node --import tsx --test tests/linuxSandboxDocker.integration.ts",
+    "test:bedrock": "node --env-file=../../../packages/website/.env.local --import tsx --test tests/bedrockModels.integration.ts",
+    "test:thumbnail": "node --env-file=../../../packages/website/.env.local --import tsx --test tests/aiThumbnail.integration.ts"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 4,
+    "printWidth": 100
+  },
+  "dependencies": {
+    "@ai-sdk/amazon-bedrock": "5.0.84",
+    "@ai-sdk/anthropic": "4.0.54",
+    "@ai-sdk/azure": "4.0.71",
+    "@aws-sdk/client-s3": "3.1140.0",
+    "@hono/node-server": "2.1.5",
+    "@supabase/postgrest-js": "2.117.3",
+    "ai": "7.0.102",
+    "hono": "4.13.14",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9",
+    "undici": "7.30.1",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "prettier": "3.9.6"
+  }
+}

@@ -1,0 +1,466 @@
+/* Shared dimensions, typography, and surfaces follow the selected homepage prototype. */
+/* TODO: AI-PICKED-VALUE: Interior pages use 28px titles and a 210px docs navigation column to extend the prototype to reading and account pages. */
+:root {
+  --site-width: 1328px;
+  --site-gutter: 40px;
+  /* TODO: AI-PICKED-VALUE: Use a 56px header, 54px on tablets and 52px on phones, keeping the existing 16px clearance above anchor targets. */
+  --site-header-height: 56px;
+  --site-anchor-offset: calc(var(--site-header-height) + 16px);
+  --game-thumbnail-ratio: 1.65;
+  /* TODO: AI-PICKED-VALUE: 32px above the content (24px on phones). */
+  --site-page-top: 32px;
+  --site-sidebar-width: 240px;
+}
+
+/* Stop the page from bouncing past its edges on trackpad scrolls. Touchscreens keep their bounce. */
+@media (pointer: fine) { html { overscroll-behavior: none; } }
+
+html:has(.site-shell) { scrollbar-gutter: stable; }
+/* TODO: AI-PICKED-VALUE: As on deriveit.org, the content area fades from white across its middle half to a light gray, #e9ecef at
+   85%, at its left and right edges. It is painted on the page itself, under the skies, and starts where the sidebar ends, so the
+   sidebar keeps its own tint. */
+body:has(.site-shell) { background: #fff linear-gradient(90deg, rgb(233 236 239 / .85), #fff 25%, #fff 75%, rgb(233 236 239 / .85)) right top / 100% 100% repeat-y; }
+@media (min-width: 1024px) { body:has(.site-columns > .site-sidebar) { background-size: calc(100% - var(--site-sidebar-width)) 100%; } }
+html body[data-scroll-locked] { margin-right: 0 !important; }
+
+.site-shell { min-height: 100svh; overflow-y: clip; }
+.site-body { display: flex; min-height: calc(100svh - var(--site-header-height)); flex-direction: column; }
+.site-main { flex: 1; min-width: 0; }
+.site-columns { display: flex; }
+.site-header-and-body { flex: 1; min-width: 0; }
+/* TODO: AI-PICKED-VALUE: A 240px column, 40px rows 8px apart, 20px icons and 16px labels at weight 520 with slightly tighter letter spacing. A wash of the sky's top blue (#7aa1e6) at 18% along its left edge fades out by its right edge. */
+.site-sidebar { display: flex; flex-direction: column; flex-shrink: 0; width: var(--site-sidebar-width); background: linear-gradient(to right, rgb(122 161 230 / .18), transparent); }
+/* TODO: AI-PICKED-VALUE: The sidebar beside the page is set off by a 1px line in the site's border gray. The one in the phone menu has none. */
+.site-columns > .site-sidebar { border-right: 1px solid var(--border); }
+.site-sidebar-top { position: sticky; top: 0; }
+.site-sidebar-brand { display: flex; height: var(--site-header-height); margin-bottom: var(--site-page-top); }
+.site-sidebar-brand .site-brand { flex: 1; padding-inline: 24px; }
+.site-sidebar-bottom { position: sticky; bottom: 0; margin-top: auto; padding-bottom: 12px; }
+/* The phone drawer and its shade cover the whole screen, header included. Its own close button is hidden; tapping the shade
+   closes it. */
+.site-sidebar-drawer { height: auto; width: auto; gap: 0; border-right: 0; }
+.site-sidebar-drawer > button:last-child { display: none; }
+.site-sidebar-drawer .site-sidebar { flex: 1; overflow-y: auto; }
+.site-sidebar-drawer .site-sidebar-needs-login-link { display: none; }
+.site-sidebar-link { display: block; padding: 4px 12px; }
+.site-sidebar-link-inner { position: relative; z-index: 0; display: flex; align-items: center; gap: 12px; height: 40px; padding-inline: 12px; border-radius: 8px; font-size: 16px; font-weight: 520; letter-spacing: -.015em; }
+.site-sidebar-link-inner svg { flex-shrink: 0; }
+/* TODO: AI-PICKED-VALUE: Every sidebar icon sits in a 24px box, the avatar's size, so the labels line up. */
+.site-sidebar-link-icon { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 24px; }
+.site-sidebar-link-inner::before { content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit; background: rgba(0, 0, 0, .06); opacity: 0; transition: opacity .15s; }
+.site-sidebar-link:hover .site-sidebar-link-inner::before, .site-sidebar-link[aria-current='page'] .site-sidebar-link-inner::before { opacity: 1; }
+.site-sidebar-link[aria-current='page'] .site-sidebar-link-inner { color: var(--primary); font-weight: 600; }
+.site-header { position: sticky; top: 0; z-index: 50; isolation: isolate; height: var(--site-header-height); }
+/* A solid white surface behind the header's links. Every page starts
+   with the header clear over its sky, and fades the surface in once the page scrolls (on the homepage, once the header
+   reaches the headline). */
+.site-header-surface { position: absolute; inset: 0; z-index: -1; background: var(--background); transition: opacity .2s; pointer-events: none; }
+.site-header-surface:not([data-scrolled='true']) { opacity: 0; }
+/* TODO: AI-PICKED-VALUE: The header's spacing is all side padding on its items, so there is no strip between two items
+   that cannot be clicked: 20px after the logo and 20px each side of a link, so the logo and links all sit 40px apart, and 12px each side of an
+   account control so they sit 24px apart, and the same 12px each side between the menu button and the logo on smaller
+   screens. */
+/* The header's row keeps 20px from the screen's edges. */
+/* TODO: AI-PICKED-VALUE: Once the menu button shows, it keeps 12px from the screen's edges instead. */
+.site-header-inner { display: flex; align-items: center; height: 100%; padding: 0 20px; }
+@media (min-width: 1024px) { body:has(.site-sidebar) .site-header-brand { display: none; } }
+/* TODO: AI-PICKED-VALUE: The smaller header brand pairs a 44px logo drawing with 20px type and a 10px gap. */
+.site-brand { display: inline-flex; align-items: center; gap: 12px; }
+/* TODO: AI-PICKED-VALUE: A 24px wordmark at weight 680 makes the brand slightly smaller and lighter. */
+.site-wordmark { font-size: 24px; font-weight: 680; letter-spacing: -1.2px; }
+/* TODO: AI-PICKED-VALUE: The suffix stays at 70% size and shares kube's bold font. */
+.site-wordmark-suffix { font-size: .7em; letter-spacing: -.05em; }
+.site-primary-nav, .site-resource-nav, .site-account-nav { display: flex; align-self: stretch; align-items: center; white-space: nowrap; }
+/* As tall as the balance's pill (one 14px line and 6px above and below), so the two tooltips open at the same height. */
+.site-discord-link { position: relative; display: inline-flex; align-items: center; height: calc(1lh + 12px); margin-left: auto; padding-inline: 10px; color: var(--color-blue-700); font-size: 14px; }
+.site-discord-inner { position: relative; z-index: 0; display: inline-flex; align-self: stretch; align-items: center; border-radius: 8px; padding-inline: 10px; }
+.site-discord-inner::before { content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit; background: rgba(0, 0, 0, .08); opacity: 0; transition: opacity .15s; }
+.site-discord-link:hover .site-discord-inner::before { opacity: 1; }
+/* With Blog's own 20px, this keeps the 40px the header used to put between Blog and Log in. */
+.site-resource-nav + .site-account-nav { margin-left: 20px; }
+.site-header-brand { display: flex; align-self: stretch; }
+.site-header-brand .site-brand { padding-left: 12px; padding-right: 20px; }
+/* The menu button's own padding hangs out into the row's 12px edge, so its lines sit 15px from the screen's edge. */
+.site-menu-trigger { display: none; align-self: center; width: auto; margin-left: -12px; padding-inline: 12px; }
+/* Every item in the header except the settings gear runs the full height of the header, so all of it can be clicked.
+   On hover the links, the gear, Discord and the balance tint a grey pill behind themselves; the name changes colour. The gear
+   keeps its own small size so its menu opens right under it. A link's pill is drawn behind its text, 10px wider each side
+   and 6px taller each way, the same as the balance's. */
+.site-nav-link, .site-header-name { align-self: stretch; height: auto; transition: color .15s; }
+.site-nav-link { position: relative; z-index: 0; display: inline-flex; align-items: center; font-size: 14px; padding-inline: 20px; }
+.site-nav-link::before { content: ''; position: absolute; z-index: -1; inset-inline: 10px; top: 50%; height: calc(1lh + 12px); translate: 0 -50%; border-radius: 8px; background: rgba(0, 0, 0, .08); opacity: 0; transition: opacity .15s; }
+.site-nav-link:hover::before { opacity: 1; }
+.site-balance, .site-header-name, .site-settings-trigger { padding-inline: 12px; }
+.site-settings-trigger { position: relative; z-index: 0; width: auto; height: auto; padding-block: 8px; border-radius: 8px; }
+.site-settings-trigger::before { content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit; background: rgba(0, 0, 0, .08); opacity: 0; transition: opacity .15s; }
+.site-settings-trigger:hover::before { opacity: 1; }
+.site-header-name:hover { color: var(--primary); }
+.site-login { border-radius: 8px; padding: 10px 15px; background: var(--primary); color: var(--primary-foreground); font-size: 14px; font-weight: 550; white-space: nowrap; transition: background-color .15s; }
+.site-login:hover { background: color-mix(in srgb, var(--primary) 88%, black); }
+/* TODO: AI-PICKED-VALUE: The balance takes the log in button's 14px type and 8px radius with tighter 6px/10px padding. It has no fill of its own and only tints on hover: the header behind it is itself see-through, and a tint darkens whatever is underneath where a grey line would sit on top of it. Tabular figures stop the digits shifting as the number changes. */
+.site-balance { position: relative; display: inline-flex; align-items: center; }
+/* The link is only as tall as its pill, so its tooltip opens right under the pill. This invisible strip carries its
+   hover and click the full height of the header. */
+.site-header .site-balance::before, .site-discord-link::before { content: ''; position: absolute; inset-inline: 0; top: 50%; height: var(--site-header-height); transform: translateY(-50%); }
+.site-balance-inner { position: relative; z-index: 0; display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; padding: 6px 10px; font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.site-balance-inner::before { content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit; background: rgba(0, 0, 0, .08); opacity: 0; transition: opacity .15s; }
+.site-balance:hover .site-balance-inner::before { opacity: 1; }
+/* The editor's balance reads the same as the amount in its tooltip. */
+.editor-header .site-balance-inner { gap: 5px; color: var(--foreground); font-size: 13px; }
+
+/* Radix wraps every tooltip in an invisible box of the same size that positions it. A hover tooltip lets the pointer pass
+   through, so its wrapper has to as well, or the pointer lands on the wrapper, leaves the trigger, and the tooltip flickers. */
+[data-radix-popper-content-wrapper]:has(> [data-slot="tooltip-content"].pointer-events-none) { pointer-events: none; }
+.site-balance-daily { display: flex; align-items: center; gap: 5px; }
+.site-balance-daily-amount { display: inline-flex; align-items: center; gap: 3px; font-variant-numeric: tabular-nums; }
+.site-balance-daily-icon { width: 13px; height: 13px; }
+/* TODO: AI-PICKED-VALUE: 80px above the footer's links and 30px below. */
+.site-footer { position: relative; max-width: var(--site-width); width: 100%; margin: auto; padding: 80px var(--site-gutter) 30px; color: var(--muted-foreground); font-size: 12px; }
+
+/* All routes share their outer margins, while prose stays narrow enough to read. */
+.site-container { width: 100%; max-width: var(--site-width); margin-inline: auto; padding-inline: var(--site-gutter); }
+.site-page { padding-top: var(--site-page-top); padding-bottom: 72px; }
+.site-prose-page { max-width: 840px; }
+.site-full-width-page { max-width: none; }
+.site-page-title { font-size: 28px; font-weight: 620; line-height: 1.25; letter-spacing: -.045em; }
+.site-section-title { font-size: 21px; font-weight: 560; line-height: 1.4; letter-spacing: -.035em; }
+.site-page-description { margin-top: 12px; color: var(--muted-foreground); font-size: 14px; line-height: 1.7; }
+.site-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 10px; background: var(--primary); color: var(--primary-foreground); padding: 11px 16px; font-size: 13px; font-weight: 550; transition: background .15s; }
+.site-button:hover { background: color-mix(in srgb, var(--primary) 88%, black); }
+.site-button:disabled { cursor: default; opacity: .5; }
+.site-button, .site-login, .site-nav-link, .site-sidebar-link-inner, :is(.site-shell, .site-surface-card, [role="dialog"]) :is(button, [data-slot="button"]) { text-transform: lowercase; }
+/* Search buttons keep their capital. */
+[role="search"] :is(button, [data-slot="button"]) { text-transform: none; }
+/* So do the login modal's buttons. */
+.site-login-modal :is(button, [data-slot="button"]) { text-transform: none; }
+/* And the game page's Edit button. */
+.game-edit-button[data-slot="button"] { text-transform: none; }
+/* And the buttons in the game and asset settings dialogs. */
+.site-settings-dialog :is(button, [data-slot="button"]) { text-transform: none; }
+.site-field { width: 100%; border: 1px solid var(--border); border-radius: 9px; padding: 12px 15px; background: #fff; color: var(--foreground); font-size: 14px; outline: none; transition: border-color .15s; }
+.site-field::placeholder { color: var(--muted-foreground); }
+.site-field:focus { border-color: var(--primary); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+@media (pointer: coarse) { :focus-visible { outline: none !important; box-shadow: none !important; } }
+/* A scrolling box fades its top and bottom edges out while there is more to scroll that way, instead of cutting its text off
+   hard. The fades follow the scroll position, and a box that does not scroll has none. Browsers without scroll-driven
+   animations keep the hard edges. */
+/* TODO: AI-PICKED-VALUE: Each fade is 24px tall, one line of description text, and grows to full size over the first and last
+   10% of the scroll. */
+@property --scroll-fade-top { syntax: '<length>'; inherits: false; initial-value: 0px; }
+@property --scroll-fade-bottom { syntax: '<length>'; inherits: false; initial-value: 0px; }
+@keyframes scroll-fade { from { --scroll-fade-top: 0px; --scroll-fade-bottom: 24px; } 10% { --scroll-fade-top: 24px; } 90% { --scroll-fade-bottom: 24px; } to { --scroll-fade-top: 24px; --scroll-fade-bottom: 0px; } }
+@supports (animation-timeline: scroll()) {
+  .scroll-fade { mask-image: linear-gradient(to bottom, transparent, #000 var(--scroll-fade-top), #000 calc(100% - var(--scroll-fade-bottom)), transparent); animation: scroll-fade linear both; animation-timeline: scroll(self); }
+}
+
+/* The homepage's text and working composer occupy the same space as the approved preview. */
+.create-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100svh - var(--site-header-height)); padding: 64px var(--site-gutter); text-align: center; }
+/* Above the fold the homepage sits in a game's sky. A layer behind the hero runs from the top of the page, behind the
+   header, down to the fold: blue at the top lightening towards the horizon, with soft white clouds drifting across it.
+   It reaches a little past the fold and fades out into the white page there, so it does not stop short above the games.
+   The pages with game tiles behind a card (log in, download and the like) sit in the same sky, under their tiles. */
+/* TODO: AI-PICKED-VALUE: The colours are read off a game's sky, #7aa1e6 at the top to #bcd5f0 near the horizon. The layer
+   runs 120px past the fold and fades out over its last 220px. White clouds sit over a layer of lavender ones (#c7adff)
+   taken from the logo, both wider than they are tall and tiled every 1200 by 700px. They drift right, the white at 30px a
+   second and the lavender behind at half that, so the two slide past each other; each moves a whole number of tiles per
+   loop, so the loop has no jump. */
+.create-hero { position: relative; }
+.site-header .text-muted-foreground { color: var(--foreground); }
+/* The clouds are moved with transforms rather than by their background position, so the browser slides already drawn
+   layers instead of repainting the sky every frame. The lavender clouds and the sky's gradient, which is the same all the
+   way across, sit in one layer, and the white clouds in another above it. Each layer is a tile wider than the page,
+   starting a tile to the left, and slides one tile right per loop. The page clips them at its sides. */
+@keyframes sky-clouds-drift { to { transform: translateX(1200px); } }
+@media (prefers-reduced-motion: reduce) { .create-hero::before, .site-backdrop-page::before, .plans-page::before, .site-header-and-body::before, .create-hero::after, .site-backdrop-page::after, .plans-page::after, .site-header-and-body::after { animation: none; } }
+.create-hero, .site-backdrop-page, .plans-page, .site-header-and-body { overflow-x: clip; }
+.create-hero::before, .site-backdrop-page::before, .plans-page::before, .site-header-and-body::before, .create-hero::after, .site-backdrop-page::after, .plans-page::after, .site-header-and-body::after {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--site-header-height)) 0 -120px -1200px;
+  z-index: -1;
+  will-change: transform;
+  animation: sky-clouds-drift 80s linear infinite;
+  /* Rather than stopping at an edge, the sky fades out into the white page over its last stretch. */
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 220px), transparent);
+}
+.create-hero::before, .site-backdrop-page::before, .plans-page::before, .site-header-and-body::before {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Cfilter id='c' x='0' y='0' width='1200' height='700' filterUnits='userSpaceOnUse'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0028 0.006' numOctaves='4' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.78  0 0 0 0 0.68  0 0 0 0 1  1.6 0 0 0 -0.68'/%3E%3C/filter%3E%3Crect width='1200' height='700' filter='url%28%23c%29'/%3E%3C/svg%3E"),
+    linear-gradient(to bottom, #7aa1e6, #93b6eb 55%, #b2cdef 85%, #bcd5f0);
+  background-size: 1200px 700px, auto;
+  background-position: 300px 180px, 0 0;
+}
+.create-hero::after, .site-backdrop-page::after, .plans-page::after, .site-header-and-body::after {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Cfilter id='c' x='0' y='0' width='1200' height='700' filterUnits='userSpaceOnUse'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0028 0.006' numOctaves='4' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1.7 0 0 0 -0.66'/%3E%3C/filter%3E%3Crect width='1200' height='700' filter='url%28%23c%29'/%3E%3C/svg%3E");
+  background-size: 1200px 700px;
+  animation-duration: 40s;
+}
+/* Every other page has a strip of the same sky behind its header, fading out just under it. */
+/* TODO: AI-PICKED-VALUE: The strip fades out over the 80px under the header. */
+.site-header-and-body { position: relative; }
+.site-header-and-body::before, .site-header-and-body::after { inset: 0 0 auto -1200px; height: calc(var(--site-header-height) + 80px); mask-image: linear-gradient(to bottom, #000 var(--site-header-height), transparent); }
+body:has(.create-hero, .site-backdrop-page, .plans-page) .site-header-and-body::before, body:has(.create-hero, .site-backdrop-page, .plans-page) .site-header-and-body::after { content: none; }
+/* The homepage headline's glow, the same size and in the same place, over every other page's strip of sky, so their tops look
+   like the homepage's. It is sized from the headline's font size: the headline's text is 8.858em wide (8.921em on phones) and two
+   1.02em lines tall, 64px under the header. If the headline's words change, measure its width again. */
+.site-body { position: relative; z-index: 0; }
+/* Drawn as its own layer for the same reason as the homepage glow below: it reaches up behind the header. */
+.site-body::before { content: ''; position: absolute; z-index: -1; font-size: clamp(46px, 4.9vw, 70px); left: 50%; top: calc(64px - 2.04em * 1.6); width: calc(8.858em * 2.6); height: calc(2.04em * 4.2); translate: -50% 0; background: radial-gradient(closest-side, #fff 28%, rgb(255 255 255 / 0)); pointer-events: none; will-change: transform; }
+body:has(.create-hero, .site-backdrop-page, .plans-page) .site-body::before { content: none; }
+/* The editor's viewport shows the site's sky gradient while the world loads, instead of a blank gray. */
+.editor-loading-sky { background: linear-gradient(to bottom, #7aa1e6, #93b6eb 55%, #b2cdef 85%, #bcd5f0); }
+/* Avatars stand in the homepage's sky and white clouds, sized to the avatar and not drifting. */
+/* TODO: AI-PICKED-VALUE: Each avatar shows a third of the width of the homepage's 1200 by 700 cloud tile. */
+.avatar-sky {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Cfilter id='c' x='0' y='0' width='1200' height='700' filterUnits='userSpaceOnUse'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0028 0.006' numOctaves='4' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1.7 0 0 0 -0.66'/%3E%3C/filter%3E%3Crect width='1200' height='700' filter='url%28%23c%29'/%3E%3C/svg%3E") 0 0 / 300% auto,
+    linear-gradient(to bottom, #7aa1e6, #93b6eb 55%, #b2cdef 85%, #bcd5f0);
+}
+/* TODO: AI-PICKED-VALUE: The headline is 36px, 28px on phones, so the box under it is what stands out. */
+.create-headline { font-size: 36px; font-weight: 590; line-height: 1.02; letter-spacing: -.045em; }
+/* A soft white glow behind the headline, over the sky, fading out far past the text. The headline is its own layer, so the
+   glow sits above the sky and under the words. */
+/* TODO: AI-PICKED-VALUE: The glow reaches 80% of the headline's width past each side and 160% of its height above and below,
+   solid white at its middle, fading out to its edge. */
+.create-headline { position: relative; z-index: 0; }
+/* The glow reaches up behind the header, so like the clouds it is drawn as its own layer. Without that, Safari on iPhone cut
+   it off at the bottom of the header, which left the header looking like a darker band over the sky. */
+.create-headline::before { content: ''; position: absolute; z-index: -1; inset: -160% -80%; background: radial-gradient(closest-side, #fff 28%, rgb(255 255 255 / 0)); pointer-events: none; will-change: transform; }
+/* TODO: AI-PICKED-VALUE: The box sits 40px under the headline, 28px on phones. */
+.create-composer-group { position: relative; width: 100%; max-width: 650px; margin-top: 40px; }
+/* Game thumbnails in a row below the fold, with the end ones tipped outwards. */
+/* TODO: AI-PICKED-VALUE: The section has 48px above the row and 96px below its title (56px on phones), so the title reads as the
+   row's and All Games starts a new section. The title is 36px (28px on phones), the same as the headline, 44px under the row (32px on phones). The row is up to 1200px wide, each thumbnail is 31% of it, and they are 16px apart.
+   The end ones tip 6 degrees. They fade in over 0.6 seconds each, 150ms apart from left to right. */
+.create-fold-games-section { display: flex; flex-direction: column; align-items: center; padding: 48px var(--site-gutter) 96px; text-align: center; }
+.create-fold-games-title { margin-top: 44px; font-size: 36px; font-weight: 590; line-height: 1.08; letter-spacing: -.045em; }
+.create-fold-games { --fold-game-width: 31%; --fold-game-tilt: 6deg; display: flex; justify-content: center; gap: 16px; width: 100%; max-width: 1200px; }
+.create-fold-game { position: relative; flex-shrink: 0; width: var(--fold-game-width); aspect-ratio: var(--game-thumbnail-ratio); overflow: hidden; border-radius: 10px; box-shadow: 0 14px 30px -14px #15241459; transition: scale .2s; }
+/* A shiny edge drawn over the picture, bright at the top left corner and fading out towards the bottom right. The fade fills
+   the whole thumbnail, and the mask cuts away all of it except a thin ring along the edge. */
+/* TODO: AI-PICKED-VALUE: A quieter version of the edge lemonade.gg puts on its hero cards: 1px of white, 60% strength at the
+   top left corner and gone halfway across. */
+.create-fold-game::after { content: ''; position: absolute; inset: 0; padding: 1px; border-radius: inherit; background: linear-gradient(135deg, rgb(255 255 255 / .6), rgb(255 255 255 / .3) 15%, rgb(255 255 255 / .1) 30%, transparent 50%); mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); pointer-events: none; }
+.create-fold-game:hover { scale: 1.04; }
+/* TODO: AI-PICKED-VALUE: The play and pause button is a 36px circle of light frosted glass with a dark mark. It fades in over
+   0.2 seconds while the thumbnail has the mouse over it, and always shows on touch screens. */
+.create-fold-game-control { position: absolute; top: 50%; left: 50%; translate: -50% -50%; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--foreground); background: rgb(255 255 255 / .75); backdrop-filter: blur(6px); opacity: 0; transition: opacity .2s; pointer-events: none; }
+.create-fold-game:hover .create-fold-game-control { opacity: 1; }
+@media (hover: none) { .create-fold-game-control { opacity: 1; } }
+/* Each thumbnail stays hidden until its picture has loaded, then fades in where it sits. */
+@keyframes create-fold-game-fade-in { from { opacity: 0; } }
+.create-fold-game:has([aria-busy='true']) { opacity: 0; }
+.create-fold-game:has([aria-busy='false']) { animation: create-fold-game-fade-in .6s ease backwards; }
+.create-fold-game:first-child { rotate: calc(-1 * var(--fold-game-tilt)); }
+.create-fold-game:last-child { rotate: var(--fold-game-tilt); }
+/* The ones in between are raised so their top lines up with the corners the end ones lift as they tip. Tipping lifts a corner
+   by half the width times the sine of the tilt, less the little the top edge drops at its middle. */
+.create-fold-game:not(:first-child, :last-child) { translate: 0 calc(-50% * (var(--game-thumbnail-ratio) * sin(var(--fold-game-tilt)) + cos(var(--fold-game-tilt)) - 1)); }
+.create-fold-game:nth-child(2) { animation-delay: .15s; }
+.create-fold-game:nth-child(3) { animation-delay: .3s; }
+@media (prefers-reduced-motion: reduce) { .create-fold-game:has([aria-busy='false']) { animation: none; } }
+/* TODO: AI-PICKED-VALUE: A 1.5px white border that gives the box a crisp edge against the sky, a soft inner shadow along the top inside edge, a grey shadow kept close under the box, 15px text (16px on phones, so iPhones don't zoom in on it) and two lines of minimum height. While the box has the cursor a soft blue ring shows around it and a blue glow under it. */
+.create-composer { overflow: hidden; cursor: text; text-align: left; background: #fff; border: 1.5px solid #fff; border-radius: 20px; box-shadow: inset 0 2px 6px -2px #15241424, 0 0 0 4px transparent, 0 10px 22px -10px #15241430, 0 18px 48px -22px #15241426; transition: border-color .15s, box-shadow .15s; }
+.create-composer:focus-within { box-shadow: inset 0 2px 6px -2px #15241424, 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent), 0 10px 24px -8px #336dff40, 0 20px 56px -18px #336dff38; }
+.create-composer textarea { display: block; width: 100%; min-height: calc(2lh + 6px); field-sizing: content; resize: none; outline: none; background: transparent; padding: 0 4px 6px 0; font-size: 15px; line-height: 1.55; }
+.create-composer .site-button { gap: 19px; padding: 11px 14px; font-size: 12px; transition: background .15s, opacity .2s; }
+.create-composer .site-button:disabled { background: #e9ece7; color: #64705f; opacity: 1; transition: opacity .2s; }
+.create-composer .site-button[aria-hidden="true"] { opacity: 0; pointer-events: none; }
+/* The gap under the All Games button matches the 56px under the My Games button. */
+.create-games { padding-top: 22px; padding-bottom: 56px; }
+
+/* One image ratio and grid serve public games, profile cards, and background tiles. */
+/* Grid edges match the images and titles; the card's hover padding extends outside them. */
+/* TODO: AI-PICKED-VALUE: A 30px column gap preserves the previous image spacing after removing the 4px inset on each side. */
+/* Cards touch: each one sits in a cell padded by half the space between cards, and the whole cell is the card's link, so there is
+   nowhere between cards that doesn't hover or click one. The grid reaches out by half that space on every side, so the cards themselves
+   stay where they were. The gray box inside a cell reaches 12px past the image at the sides and 8px past the top and bottom. */
+/* TODO: AI-PICKED-VALUE: Cards are 30px apart across and 20px down. Each gray box reaches 8px past its card above and below, so rows
+   closer than 16px would overlap. */
+.site-game-grid { --game-grid-column-gap: 30px; --game-grid-row-gap: 20px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: calc(var(--game-grid-row-gap) / -2) calc(var(--game-grid-column-gap) / -2); }
+.site-game-grid > * { min-width: 0; }
+.game-card-cell { display: block; padding: calc(var(--game-grid-row-gap) / 2) calc(var(--game-grid-column-gap) / 2); }
+.game-card-cell:hover .game-card::before, .game-card-cell:focus-visible .game-card::before { opacity: 1; }
+/* A title on a card grid gets a cell's padding above and at the sides, so it starts where the cards do. */
+.site-game-grid > :is(h1, h2) { padding: calc(var(--game-grid-row-gap) / 2) calc(var(--game-grid-column-gap) / 2) 0; }
+/* TODO: AI-PICKED-VALUE: On the pages that fill the full width, as many cards fit in a row as there is room for at 230px or wider each, up to 5. */
+.site-full-width-page .site-game-grid { grid-template-columns: repeat(auto-fill, minmax(max(calc(230px + var(--game-grid-column-gap)), calc(100% / 5)), 1fr)); }
+/* A single-row grid hides the cards that would wrap. These are the widths where the grid above gains a column:
+   one more 230px card and 30px gap each time. Phones always have 2. */
+.game-grid-single-row { container-type: inline-size; }
+@container (width < 1270px) { .game-grid-single-row .site-game-grid > :nth-child(n + 5) { display: none; } }
+@container (width < 1010px) { .game-grid-single-row .site-game-grid > :nth-child(n + 4) { display: none; } }
+@container (width < 750px) { .game-grid-single-row .site-game-grid > :nth-child(n + 3) { display: none; } }
+/* TODO: AI-PICKED-VALUE: Use 7px image corners and a 16px hover background, halfway between the original and less rounded game cards. */
+.game-thumbnail { position: relative; width: 100%; aspect-ratio: var(--game-thumbnail-ratio); overflow: hidden; border-radius: 7px; background: var(--muted); }
+.game-card-name { margin-top: 12px; font-size: 14px; font-weight: 520; line-height: 1.5; overflow-wrap: anywhere; }
+/* TODO: AI-PICKED-VALUE: An 8px inset leaves room for the gray hover surface without moving the images; the Play control is 28px wide. */
+/* TODO: AI-PICKED-VALUE: Increase the inset to 12px within the same card footprint, giving images, names, and Play buttons more room from the gray edge. */
+/* Padded on the top and sides only. The title under the image has its own padding above and below,
+   which is what spaces it from the card's bottom edge. */
+.game-card { --game-card-padding: 12px; position: relative; z-index: 0; display: block; margin: -8px calc(-1 * var(--game-card-padding)); padding: var(--game-card-padding) var(--game-card-padding) 0; border-radius: 16px; }
+.game-card::before { content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit; background: rgba(222, 225, 228, .55); opacity: 0; transition: opacity .2s; }
+.game-card:hover::before, .game-card:focus-within::before { opacity: 1; }
+.game-card-shade { pointer-events: none; position: absolute; inset: 0; background: #000; opacity: 0; transition: opacity .2s; }
+.group:hover .game-card-shade, .group:focus-visible .game-card-shade { opacity: .15; }
+.game-section-link { display: inline-flex; align-items: center; gap: 8px; }
+.game-section-link:hover { color: var(--primary); }
+.game-section-arrow { width: 16px; height: 16px; }
+/* TODO: AI-PICKED-VALUE: The rows on Recommended are named in 14px text with 16px under it, so the names take up little room. */
+.game-section-title { margin-bottom: 16px; font-size: 14px; font-weight: 560; line-height: 1.4; letter-spacing: -.01em; }
+.game-section-title .game-section-link { gap: 6px; }
+.game-section-title .game-section-arrow { width: 14px; height: 14px; }
+
+/* Reading pages keep the same light surfaces and understated image cards. */
+.site-content-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 36px 24px; }
+.site-content-card { display: block; min-width: 0; border-radius: 10px; }
+.site-content-card h3 { margin-top: 16px; font-size: 18px; font-weight: 580; line-height: 1.4; letter-spacing: -.025em; }
+.site-content-card p { margin-top: 8px; color: var(--muted-foreground); font-size: 14px; line-height: 1.7; }
+.site-article-title { font-size: clamp(30px, 4vw, 44px); font-weight: 590; letter-spacing: -.045em; line-height: 1.15; }
+.site-prose { color: var(--foreground); font-size: 15px; line-height: 1.85; }
+.site-prose :is(h2, h3, h4) { color: var(--foreground); font-weight: 600; letter-spacing: -.025em; }
+.site-prose a { color: var(--primary); }
+.site-prose :is(pre, table) { border-radius: 10px; }
+.site-docs-layout { display: grid; gap: 56px; grid-template-columns: 210px minmax(0, 1fr); }
+.site-docs-nav { position: sticky; top: calc(var(--site-header-height) + 28px); height: calc(100svh - var(--site-header-height) - 56px); max-height: 900px; font-size: 12px; }
+.site-docs-nav [aria-current='location'] { color: var(--primary); font-weight: 600; }
+.site-docs-section { padding-top: 28px; }
+.site-docs-entry { padding-top: 8px; }
+.site-docs-entry h3 { font-size: 21px; font-weight: 600; letter-spacing: -.03em; }
+
+/* Login, downloads, and status pages use the same compact card treatment. */
+.site-backdrop-page { position: relative; min-height: calc(100svh - var(--site-header-height) - 90px); display: flex; align-items: center; justify-content: center; padding: 64px var(--site-gutter); }
+/* The login page has no header or footer, so its card centers in the whole screen. */
+body:not(:has(.site-header)) .site-backdrop-page { min-height: 100svh; }
+/* The games reach up behind the header and down behind the footer without fading, so neither one cuts them off. The
+   shell clips them at the top and bottom of the page. */
+/* TODO: AI-PICKED-VALUE: 120px past the bottom, enough to cover the footer. */
+.site-games-backdrop { inset: calc(-1 * var(--site-header-height)) 0 -120px; }
+/* TODO: AI-PICKED-VALUE: Central cards use 28px padding and 12px corners, with 22px padding on phones, to make the frame more compact. */
+.site-surface-card { position: relative; width: 100%; max-width: 448px; padding: 28px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 20px 50px -32px #15241440; }
+
+@media (max-width: 1100px) {
+  .site-game-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 1023px) {
+  /* Collapse both navigation groups at the same breakpoint as the menu button. */
+  .site-primary-nav, .site-resource-nav, .site-columns > .site-sidebar { display: none; }
+  .site-header-inner { padding-inline: 12px; }
+  .site-menu-trigger { display: inline-flex; }
+  .site-docs-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .site-docs-mobile-nav { border: 1px solid var(--border); border-radius: 10px; background: #fff; padding: 12px 16px; font-size: 13px; }
+  .site-docs-mobile-nav nav { max-height: 45svh; overflow-y: auto; margin-top: 16px; }
+}
+@media (max-width: 820px) {
+  :root { --site-gutter: 28px; --site-header-height: 54px; }
+  .site-game-grid, .site-content-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  :root { --site-gutter: 21px; --site-header-height: 52px; --site-page-top: 24px; }
+  .site-header-brand .site-brand { display: none; }
+  .site-login { padding: 8px 10px; }
+  .site-page { padding-bottom: 48px; }
+  .create-hero { padding-top: 48px; padding-bottom: 48px; }
+  .create-headline { font-size: 28px; line-height: 1.08; }
+  /* TODO: AI-PICKED-VALUE: On phones the glow behind every other page's header reaches 80% of its headline's height above and
+     below it and 20% of its width past each side, instead of 160% and 80% on bigger screens, so it no longer washes over the header
+     and the whole width of the screen. */
+  .site-body::before { font-size: clamp(30px, 8.8vw, 46px); top: calc(48px - 2.16em * .8); width: calc(8.921em * 1.4); height: calc(2.16em * 2.6); }
+  .create-composer { border-radius: 15px; }
+  /* TODO: AI-PICKED-VALUE: On phones only two thumbnails fit, so only the last two show. The row reaches to 12px from
+     the screen's edges, and the two fill it 12px apart, the same as their distance from the edges. Nothing is tipped. */
+  .create-fold-games { --fold-game-space: 12px; --fold-game-width: calc(50% - var(--fold-game-space) / 2); --fold-game-tilt: 0deg; gap: var(--fold-game-space); width: calc(100% + 2 * (var(--site-gutter) - var(--fold-game-space))); }
+  .create-composer-group { margin-top: 28px; }
+  .create-fold-games-section { padding-block: 40px 56px; }
+  .create-fold-games-title { margin-top: 32px; font-size: 28px; }
+  .create-fold-game:not(:nth-last-child(-n + 2)) { display: none; }
+  .create-composer textarea { font-size: 16px; }
+  /* TODO: AI-PICKED-VALUE: Match the existing 13px navigation text for small mobile controls and footer links. */
+  .create-composer .site-button, .site-footer { font-size: 13px; }
+  .site-content-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .site-full-width-page .site-game-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .game-card-name { font-size: 15px; margin-top: 10px; }
+  .site-field { font-size: 16px; }
+  .site-backdrop-page { padding-block: 40px; }
+  .site-surface-card { padding: 22px; }
+}
+@media (min-width: 901px) and (max-height: 780px) {
+  .create-hero { padding-top: 48px; padding-bottom: 48px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-shell *, .site-shell *::before, .site-shell *::after, .create-composer .site-button { scroll-behavior: auto; transition: none; }
+}
+
+/* The plans page. A gradient banner, two cards side by side, and the cube-K underneath. The cards
+   are narrower than the full site width because two columns of text read badly stretched out. */
+/* It opens on the same drifting sky as the homepage, fading into the white page at its bottom. flow-root keeps the cube's top
+   margin inside the page, so the page and its sky start right under the header instead of being pushed down by it. */
+.plans-page { position: relative; display: flow-root; padding-bottom: 104px; }
+/* Padded like the cards, so on a phone the words keep clear of the screen's edges. Balanced so a line
+   that has to wrap splits into two even halves rather than leaving one word on its own. */
+.plans-intro { margin-bottom: 46px; padding: 44px var(--site-gutter) 0; text-align: center; text-wrap: balance; }
+/* Both lines are the page's near-black, which reads on the sky where grey does not. */
+.plans-promo { color: var(--foreground); font-size: 15px; font-weight: 600; }
+.plans-promo-icon { display: inline-block; width: 16px; height: 16px; margin-right: 7px; vertical-align: -3px; color: var(--color-kube-blue); }
+.plans-promo-offer { color: var(--color-kube-blue); }
+.plans-grid { display: grid; grid-template-columns: repeat(2, 392px); justify-content: center; gap: 28px; padding-inline: var(--site-gutter); }
+/* A column, so the button can be pushed to the bottom and both cards end level however much text
+   sits above it. */
+.plan-card { position: relative; display: flex; flex-direction: column; align-items: stretch; text-align: left; box-sizing: border-box; padding: 32px 26px 26px; border: 1px solid transparent; border-radius: 18px; background: #fff; box-shadow: 0 18px 44px -34px #15241440; }
+.plan-card-popular { border: 1.5px solid var(--color-kube-blue); box-shadow: 0 22px 52px -30px #336dff40; }
+/* Sits astride the card's top edge, so it reads as pinned to the card rather than inside it. */
+.plan-badge { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); border-radius: 9999px; background: var(--foreground); padding: 5px 12px; color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+.plan-name { text-align: center; font-size: 19px; font-weight: 600; letter-spacing: -.02em; }
+/* Baseline-aligned so the struck-through price sits on the same line as the one being charged. */
+.plan-price { display: flex; align-items: flex-end; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 16px 0 26px; }
+.plan-price-was { margin-bottom: 8px; color: #9aa09c; font-size: 18px; text-decoration: line-through; }
+.plan-price-now { font-size: 46px; font-weight: 700; line-height: 1; letter-spacing: -.05em; }
+.plan-price-period { margin-bottom: 7px; color: var(--muted-foreground); font-size: 13px; }
+.plan-list-group { display: flex; flex-direction: column; gap: 12px; width: 100%; font-size: 15px; line-height: 1.5; }
+.plan-checks { margin-top: 22px; padding-bottom: 28px; }
+.plan-row { display: flex; align-items: flex-start; gap: 12px; }
+.plan-row-icon { flex: none; width: 18px; height: 18px; margin-top: 3px; }
+/* An 18px mark plus its 12px gap. The amounts are pushed in by this much, so they line up with
+   the checks' words as though an invisible check sat in front of them. */
+.plan-card { --plan-gutter: 30px; }
+/* Tabular figures so 220 and 1,400 line up under each other across the two cards. */
+.plan-amount { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+/* The two amounts belong with the name and the price, not with the list below. Their marks sit
+   inline with the words rather than hanging at the top like a list marker, their text starts where
+   the checks' text does, and only they get the larger mark. */
+/* TODO: AI-PICKED-VALUE: 10px more room above and below the two amounts, so they sit apart from the price and from the checks. */
+.plan-amounts { margin: 10px 0; padding-left: var(--plan-gutter); }
+/* A fixed line height, not the inherited 1.5. Unitless line-height multiplies each element's
+   own size, so the 20px number was making a 30px line box next to the label's 22.5px one,
+   which pushed the shared baseline down and left the number looking like it floated. */
+.plan-amounts .plan-row { line-height: 26px; }
+/* Lined up on the number's baseline so the small /month sits on the same line as it. The mark isn't
+   text, so it is centred instead of taking part, and keeps 8px to the number. */
+.plan-amount-trigger { display: inline-flex; align-items: baseline; gap: 4px; }
+.plan-amounts .plan-row-icon { align-self: center; width: 22px; height: 22px; margin: 0 4px 0 0; }
+.plan-amount-period { color: var(--muted-foreground); font-size: 13px; }
+/* The amount's tooltip, laid out as one line: Use [mark] 2,500 per month to ... */
+.plan-amount-tooltip { display: flex; align-items: center; gap: 4px; }
+.plan-amount-tooltip-amount { display: inline-flex; align-items: center; gap: 3px; font-variant-numeric: tabular-nums; }
+.plan-amount-tooltip-icon { width: 13px; height: 13px; }
+.plan-check { color: var(--color-kube-blue); }
+/* Pushed to the bottom of the card, so both buttons line up however much text is above them. */
+.plan-button { margin-top: auto; width: 100%; height: 46px; border-radius: 9999px; font-size: 15px; font-weight: 600; }
+/* A note such as "Ends Oct 20" sits just above the button. It takes over being pushed to the bottom, so
+   the buttons on both cards still line up. */
+.plan-button-note { margin: auto 0 8px; text-align: center; color: var(--muted-foreground); font-size: 13px; }
+.plan-button-note + .plan-button { margin-top: 0; }
+.plan-button-note-icon { display: inline-block; width: 14px; height: 14px; margin-right: 5px; vertical-align: -2px; }
+/* site-button already spaces its contents by 10px, so the mark only needs a size. */
+.plan-button-icon { width: 18px; height: 18px; }
+/* TODO: AI-PICKED-VALUE: The tagline sits 12px under the promo line, at its size and weight. */
+.plans-mark-caption { margin-top: 12px; text-align: center; color: var(--foreground); font-size: 15px; }
+.plans-mark-caption + .plans-mark-caption { margin-top: 6px; }
+
+@media (max-width: 900px) {
+  .plans-grid { grid-template-columns: minmax(0, 392px); }
+}
+
+/* TODO: AI-PICKED-VALUE: Thin grey scrollbars at 20% black on a clear track, so Windows draws a slim bar instead of its wide native one with arrows. The script editor draws its own. */
+.editor-scrollbars, .editor-scrollbars * { scrollbar-width: thin; scrollbar-color: rgba(0, 0, 0, .2) transparent; }

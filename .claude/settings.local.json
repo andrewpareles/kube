@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cargo test *)",
+      "Bash(curl -s http://127.0.0.1:7797/system_prompt)",
+      "Bash(curl -s http://127.0.0.1:7797/tools)",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s -X POST http://127.0.0.1:7797/tool_call -H 'Content-Type: application/json' -d '{\"name\": \"ls\", \"arguments\": {\"in\": 1}}')"
+    ]
+  }
+}

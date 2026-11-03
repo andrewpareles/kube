@@ -1,0 +1,360 @@
+{
+  "worldSchemaVersion": 61,
+  "fallback_camera_location": {
+    "position": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "orientation": {
+      "theta": 0.0,
+      "phi": 0.7853982
+    }
+  },
+  "objectOfId": {
+    "2": {
+      "id": 2,
+      "name": "ball_texture_material",
+      "info": {
+        "Material": {
+          "albedoTextureDataId": 1,
+          "metallicTextureDataId": null,
+          "roughnessTextureDataId": null,
+          "normalTextureDataId": null,
+          "alphaMode": "Opaque"
+        }
+      }
+    },
+    "122": {
+      "id": 122,
+      "name": "GamePig",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "25": {
+      "id": 25,
+      "name": "ground",
+      "info": {
+        "Brick": {
+          "material": {
+            "materialInfoId": 3,
+            "tileSizeU": 2.0,
+            "tileSizeV": 2.0,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 0.8,
+            "color": {
+              "r": 0.1,
+              "g": 0.3,
+              "b": 0.04
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "22": {
+      "id": 22,
+      "name": "player_join_avatar_script",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "126": {
+      "id": 126,
+      "name": "material_1",
+      "info": {
+        "Material": {
+          "albedoTextureDataId": 81,
+          "metallicTextureDataId": null,
+          "roughnessTextureDataId": null,
+          "normalTextureDataId": null,
+          "alphaMode": "Opaque"
+        }
+      }
+    },
+    "123": {
+      "id": 123,
+      "name": "physics_collider",
+      "info": {
+        "RigidGroup": {
+          "followSkeletonId": null,
+          "followJointNameOfChildName": null,
+          "attachmentOffsetOfChildName": {}
+        }
+      }
+    },
+    "127": {
+      "id": 127,
+      "name": "mesh_anchor",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 0.0,
+            "color": {
+              "r": 1.0,
+              "g": 0.0,
+              "b": 0.0
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "1": {
+      "id": 1,
+      "name": "root",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "3": {
+      "id": 3,
+      "name": "grass_material",
+      "info": {
+        "Material": {
+          "albedoTextureDataId": null,
+          "metallicTextureDataId": null,
+          "roughnessTextureDataId": 1,
+          "normalTextureDataId": null,
+          "alphaMode": "Opaque"
+        }
+      }
+    },
+    "125": {
+      "id": 125,
+      "name": "mesh_1",
+      "info": {
+        "Mesh": {
+          "meshDataId": 71,
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "material": {
+            "materialInfoId": 126
+          },
+          "followSkeletonId": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.5,
+              "g": 0.5,
+              "b": 0.5
+            },
+            "isAlwaysOnTop": false
+          },
+          "physicalObjectId": 127
+        }
+      }
+    },
+    "124": {
+      "id": 124,
+      "name": "physics_collider_child",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 0.5,
+            "color": {
+              "r": 0.5,
+              "g": 0.5,
+              "b": 0.5
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    }
+  },
+  "rootObjectId": 1,
+  "childrenOfId": {
+    "25": [],
+    "3": [],
+    "127": [],
+    "125": [
+      126
+    ],
+    "122": [
+      123,
+      125
+    ],
+    "2": [],
+    "124": [],
+    "126": [],
+    "22": [],
+    "1": [
+      3,
+      22,
+      122,
+      2,
+      25
+    ],
+    "123": [
+      127,
+      124
+    ]
+  },
+  "scriptRawCodeOfId": {
+    "22": "const rootObjectId = game.world.id;\nconsole.log('[player_join_avatar_script] loaded rootObjectId', rootObjectId);\n\ngame.objectService.addObjectCreatedListener((player) => {\n  console.log('[player_join_avatar_script] join callback fired', player.id);\n  if (player.type !== 'player') return;\n  if (player.characterObjectId !== null) return;\n  \n  const spawnColumn = player.id % 4;\n  const spawnRow = Math.floor(player.id / 4) % 3;\n  const groupPosition = { x: (spawnColumn - 1.5) * 8.0, y: 15.0, z: spawnRow * 8.0 - 8.0 };\n\n  // Find one GamePig to use as a template\n  const allChildren = game.world.getChildren();\n  const pigs = allChildren.filter(c => c.name === \"GamePig\");\n  let templatePigId = null;\n  if (pigs.length > 0) {\n      templatePigId = pigs[0].id;\n  }\n\n  if (templatePigId) {\n      // Clone the pig template\n      const clonedPig = game.objectService.cloneObject(templatePigId, \"PlayerPig_\" + player.id);\n      \n      if (clonedPig) {\n          const collider = clonedPig.getChildren().find(c => c.name === \"physics_collider\");\n          const mesh = clonedPig.getChildren().find(c => c.name === \"mesh_1\");\n          const materialChild = mesh ? mesh.getChildren().find(c => c.name === \"material_1\") : null;\n\n          if (collider) {\n              collider.location.position = groupPosition;\n              \n              const anchor = collider.getChildren().find(c => c.name === \"mesh_anchor\");\n              \n              // Link mesh to the rotated anchor (or directly to collider if not found)\n              if (mesh) {\n                  mesh.physicalObjectId = anchor ? anchor.id : collider.id;\n                  if (materialChild) {\n                      mesh.material = { materialInfoId: materialChild.id };\n                  }\n              }\n\n              // Make collider transparent and absolutely unanchored\n              const colliderChild = collider.getChildren().find(c => c.name === \"physics_collider_child\");\n              if (colliderChild) {\n                  colliderChild.opacity = 0;\n                  colliderChild.isAnchored = false;\n                  // Set the head to the actual ball collider so the camera tracks properly!\n                  player.headObjectId = colliderChild.id;\n              }\n              \n              player.characterObjectId = collider.id;\n          }\n      }\n  } else {\n      console.log(\"Template pig not found, unable to spawn player\");\n  }\n}, \"player\");"
+  },
+  "physicsInfo3DOfId": {
+    "127": {
+      "location": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.7071081,
+          0.0,
+          0.7071055
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "124": {
+      "location": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "123": {
+      "location": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "25": {
+      "location": {
+        "position": [
+          0.0,
+          -0.5,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "physicsToggles3DOfId": {
+    "124": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 19.098593171027442
+    },
+    "25": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 0.0
+    },
+    "127": {
+      "isWalkthrough": true,
+      "isAnchored": false,
+      "density": 99.99999999999999
+    }
+  },
+  "primitiveSettingsOfId": {
+    "25": {
+      "Brick": {
+        "size": [
+          40.0,
+          1.0,
+          40.0
+        ]
+      }
+    },
+    "124": {
+      "Ball": {
+        "radius": 0.5
+      }
+    },
+    "127": {
+      "Brick": {
+        "size": [
+          0.1,
+          0.1,
+          0.1
+        ]
+      }
+    }
+  }
+}

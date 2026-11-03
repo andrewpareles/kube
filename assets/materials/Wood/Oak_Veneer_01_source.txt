@@ -1,0 +1,7 @@
+Source: Poly Haven
+Page: https://polyhaven.com/a/oak_veneer_01
+License: CC0
+Downloaded maps: albedo, roughness, normal
+Generated maps: metallic
+Missing requested maps: ao
+Notes: Normal map uses the NormalGL file.

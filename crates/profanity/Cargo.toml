@@ -1,0 +1,14 @@
+[package]
+name = "profanity"
+version.workspace = true
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# Only the censor feature: the context feature tracks per-user state that nothing here uses.
+rustrict = { version = "0.7.39", default-features = false, features = ["censor"] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen = "=0.2.114"

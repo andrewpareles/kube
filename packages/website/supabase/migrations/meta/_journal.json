@@ -1,0 +1,692 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1767936904927,
+      "tag": "0000_init",
+      "breakpoints": false
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771491264944,
+      "tag": "0001_uploads_set_type_id_trigger",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771492069770,
+      "tag": "0002_other_existing_triggers_and_functions",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1772079243000,
+      "tag": "0003_rename_uploads_table_to_uploads_metadata",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1773709660000,
+      "tag": "0004_rename_games_table_to_games_metadata",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1775941531255,
+      "tag": "0005_rename_animation_frames_data_to_bone_animation_data",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1776378961266,
+      "tag": "0006_profile_public_id_and_bigint_game_ids",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1776745430245,
+      "tag": "0007_player_auth_and_session_cleanup",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1777600000000,
+      "tag": "0008_starting_and_running_servers",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1777600000001,
+      "tag": "0009_remove_bone_animation_data",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1777600000002,
+      "tag": "0010_safe_running_player_session_cleanup",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1777600000003,
+      "tag": "0011_game_likes",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1777600000004,
+      "tag": "0012_game_bookmarks",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1777600000005,
+      "tag": "0013_rename_favorites_and_total_views",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1777600000006,
+      "tag": "0014_rename_total_visits",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1777600000007,
+      "tag": "0015_drop_game_favorites",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1777600000008,
+      "tag": "0016_thumbnails_bucket",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1777600000009,
+      "tag": "0017_rename_database_objects",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1777600000010,
+      "tag": "0018_drop_thumbnail_url",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1777600000011,
+      "tag": "0019_drop_game_metadata_world_version",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1777600000012,
+      "tag": "0020_fix_running_player_session_cleanup_after_renames",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1777600000013,
+      "tag": "0021_per_game_world_version_num",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1777600000014,
+      "tag": "0022_chat_metadata_and_chat_messages",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1777600000015,
+      "tag": "0023_chat_messages_model_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1777600000016,
+      "tag": "0024_drop_chat_messages_world_version",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1777600000017,
+      "tag": "0025_remove_chat_revert",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1777600000018,
+      "tag": "0026_unique_usernames",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1777600000019,
+      "tag": "0027_username_min_length_four",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1777600000020,
+      "tag": "0028_our_picks_games",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1777600000021,
+      "tag": "0029_game_remixed_from",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1777600000022,
+      "tag": "0031_running_player_session_connected_at",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1777600000023,
+      "tag": "0032_data_metadata_name",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1788921230315,
+      "tag": "0033_drop_data_metadata_url",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1788928034996,
+      "tag": "0034_data_metadata_is_main",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1788930328157,
+      "tag": "0035_drop_data_metadata_is_main",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1788931056034,
+      "tag": "0036_require_data_metadata_name",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1788933937907,
+      "tag": "0037_game_object_catalog",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1788997519069,
+      "tag": "0038_catalog_names_only",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1789280267676,
+      "tag": "0039_catalog_stored_object",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1789357834440,
+      "tag": "0040_catalog_item_names",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1789364403499,
+      "tag": "0041_catalog_item_stored_object_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1789525357390,
+      "tag": "0042_browser_editor",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1789802210014,
+      "tag": "0043_editor_share_auth",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1789872778972,
+      "tag": "0044_game_chats",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1789888196410,
+      "tag": "0045_k_coins",
+      "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1789888196411,
+      "tag": "0046_blender_sources",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1789954575548,
+      "tag": "0047_payments",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1789967720648,
+      "tag": "0048_chat_usage_request_id_unique",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1790036047362,
+      "tag": "0049_chat_usage_message_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1790036047363,
+      "tag": "0050_delete_legacy_chats",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1790046452721,
+      "tag": "0051_ai_sdk_chats_only",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1790303237630,
+      "tag": "0052_catalog_material_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "7",
+      "when": 1790713868724,
+      "tag": "0053_rename_ledger_picks_and_play_auth",
+      "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "7",
+      "when": 1790755060665,
+      "tag": "0054_rename_catalog_to_assets",
+      "breakpoints": true
+    },
+    {
+      "idx": 55,
+      "version": "7",
+      "when": 1790755060666,
+      "tag": "0055_drop_catalog_names",
+      "breakpoints": true
+    },
+    {
+      "idx": 56,
+      "version": "7",
+      "when": 1790758181087,
+      "tag": "0056_drop_game_remixed_from",
+      "breakpoints": true
+    },
+    {
+      "idx": 57,
+      "version": "7",
+      "when": 1790759877310,
+      "tag": "0057_catalog",
+      "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "7",
+      "when": 1790801837043,
+      "tag": "0058_catalog_public_items",
+      "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1790814290208,
+      "tag": "0059_blender_source_format",
+      "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "7",
+      "when": 1790822508156,
+      "tag": "0060_skybox_asset_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "7",
+      "when": 1790892734144,
+      "tag": "0061_rename_assets_to_asset_metadata",
+      "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "7",
+      "when": 1790893037639,
+      "tag": "0062_asset_import_counts",
+      "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "7",
+      "when": 1790913959379,
+      "tag": "0063_chat_screenshots_bucket",
+      "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "7",
+      "when": 1790916666460,
+      "tag": "0064_game_worlds_bucket",
+      "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1790917092608,
+      "tag": "0065_drop_inline_game_worlds",
+      "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "7",
+      "when": 1790919803641,
+      "tag": "0066_starting_build_credits",
+      "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "7",
+      "when": 1791068844780,
+      "tag": "0067_user_favorites",
+      "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "7",
+      "when": 1791072693631,
+      "tag": "0068_sfx_asset_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1791072693632,
+      "tag": "0069_sound_effects_to_sfx",
+      "breakpoints": true
+    },
+    {
+      "idx": 70,
+      "version": "7",
+      "when": 1791072944440,
+      "tag": "0070_object_asset_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 71,
+      "version": "7",
+      "when": 1791080778258,
+      "tag": "0071_private_assets",
+      "breakpoints": true
+    },
+    {
+      "idx": 72,
+      "version": "7",
+      "when": 1791094379091,
+      "tag": "0072_creators_own_their_catalog_items",
+      "breakpoints": true
+    },
+    {
+      "idx": 73,
+      "version": "7",
+      "when": 1791095470141,
+      "tag": "0073_replace_k_coins_with_build_credits",
+      "breakpoints": true
+    },
+    {
+      "idx": 74,
+      "version": "7",
+      "when": 1791096867898,
+      "tag": "0074_equipped_hats_and_purchases_pay_nobody",
+      "breakpoints": true
+    },
+    {
+      "idx": 75,
+      "version": "7",
+      "when": 1791103731689,
+      "tag": "0075_rename_build_credits_to_credits",
+      "breakpoints": true
+    },
+    {
+      "idx": 76,
+      "version": "7",
+      "when": 1791104238382,
+      "tag": "0076_free_hats",
+      "breakpoints": true
+    },
+    {
+      "idx": 77,
+      "version": "7",
+      "when": 1791104497307,
+      "tag": "0077_rename_free_hats_to_free_hats_left",
+      "breakpoints": true
+    },
+    {
+      "idx": 78,
+      "version": "7",
+      "when": 1791156337603,
+      "tag": "0078_preferred_color",
+      "breakpoints": true
+    },
+    {
+      "idx": 79,
+      "version": "7",
+      "when": 1791168461462,
+      "tag": "0079_preferred_color_nullable",
+      "breakpoints": true
+    },
+    {
+      "idx": 80,
+      "version": "7",
+      "when": 1791190882103,
+      "tag": "0080_rename_public_id_to_user_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 81,
+      "version": "7",
+      "when": 1791363338173,
+      "tag": "0081_public_assets",
+      "breakpoints": true
+    },
+    {
+      "idx": 82,
+      "version": "7",
+      "when": 1791405626299,
+      "tag": "0082_drop_game_our_picks",
+      "breakpoints": true
+    },
+    {
+      "idx": 83,
+      "version": "7",
+      "when": 1791430097591,
+      "tag": "0083_guest_username_for_google_sign_ups",
+      "breakpoints": true
+    },
+    {
+      "idx": 84,
+      "version": "7",
+      "when": 1791441420833,
+      "tag": "0084_every_account_starts_as_guest",
+      "breakpoints": true
+    },
+    {
+      "idx": 85,
+      "version": "7",
+      "when": 1791445957811,
+      "tag": "0085_delete_empty_running_server",
+      "breakpoints": true
+    },
+    {
+      "idx": 86,
+      "version": "7",
+      "when": 1791495790756,
+      "tag": "0086_data_ids_never_reused",
+      "breakpoints": true
+    },
+    {
+      "idx": 87,
+      "version": "7",
+      "when": 1791506164616,
+      "tag": "0087_s3_file_pointers",
+      "breakpoints": true
+    },
+    {
+      "idx": 88,
+      "version": "7",
+      "when": 1791509604603,
+      "tag": "0088_next_file_ids",
+      "breakpoints": true
+    },
+    {
+      "idx": 89,
+      "version": "7",
+      "when": 1791522224491,
+      "tag": "0089_asset_uuid",
+      "breakpoints": true
+    },
+    {
+      "idx": 90,
+      "version": "7",
+      "when": 1791575350245,
+      "tag": "0090_files_only_in_s3",
+      "breakpoints": true
+    },
+    {
+      "idx": 91,
+      "version": "7",
+      "when": 1791575350246,
+      "tag": "0091_catalog_is_listed",
+      "breakpoints": true
+    },
+    {
+      "idx": 92,
+      "version": "7",
+      "when": 1791587064264,
+      "tag": "0092_editor_database_functions",
+      "breakpoints": true
+    },
+    {
+      "idx": 93,
+      "version": "7",
+      "when": 1792192065419,
+      "tag": "0093_site_admins",
+      "breakpoints": true
+    },
+    {
+      "idx": 94,
+      "version": "7",
+      "when": 1792194918689,
+      "tag": "0094_daily_credits_and_free_hats",
+      "breakpoints": true
+    },
+    {
+      "idx": 95,
+      "version": "7",
+      "when": 1792284402910,
+      "tag": "0095_game_suggested_min_players",
+      "breakpoints": true
+    },
+    {
+      "idx": 96,
+      "version": "7",
+      "when": 1792285320392,
+      "tag": "0096_game_screenshot_and_ai_thumbnail",
+      "breakpoints": true
+    },
+    {
+      "idx": 97,
+      "version": "7",
+      "when": 1792291030440,
+      "tag": "0097_drop_game_thumbnail_uuid",
+      "breakpoints": true
+    },
+    {
+      "idx": 98,
+      "version": "7",
+      "when": 1793419677000,
+      "tag": "0098_revoke_browser_table_rights",
+      "breakpoints": true
+    }
+  ]
+}

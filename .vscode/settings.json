@@ -1,0 +1,9 @@
+{
+  // rust-analyzer re-runs `cargo check --workspace --all-targets` on every save, and it takes the lock on
+  // target/. Any build in a terminal then sits on "Blocking waiting for file lock on build directory" until
+  // it finishes. Giving rust-analyzer target/rust-analyzer/ means the two stop fighting.
+  "rust-analyzer.cargo.targetDir": true,
+
+  // check only what changed rather than every test/bench target in the workspace
+  "rust-analyzer.check.allTargets": false
+}

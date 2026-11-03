@@ -1,0 +1,2087 @@
+{
+  "worldSchemaVersion": 69,
+  "fallback_camera_location": {
+    "position": [
+      0.0,
+      34.7641,
+      -44.764095
+    ],
+    "orientation": {
+      "theta": 0.0,
+      "phi": 0.7853982
+    }
+  },
+  "objectOfId": {
+    "8": {
+      "id": 8,
+      "name": "Expansive-Farm-Arena",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "24": {
+      "id": 24,
+      "name": "Lobby-Post",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.45,
+              "g": 0.25,
+              "b": 0.1
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "28": {
+      "id": 28,
+      "name": "Lobby-Post",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.45,
+              "g": 0.25,
+              "b": 0.1
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "9": {
+      "id": 9,
+      "name": "Boulder",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.35,
+              "g": 0.38,
+              "b": 0.34
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "13": {
+      "id": 13,
+      "name": "Arena-Grass",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.2,
+              "g": 0.65,
+              "b": 0.22
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "32": {
+      "id": 32,
+      "name": "PigBody",
+      "info": {
+        "RigidGroup": {
+          "followSkeletonId": null
+        }
+      }
+    },
+    "41": {
+      "id": 41,
+      "name": "PigLegFrontRight",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.82,
+              "g": 0.24,
+              "b": 0.38
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "22": {
+      "id": 22,
+      "name": "Lobby",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "25": {
+      "id": 25,
+      "name": "Lobby-Roof",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.85,
+              "g": 0.25,
+              "b": 0.22
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "1": {
+      "id": 1,
+      "name": "root",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "6": {
+      "id": 6,
+      "name": "Pig-Tag-HUD",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "21": {
+      "id": 21,
+      "name": "East-Fence",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.5,
+              "g": 0.3,
+              "b": 0.12
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "23": {
+      "id": 23,
+      "name": "Lobby-Platform",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.35,
+              "g": 0.55,
+              "b": 0.25
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "29": {
+      "id": 29,
+      "name": "materials",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "35": {
+      "id": 35,
+      "name": "PigSnout",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.82,
+              "g": 0.24,
+              "b": 0.38
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "36": {
+      "id": 36,
+      "name": "PigEarLeft",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 1.0,
+              "g": 0.48,
+              "b": 0.62
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "37": {
+      "id": 37,
+      "name": "PigEarRight",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 1.0,
+              "g": 0.48,
+              "b": 0.62
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "4": {
+      "id": 4,
+      "name": "scripts",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "38": {
+      "id": 38,
+      "name": "PigEyeLeft",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.05,
+              "g": 0.04,
+              "b": 0.04
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "39": {
+      "id": 39,
+      "name": "PigEyeRight",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.05,
+              "g": 0.04,
+              "b": 0.04
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "33": {
+      "id": 33,
+      "name": "PigTorso",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 1.0,
+              "g": 0.48,
+              "b": 0.62
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "7": {
+      "id": 7,
+      "name": "world",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "31": {
+      "id": 31,
+      "name": "PigCharacterSource",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "34": {
+      "id": 34,
+      "name": "PigHead",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 1.0,
+              "g": 0.48,
+              "b": 0.62
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "45": {
+      "id": 45,
+      "name": "spawn_players",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "44": {
+      "id": 44,
+      "name": "PigTail",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.82,
+              "g": 0.24,
+              "b": 0.38
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "43": {
+      "id": 43,
+      "name": "PigLegBackRight",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.82,
+              "g": 0.24,
+              "b": 0.38
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "11": {
+      "id": 11,
+      "name": "North-Fence",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.5,
+              "g": 0.3,
+              "b": 0.12
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "10": {
+      "id": 10,
+      "name": "Barn-Roof",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.2,
+              "g": 0.12,
+              "b": 0.08
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "12": {
+      "id": 12,
+      "name": "Silo",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.65,
+              "g": 0.68,
+              "b": 0.7
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "27": {
+      "id": 27,
+      "name": "Lobby-Post",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.45,
+              "g": 0.25,
+              "b": 0.1
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "17": {
+      "id": 17,
+      "name": "West-Fence",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.5,
+              "g": 0.3,
+              "b": 0.12
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "5": {
+      "id": 5,
+      "name": "Pig-Tag-Game-Manager",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "15": {
+      "id": 15,
+      "name": "Boulder",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.35,
+              "g": 0.38,
+              "b": 0.34
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "42": {
+      "id": 42,
+      "name": "PigLegBackLeft",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.82,
+              "g": 0.24,
+              "b": 0.38
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "19": {
+      "id": 19,
+      "name": "Hay-Bale",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.95,
+              "g": 0.7,
+              "b": 0.12
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "18": {
+      "id": 18,
+      "name": "Red-Barn",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.65,
+              "g": 0.08,
+              "b": 0.06
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "16": {
+      "id": 16,
+      "name": "South-Fence",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.5,
+              "g": 0.3,
+              "b": 0.12
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "20": {
+      "id": 20,
+      "name": "Pond",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 0.75,
+            "color": {
+              "r": 0.1,
+              "g": 0.45,
+              "b": 0.85
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "14": {
+      "id": 14,
+      "name": "Hay-Bale",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.95,
+              "g": 0.7,
+              "b": 0.12
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "26": {
+      "id": 26,
+      "name": "Lobby-Post",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.45,
+              "g": 0.25,
+              "b": 0.1
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "2": {
+      "id": 2,
+      "name": "animations",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "3": {
+      "id": 3,
+      "name": "Baseplate",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.55,
+              "g": 0.75,
+              "b": 0.55
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "40": {
+      "id": 40,
+      "name": "PigLegFrontLeft",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.82,
+              "g": 0.24,
+              "b": 0.38
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    }
+  },
+  "rootObjectId": 1,
+  "childrenOfId": {
+    "28": [],
+    "22": [
+      26,
+      23,
+      24,
+      28,
+      25,
+      27
+    ],
+    "34": [],
+    "17": [],
+    "35": [],
+    "38": [],
+    "36": [],
+    "14": [],
+    "9": [],
+    "20": [],
+    "39": [],
+    "1": [
+      2,
+      3,
+      29,
+      7,
+      4
+    ],
+    "41": [],
+    "40": [],
+    "13": [],
+    "26": [],
+    "31": [
+      32
+    ],
+    "19": [],
+    "12": [],
+    "2": [],
+    "27": [],
+    "42": [],
+    "23": [],
+    "4": [
+      5,
+      45,
+      6
+    ],
+    "6": [],
+    "15": [],
+    "21": [],
+    "44": [],
+    "32": [
+      38,
+      39,
+      43,
+      42,
+      37,
+      34,
+      36,
+      41,
+      33,
+      44,
+      35,
+      40
+    ],
+    "11": [],
+    "37": [],
+    "45": [],
+    "18": [],
+    "3": [],
+    "25": [],
+    "29": [],
+    "7": [
+      22,
+      8,
+      31
+    ],
+    "8": [
+      9,
+      12,
+      18,
+      21,
+      15,
+      10,
+      11,
+      13,
+      16,
+      19,
+      14,
+      17,
+      20
+    ],
+    "16": [],
+    "33": [],
+    "43": [],
+    "10": [],
+    "5": [],
+    "24": []
+  },
+  "scriptRawCodeOfId": {
+    "5": "'use server'\n\nconst LOBBY_MS = 30000;\nconst ROUND_MS = 300000;\nconst RESET_MS = 8000;\nconst lobbySpawns = [{ x: -8, y: 5, z: -8 }, { x: 8, y: 5, z: -8 }, { x: -8, y: 5, z: 8 }, { x: 8, y: 5, z: 8 }];\nconst arenaSpawns = [{ x: 95, y: 5, z: -90 }, { x: 265, y: 5, z: -90 }, { x: 95, y: 5, z: 90 }, { x: 265, y: 5, z: 90 }, { x: 130, y: 5, z: 35 }, { x: 230, y: 5, z: -35 }];\nlet phase = \"Lobby\";\nlet phaseEndsAt = getTime() + LOBBY_MS;\nconst tagged = new Set<number>();\n\nfunction descendants(root) {\n  const result = [];\n  const pending = [...root.getChildren()];\n  while (pending.length > 0) {\n    const next = pending.pop();\n    if (!next) continue;\n    result.push(next);\n    pending.push(...next.getChildren());\n  }\n  return result;\n}\n\nfunction allPlayers() {\n  return game.playerService.getAllPlayers();\n}\n\nfunction character(player) {\n  if (player.characterObjectId == null) return null;\n  return game.objectService.getObjectById(player.characterObjectId);\n}\n\nfunction teleport(player, position) {\n  const body = character(player);\n  if (body) game.objectService.moveObjectTo(body.id, position);\n}\n\nfunction recolor(player, isTagger) {\n  const body = character(player);\n  if (!body) return;\n  const color = isTagger ? { r: 0.95, g: 0.08, b: 0.06 } : { r: 1.0, g: 0.48, b: 0.62 };\n  for (const part of [body, ...descendants(body)]) {\n    if (\"color\" in part) part.color = color;\n  }\n}\n\nfunction resetToLobby() {\n  phase = \"Lobby\";\n  phaseEndsAt = getTime() + LOBBY_MS;\n  tagged.clear();\n  allPlayers().forEach((player, index) => {\n    recolor(player, false);\n    teleport(player, lobbySpawns[index % lobbySpawns.length]);\n  });\n  console.log(\"PIG TAG: Lobby started - round begins in 30 seconds\");\n}\n\nfunction startRound() {\n  const players = allPlayers();\n  if (players.length === 0) {\n    resetToLobby();\n    return;\n  }\n  phase = \"Round\";\n  phaseEndsAt = getTime() + ROUND_MS;\n  tagged.clear();\n  const firstTagger = players[Math.floor(Math.random() * players.length)];\n  tagged.add(firstTagger.id);\n  players.forEach((player, index) => {\n    teleport(player, arenaSpawns[index % arenaSpawns.length]);\n    recolor(player, tagged.has(player.id));\n  });\n  console.log(\"PIG TAG: Round started with \" + players.length + \" players. Survive the red infected pigs for 5 minutes.\");\n}\n\nfunction finishRound(message) {\n  if (phase !== \"Round\") return;\n  phase = \"Results\";\n  phaseEndsAt = getTime() + RESET_MS;\n  console.log(\"PIG TAG RESULT: \" + message);\n}\n\nfunction playerForCollisionObject(object) {\n  return allPlayers().find((player) => {\n    const body = character(player);\n    return body && (body.id === object.id || descendants(body).some((part) => part.id === object.id));\n  });\n}\n\ngame.collisionService.addCollisionListener((objectA, objectB) => {\n  if (phase !== \"Round\") return;\n  const playerA = playerForCollisionObject(objectA);\n  const playerB = playerForCollisionObject(objectB);\n  if (!playerA || !playerB || playerA.id === playerB.id) return;\n  if (tagged.has(playerA.id) && !tagged.has(playerB.id)) {\n    tagged.add(playerB.id);\n    recolor(playerB, true);\n  } else if (tagged.has(playerB.id) && !tagged.has(playerA.id)) {\n    tagged.add(playerA.id);\n    recolor(playerA, true);\n  }\n  const players = allPlayers();\n  if (players.length > 0 && players.every((player) => tagged.has(player.id))) {\n    finishRound(\"THE TAGGERS WIN - every pig was infected!\");\n  }\n});\n\nsetInterval(() => {\n  if (getTime() < phaseEndsAt) return;\n  if (phase === \"Lobby\") startRound();\n  else if (phase === \"Round\") finishRound(\"THE PIGS WIN - survivors lasted 5 minutes!\");\n  else resetToLobby();\n}, 250);\nresetToLobby();\n",
+    "6": "const elapsed = createState(0);\nsetInterval(() => elapsed.set(getTime()), 250);\n\nfunction Hud() {\n  const cycle = elapsed.get() % 338000;\n  const inLobby = cycle < 30000;\n  const inRound = cycle >= 30000 && cycle < 330000;\n  const remainingMs = inLobby ? 30000 - cycle : inRound ? 330000 - cycle : 338000 - cycle;\n  const seconds = Math.max(0, Math.ceil(remainingMs / 1000));\n  const minutes = Math.floor(seconds / 60);\n  const displaySeconds = String(seconds % 60).padStart(2, \"0\");\n  const title = inLobby ? \"LOBBY\" : inRound ? \"PIG TAG\" : \"ROUND OVER\";\n  const subtitle = inLobby\n    ? \"Round begins soon • one pig will become the red tagger\"\n    : inRound\n      ? \"Pink pigs: survive!  Red pigs: infect everyone!\"\n      : \"Returning to the lobby...\";\n  return <div className=\"mt-6 flex w-[520px] flex-col items-center rounded-[24px] bg-black/70 px-7 py-4 text-white shadow-2xl\">\n    <div className=\"text-[30px] font-black tracking-[6px] text-pink-300\">{title}</div>\n    <div className=\"mt-1 text-[42px] font-black\">{minutes}:{displaySeconds}</div>\n    <div className=\"mt-1 text-center text-[16px] font-semibold\">{subtitle}</div>\n  </div>;\n}\n\ngame.guiService.show(\"pig-tag-hud\", <Hud />, \"top\");",
+    "45": "'use server'\n\nconst pigRootIdOfPlayerId = new Map<number, number>();\nconst lobbySpawns = [\n  { x: -8, y: 5, z: -8 },\n  { x: 8, y: 5, z: -8 },\n  { x: -8, y: 5, z: 8 },\n  { x: 8, y: 5, z: 8 },\n];\nlet nextSpawnIndex = 0;\n\nconst world = game.objectService.getObjectByName(\"world\");\nconst pigSource = game.objectService.getObjectByName(\"PigCharacterSource\");\nif (!world || !pigSource) {\n  throw new Error(\"Pig character source or world group is missing\");\n}\ngame.templateService.cutObjectToTemplate(pigSource.id, \"pig-character\");\n\nconst spawnPig = (player) => {\n  const pigRoot = game.templateService.pasteTemplate(\"pig-character\", world.id);\n  const body = pigRoot.getChild(\"PigBody\");\n  const head = body ? body.getChild(\"PigHead\") : null;\n  if (!body || !head) {\n    game.objectService.deleteObject(pigRoot.id);\n    console.log(\"PIG TAG ERROR: Pig template is missing PigBody or PigHead\");\n    return;\n  }\n\n  const spawn = lobbySpawns[nextSpawnIndex % lobbySpawns.length];\n  nextSpawnIndex += 1;\n  game.objectService.moveObjectTo(body.id, spawn);\n  game.objectService.setObjectAnchored(body.id, false);\n  game.objectService.setObjectDensity(body.id, 1);\n\n  player.characterObjectId = body.id;\n  player.headObjectId = head.id;\n  player.physicsControls = {\n    jumpHeight: 3,\n    stepHeight: 2,\n    speed: 18,\n    acceleration: 90,\n  };\n  pigRootIdOfPlayerId.set(player.id, pigRoot.id);\n  console.log(\"PIG TAG: Spawned controllable pig for \" + player.userid);\n};\n\ngame.objectService.addObjectCreatedListener((player) => {\n  spawnPig(player);\n}, \"player\");\n\ngame.objectService.addObjectDeletedListener((playerId) => {\n  const pigRootId = pigRootIdOfPlayerId.get(playerId);\n  if (pigRootId === undefined) return;\n  game.objectService.deleteObject(pigRootId);\n  pigRootIdOfPlayerId.delete(playerId);\n}, \"player\");\n"
+  },
+  "physicsInfo3DOfId": {
+    "36": {
+      "location": {
+        "position": [
+          -0.8,
+          6.75,
+          2.7
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "28": {
+      "location": {
+        "position": [
+          -10.0,
+          6.0,
+          -10.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "10": {
+      "location": {
+        "position": [
+          180.0,
+          22.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "14": {
+      "location": {
+        "position": [
+          120.0,
+          3.0,
+          -45.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "17": {
+      "location": {
+        "position": [
+          60.0,
+          3.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "9": {
+      "location": {
+        "position": [
+          275.0,
+          5.0,
+          78.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "21": {
+      "location": {
+        "position": [
+          300.0,
+          3.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "38": {
+      "location": {
+        "position": [
+          -0.5,
+          5.85,
+          4.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "35": {
+      "location": {
+        "position": [
+          0.0,
+          5.2,
+          3.9
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "11": {
+      "location": {
+        "position": [
+          180.0,
+          3.0,
+          -120.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "13": {
+      "location": {
+        "position": [
+          180.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "42": {
+      "location": {
+        "position": [
+          -1.2,
+          3.45,
+          -1.3
+        ],
+        "quaternion": [
+          0.7071068,
+          0.0,
+          0.0,
+          0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "12": {
+      "location": {
+        "position": [
+          245.0,
+          12.0,
+          -60.0
+        ],
+        "quaternion": [
+          0.7071068,
+          -0.0,
+          0.0,
+          0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "33": {
+      "location": {
+        "position": [
+          0.0,
+          5.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "23": {
+      "location": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "19": {
+      "location": {
+        "position": [
+          245.0,
+          3.0,
+          50.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "26": {
+      "location": {
+        "position": [
+          10.0,
+          6.0,
+          -10.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "24": {
+      "location": {
+        "position": [
+          10.0,
+          6.0,
+          10.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "34": {
+      "location": {
+        "position": [
+          0.0,
+          5.5,
+          2.7
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "15": {
+      "location": {
+        "position": [
+          90.0,
+          4.0,
+          -75.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "20": {
+      "location": {
+        "position": [
+          115.0,
+          1.1,
+          60.0
+        ],
+        "quaternion": [
+          0.7071068,
+          -0.0,
+          0.0,
+          0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "37": {
+      "location": {
+        "position": [
+          0.8,
+          6.75,
+          2.7
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "43": {
+      "location": {
+        "position": [
+          1.2,
+          3.45,
+          -1.3
+        ],
+        "quaternion": [
+          0.7071068,
+          0.0,
+          0.0,
+          0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "25": {
+      "location": {
+        "position": [
+          0.0,
+          12.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "18": {
+      "location": {
+        "position": [
+          180.0,
+          10.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "32": {
+      "location": {
+        "position": [
+          0.0,
+          5.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "16": {
+      "location": {
+        "position": [
+          180.0,
+          3.0,
+          120.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "44": {
+      "location": {
+        "position": [
+          0.0,
+          5.3,
+          -2.45
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "27": {
+      "location": {
+        "position": [
+          -10.0,
+          6.0,
+          10.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "41": {
+      "location": {
+        "position": [
+          1.2,
+          3.45,
+          1.3
+        ],
+        "quaternion": [
+          0.7071068,
+          0.0,
+          0.0,
+          0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "39": {
+      "location": {
+        "position": [
+          0.5,
+          5.85,
+          4.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "3": {
+      "location": {
+        "position": [
+          0.0,
+          0.5,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "40": {
+      "location": {
+        "position": [
+          -1.2,
+          3.45,
+          1.3
+        ],
+        "quaternion": [
+          0.7071068,
+          0.0,
+          0.0,
+          0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "physicsToggles3DOfId": {
+    "33": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "19": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "24": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "35": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "44": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "11": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "3": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "43": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "25": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "27": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "34": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "21": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "39": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "9": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "26": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "15": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "36": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "23": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "14": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "42": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "41": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "18": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "40": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "13": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "37": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "10": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "38": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "12": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "17": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "16": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "28": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "20": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    }
+  },
+  "primitiveSettingsOfId": {
+    "11": {
+      "Brick": {
+        "size": [
+          240.0,
+          6.0,
+          2.0
+        ]
+      }
+    },
+    "36": {
+      "Brick": {
+        "size": [
+          0.75,
+          1.0,
+          0.5
+        ]
+      }
+    },
+    "34": {
+      "Ball": {
+        "radius": 1.45
+      }
+    },
+    "43": {
+      "Cylinder": {
+        "radius": 0.42,
+        "length": 1.5
+      }
+    },
+    "41": {
+      "Cylinder": {
+        "radius": 0.42,
+        "length": 1.5
+      }
+    },
+    "12": {
+      "Cylinder": {
+        "radius": 10.0,
+        "length": 24.0
+      }
+    },
+    "40": {
+      "Cylinder": {
+        "radius": 0.42,
+        "length": 1.5
+      }
+    },
+    "15": {
+      "Ball": {
+        "radius": 4.0
+      }
+    },
+    "38": {
+      "Ball": {
+        "radius": 0.18
+      }
+    },
+    "24": {
+      "Brick": {
+        "size": [
+          1.0,
+          12.0,
+          1.0
+        ]
+      }
+    },
+    "9": {
+      "Ball": {
+        "radius": 5.0
+      }
+    },
+    "35": {
+      "Cylinder": {
+        "radius": 0.8,
+        "length": 0.9
+      }
+    },
+    "17": {
+      "Brick": {
+        "size": [
+          2.0,
+          6.0,
+          240.0
+        ]
+      }
+    },
+    "20": {
+      "Cylinder": {
+        "radius": 18.0,
+        "length": 0.3
+      }
+    },
+    "18": {
+      "Brick": {
+        "size": [
+          34.0,
+          20.0,
+          42.0
+        ]
+      }
+    },
+    "3": {
+      "Brick": {
+        "size": [
+          100.0,
+          1.0,
+          100.0
+        ]
+      }
+    },
+    "44": {
+      "Cylinder": {
+        "radius": 0.22,
+        "length": 1.2
+      }
+    },
+    "13": {
+      "Brick": {
+        "size": [
+          240.0,
+          2.0,
+          240.0
+        ]
+      }
+    },
+    "27": {
+      "Brick": {
+        "size": [
+          1.0,
+          12.0,
+          1.0
+        ]
+      }
+    },
+    "25": {
+      "Brick": {
+        "size": [
+          22.0,
+          1.0,
+          22.0
+        ]
+      }
+    },
+    "23": {
+      "Brick": {
+        "size": [
+          50.0,
+          2.0,
+          50.0
+        ]
+      }
+    },
+    "10": {
+      "Brick": {
+        "size": [
+          40.0,
+          4.0,
+          48.0
+        ]
+      }
+    },
+    "28": {
+      "Brick": {
+        "size": [
+          1.0,
+          12.0,
+          1.0
+        ]
+      }
+    },
+    "26": {
+      "Brick": {
+        "size": [
+          1.0,
+          12.0,
+          1.0
+        ]
+      }
+    },
+    "33": {
+      "Brick": {
+        "size": [
+          3.6,
+          2.4,
+          4.4
+        ]
+      }
+    },
+    "37": {
+      "Brick": {
+        "size": [
+          0.75,
+          1.0,
+          0.5
+        ]
+      }
+    },
+    "39": {
+      "Ball": {
+        "radius": 0.18
+      }
+    },
+    "21": {
+      "Brick": {
+        "size": [
+          2.0,
+          6.0,
+          240.0
+        ]
+      }
+    },
+    "42": {
+      "Cylinder": {
+        "radius": 0.42,
+        "length": 1.5
+      }
+    },
+    "16": {
+      "Brick": {
+        "size": [
+          240.0,
+          6.0,
+          2.0
+        ]
+      }
+    },
+    "14": {
+      "Brick": {
+        "size": [
+          8.0,
+          6.0,
+          12.0
+        ]
+      }
+    },
+    "19": {
+      "Brick": {
+        "size": [
+          12.0,
+          6.0,
+          8.0
+        ]
+      }
+    }
+  }
+}

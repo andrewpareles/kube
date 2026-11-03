@@ -1,0 +1,6 @@
+Source: Poliigon
+Page: https://www.poliigon.com/texture/slip-match-oak-wood-veneer-texture/7760
+License: Poliigon asset license
+Downloaded maps: none
+Missing requested maps: albedo, roughness, metallic, normal, ao
+Notes: Not downloaded or packaged because the current Poliigon terms restrict redistribution or repackaging of assets and restrict use in design software or games where users have direct or indirect access to the assets. Needs license confirmation before upload.

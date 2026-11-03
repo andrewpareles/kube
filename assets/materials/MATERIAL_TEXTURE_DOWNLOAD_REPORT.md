@@ -1,0 +1,115 @@
+# Material Texture Download Report
+
+Downloaded 1024-resolution texture maps where source files existed. Requested maps are albedo, roughness, metallic, normal, and ao. Extra opacity/emission maps were also saved when present.
+
+## Missing Requested Maps
+
+- Water/Surface_Imperfections_001: missing roughness, metallic, ao.
+- Concrete/Concrete_034: missing metallic, ao.
+- Plastic/Plastic_013_A: missing metallic, ao.
+- Plastic/Plastic_010: missing metallic, ao.
+- Plastic/Plastic_017_A: missing metallic, ao.
+- Wood/Wood_095: missing metallic, ao.
+- Wood/Wood_Floor_051: missing metallic.
+- Wood/Wood_Table_001: missing metallic.
+- Fabric_Fiber/Fabric_081_C: missing metallic.
+- Fabric_Fiber/Fabric_083: missing metallic, ao.
+- Carpet/Carpet_016: missing metallic.
+- Leather/Leather_037: missing metallic, ao.
+- Leather/Leather_038: missing metallic, ao.
+- Glass/Facade_001: missing ao.
+- Lava/Lava_001: missing metallic, ao.
+- Lava/Lava_005: missing metallic, ao.
+- Goo_Slime/Ground_083: missing metallic.
+- Goo_Slime/Ground_035: missing metallic.
+- Goo_Slime/Surface_Imperfections_011: missing roughness, metallic, ao.
+- Metal/Metal_063: missing ao.
+- Metal/Metal_060_B: missing ao.
+- Wood/Slip_Match_Oak_Wood_Veneer: not downloaded because the current Poliigon terms need redistribution/direct-access confirmation.
+- Metal/Clean_Galvanized_Zinc_Metal: not downloaded because the current Poliigon terms need redistribution/direct-access confirmation.
+- Stone_Rock/Rock_064: missing metallic.
+- Stone_Rock/Gravel_043: missing metallic.
+- Brick/Bricks_097: missing metallic.
+- Brick/Bricks_060: missing metallic.
+- Asphalt_Road/Road_012_A: missing metallic.
+- Asphalt_Road/Asphalt_031: missing metallic.
+- Sand/Ground_054: missing metallic.
+- Sand/Ground_080: missing metallic.
+- Grass/Grass_005: missing metallic.
+- Grass/Grass_001: missing metallic.
+- Dirt_Soil/Ground_103: missing metallic.
+- Dirt_Soil/Ground_068: missing metallic.
+- Rubber/Rubber_004: missing metallic, ao.
+- Rubber/Rubber_001: missing metallic, ao.
+- Ice/Ice_003: missing metallic, ao.
+- Ice/Ice_002: missing metallic, ao.
+- Snow/Snow_015: missing metallic.
+- Snow/Snow_014: missing metallic.
+- Tile_Ceramic/Tiles_138: missing metallic.
+- Tile_Ceramic/Tiles_107: missing metallic.
+- Concrete/Anti_Slip_Concrete: missing metallic.
+- Wood/Brown_Planks_03: missing metallic.
+- Fabric_Fiber/Denim_Fabric: missing metallic.
+- Leather/Brown_Leather: missing metallic.
+- Brick/Brick_4: missing metallic.
+- Tile_Ceramic/Marble_Tiles: missing metallic.
+- Water/Water_001: missing roughness, metallic.
+- Glass/Glass_Frosted_002: missing metallic.
+
+## Downloaded Variants
+
+- Water/Surface_Imperfections_001: albedo, normal, opacity
+- Concrete/Concrete_048: albedo, roughness, metallic, normal, ao
+- Concrete/Concrete_034: albedo, roughness, normal
+- Plastic/Plastic_013_A: albedo, roughness, normal
+- Plastic/Plastic_010: albedo, roughness, normal
+- Plastic/Plastic_017_A: albedo, roughness, normal
+- Wood/Wood_095: albedo, roughness, normal
+- Wood/Wood_Floor_051: albedo, roughness, normal, ao
+- Wood/Wood_Table_001: albedo, roughness, normal, ao
+- Fabric_Fiber/Fabric_081_C: albedo, roughness, normal, ao
+- Fabric_Fiber/Fabric_083: albedo, roughness, normal
+- Carpet/Carpet_016: albedo, roughness, normal, ao
+- Leather/Leather_037: albedo, roughness, normal
+- Leather/Leather_038: albedo, roughness, normal
+- Glass/Facade_001: albedo, roughness, metallic, normal
+- Lava/Lava_001: albedo, roughness, normal, emission
+- Lava/Lava_005: albedo, roughness, normal, emission
+- Goo_Slime/Ground_083: albedo, roughness, normal, ao
+- Goo_Slime/Ground_035: albedo, roughness, normal, ao
+- Goo_Slime/Surface_Imperfections_011: albedo, normal, opacity
+- Metal/Metal_0010: albedo, roughness, metallic, normal, ao
+- Metal/Corrugated_Steel_009: albedo, roughness, metallic, normal, ao
+- Metal/Metal_063: albedo, roughness, metallic, normal
+- Metal/Metal_044_A: albedo, roughness, metallic, normal
+- Stone_Rock/Rock_064: albedo, roughness, normal, ao
+- Stone_Rock/Gravel_043: albedo, roughness, normal, ao
+- Brick/Bricks_097: albedo, roughness, normal, ao
+- Brick/Bricks_060: albedo, roughness, normal, ao
+- Asphalt_Road/Road_012_A: albedo, roughness, normal, ao
+- Asphalt_Road/Asphalt_031: albedo, roughness, normal, ao
+- Sand/Ground_054: albedo, roughness, normal, ao
+- Sand/Ground_080: albedo, roughness, normal, ao
+- Grass/Grass_005: albedo, roughness, normal, ao
+- Grass/Grass_001: albedo, roughness, normal, ao
+- Dirt_Soil/Ground_103: albedo, roughness, normal, ao
+- Dirt_Soil/Ground_068: albedo, roughness, normal, ao
+- Rubber/Rubber_004: albedo, roughness, normal
+- Rubber/Rubber_001: albedo, roughness, normal
+- Ice/Ice_003: albedo, roughness, normal
+- Ice/Ice_002: albedo, roughness, normal
+- Snow/Snow_015: albedo, roughness, normal, ao
+- Snow/Snow_014: albedo, roughness, normal, ao
+- Tile_Ceramic/Tiles_138: albedo, roughness, normal, ao
+- Tile_Ceramic/Tiles_107: albedo, roughness, normal, ao
+- Concrete/Anti_Slip_Concrete: albedo, roughness, normal, ao
+- Wood/Brown_Planks_03: albedo, roughness, normal, ao
+- Fabric_Fiber/Denim_Fabric: albedo, roughness, normal, ao
+- Leather/Brown_Leather: albedo, roughness, normal, ao
+- Metal/Metal_Plate: albedo, roughness, metallic, normal, ao
+- Metal/Metal_060_B: albedo, roughness, metallic, normal
+- Brick/Brick_4: albedo, roughness, normal, ao
+- Tile_Ceramic/Marble_Tiles: albedo, roughness, normal, ao
+- Water/Water_001: albedo, normal, ao
+- Glass/Glass_Frosted_002: albedo, roughness, normal, ao
+- Glass/Glass_Window_003: albedo, roughness, metallic, normal, ao, opacity

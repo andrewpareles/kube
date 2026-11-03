@@ -1,0 +1,163 @@
+{
+  "Object": {
+    "worldSchemaVersion": 91,
+    "fallback_camera_location": {
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "orientation": {
+        "theta": 0.0,
+        "phi": 0.0
+      }
+    },
+    "objectOfId": {
+      "1": {
+        "id": 1,
+        "name": "Object fixture",
+        "info": {
+          "LocalGroup": {}
+        }
+      },
+      "3": {
+        "id": 3,
+        "name": "physics_collider_child",
+        "info": {
+          "Ball": {
+            "material": null,
+            "visualSettings": {
+              "opacity": 1.0,
+              "color": {
+                "r": 1.0,
+                "g": 0.0,
+                "b": 0.0
+              },
+              "glow": 0.0,
+              "isAlwaysOnTop": false
+            }
+          }
+        }
+      },
+      "2": {
+        "id": 2,
+        "name": "physics_collider",
+        "info": {
+          "RigidGroup": {
+            "followSkeletonId": null
+          }
+        }
+      },
+      "4": {
+        "id": 4,
+        "name": "mesh_1",
+        "info": {
+          "Mesh": {
+            "meshDataId": 1,
+            "scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "material": null,
+            "followSkeletonId": null,
+            "visualSettings": {
+              "opacity": 0.0,
+              "color": {
+                "r": 0.5,
+                "g": 0.5,
+                "b": 0.5
+              },
+              "glow": 0.0,
+              "isAlwaysOnTop": false
+            },
+            "physicalObjectId": 2
+          }
+        }
+      }
+    },
+    "rootObjectId": 1,
+    "childrenOfId": {
+      "2": [
+        3
+      ],
+      "4": [],
+      "1": [
+        2,
+        4
+      ],
+      "3": []
+    },
+    "scriptRawCodeOfId": {},
+    "physicsInfo3DOfId": {
+      "2": {
+        "location": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quaternion": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "movement": {
+          "velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angularVelocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "3": {
+        "location": {
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "quaternion": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "movement": {
+          "velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angularVelocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "physicsToggles3DOfId": {
+      "3": {
+        "isWalkthrough": false,
+        "isPushable": true,
+        "density": 1.0
+      }
+    },
+    "primitiveSettingsOfId": {
+      "3": {
+        "Ball": {
+          "radius": 0.5
+        }
+      }
+    }
+  }
+}

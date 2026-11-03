@@ -1,0 +1,3148 @@
+{
+  "worldSchemaVersion": 72,
+  "fallback_camera_location": {
+    "position": [
+      0.0,
+      75.49344,
+      -85.49343
+    ],
+    "orientation": {
+      "theta": 0.2639999,
+      "phi": 0.6623981
+    }
+  },
+  "objectOfId": {
+    "67": {
+      "id": 67,
+      "name": "Rock6",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.45,
+              "g": 0.45,
+              "b": 0.47
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "105": {
+      "id": 105,
+      "name": "Tail",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.93,
+              "g": 0.62,
+              "b": 0.68
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "101": {
+      "id": 101,
+      "name": "PigBody",
+      "info": {
+        "RigidGroup": {
+          "followSkeletonId": null
+        }
+      }
+    },
+    "8": {
+      "id": 8,
+      "name": "Obstacles",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "45": {
+      "id": 45,
+      "name": "CrateStack1",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "1": {
+      "id": 1,
+      "name": "root",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "9": {
+      "id": 9,
+      "name": "Lobby",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "116": {
+      "id": 116,
+      "name": "round_ui_client",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "5": {
+      "id": 5,
+      "name": "scripts",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "70": {
+      "id": 70,
+      "name": "MazeWallB",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.55,
+              "g": 0.5,
+              "b": 0.4
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "68": {
+      "id": 68,
+      "name": "Rock7",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.45,
+              "g": 0.45,
+              "b": 0.47
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "54": {
+      "id": 54,
+      "name": "BarnSouthLeft",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.55,
+              "g": 0.22,
+              "b": 0.16
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "4": {
+      "id": 4,
+      "name": "materials",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "42": {
+      "id": 42,
+      "name": "LobbyRailEast",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.35,
+              "g": 0.45,
+              "b": 0.6
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "17": {
+      "id": 17,
+      "name": "WallEast",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.5,
+              "g": 0.5,
+              "b": 0.52
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "59": {
+      "id": 59,
+      "name": "CrateD",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.62,
+              "g": 0.44,
+              "b": 0.22
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "56": {
+      "id": 56,
+      "name": "CrateA",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.62,
+              "g": 0.44,
+              "b": 0.22
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "60": {
+      "id": 60,
+      "name": "CrateE",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.62,
+              "g": 0.44,
+              "b": 0.22
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "75": {
+      "id": 75,
+      "name": "round_manager",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "47": {
+      "id": 47,
+      "name": "RockFormation1",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "39": {
+      "id": 39,
+      "name": "LobbyPillar",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.5,
+              "g": 0.5,
+              "b": 0.52
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "98": {
+      "id": 98,
+      "name": "BreathAnimator",
+      "info": {
+        "PropertyAnimator": {
+          "targetObjectId": 102,
+          "propertyPath": [
+            "radius"
+          ],
+          "clockId": 99,
+          "priority": 1,
+          "weight": 100.0,
+          "weightTransition": null,
+          "propertyAnimationId": 117
+        }
+      }
+    },
+    "38": {
+      "id": 38,
+      "name": "LobbyFloor",
+      "info": {
+        "Brick": {
+          "material": {
+            "materialInfoId": 13,
+            "tileSizeU": 8.0,
+            "tileSizeV": 8.0,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.6,
+              "g": 0.42,
+              "b": 0.25
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "63": {
+      "id": 63,
+      "name": "Rock2",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.45,
+              "g": 0.45,
+              "b": 0.47
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "103": {
+      "id": 103,
+      "name": "Horn",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 0.0,
+            "color": {
+              "r": 0.55,
+              "g": 0.05,
+              "b": 0.05
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "49": {
+      "id": 49,
+      "name": "MazeCluster",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "57": {
+      "id": 57,
+      "name": "CrateB",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.62,
+              "g": 0.44,
+              "b": 0.22
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "13": {
+      "id": 13,
+      "name": "wood_planks",
+      "info": {
+        "Material": {
+          "albedoTextureDataId": 333,
+          "metallicTextureDataId": null,
+          "roughnessTextureDataId": 340,
+          "normalTextureDataId": 339,
+          "alphaMode": "Opaque"
+        }
+      }
+    },
+    "3": {
+      "id": 3,
+      "name": "animations",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "53": {
+      "id": 53,
+      "name": "BarnNorthRight",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.55,
+              "g": 0.22,
+              "b": 0.16
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "97": {
+      "id": 97,
+      "name": "PigSource",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "7": {
+      "id": 7,
+      "name": "Boundary",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "41": {
+      "id": 41,
+      "name": "LobbyRailSouth",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.35,
+              "g": 0.45,
+              "b": 0.6
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "71": {
+      "id": 71,
+      "name": "GameState",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 0.0,
+            "color": {
+              "r": 0.5,
+              "g": 0.5,
+              "b": 0.5
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "40": {
+      "id": 40,
+      "name": "LobbyRailNorth",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.35,
+              "g": 0.45,
+              "b": 0.6
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "50": {
+      "id": 50,
+      "name": "BarnWest",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.55,
+              "g": 0.22,
+              "b": 0.16
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "64": {
+      "id": 64,
+      "name": "Rock3",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.45,
+              "g": 0.45,
+              "b": 0.47
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "104": {
+      "id": 104,
+      "name": "LegFL",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.93,
+              "g": 0.62,
+              "b": 0.68
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "110": {
+      "id": 110,
+      "name": "Head",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.93,
+              "g": 0.62,
+              "b": 0.68
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "48": {
+      "id": 48,
+      "name": "RockFormation2",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "112": {
+      "id": 112,
+      "name": "LegBR",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.93,
+              "g": 0.62,
+              "b": 0.68
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "65": {
+      "id": 65,
+      "name": "Rock4",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.45,
+              "g": 0.45,
+              "b": 0.47
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "51": {
+      "id": 51,
+      "name": "BarnEast",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.55,
+              "g": 0.22,
+              "b": 0.16
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "18": {
+      "id": 18,
+      "name": "WallWest",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.5,
+              "g": 0.5,
+              "b": 0.52
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "16": {
+      "id": 16,
+      "name": "WallSouth",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.5,
+              "g": 0.5,
+              "b": 0.52
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "58": {
+      "id": 58,
+      "name": "CrateC",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.62,
+              "g": 0.44,
+              "b": 0.22
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "2": {
+      "id": 2,
+      "name": "Baseplate",
+      "info": {
+        "Brick": {
+          "material": {
+            "materialInfoId": 12,
+            "tileSizeU": 30.0,
+            "tileSizeV": 30.0,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.55,
+              "g": 0.75,
+              "b": 0.55
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "61": {
+      "id": 61,
+      "name": "CrateF",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.62,
+              "g": 0.44,
+              "b": 0.22
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "99": {
+      "id": 99,
+      "name": "BreathClock",
+      "info": {
+        "Clock": {
+          "clockState": {
+            "Playing": {
+              "localStartMs": 0.0,
+              "timeLocation": "Server"
+            }
+          },
+          "shouldLoop": true,
+          "speed": 1.0
+        }
+      }
+    },
+    "102": {
+      "id": 102,
+      "name": "Torso",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.93,
+              "g": 0.62,
+              "b": 0.68
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "6": {
+      "id": 6,
+      "name": "world",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "108": {
+      "id": 108,
+      "name": "EyeR",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.05,
+              "g": 0.05,
+              "b": 0.05
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "46": {
+      "id": 46,
+      "name": "CrateStack2",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "111": {
+      "id": 111,
+      "name": "EyeL",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.05,
+              "g": 0.05,
+              "b": 0.05
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "10": {
+      "id": 10,
+      "name": "Players",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "69": {
+      "id": 69,
+      "name": "MazeWallA",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.55,
+              "g": 0.5,
+              "b": 0.4
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "12": {
+      "id": 12,
+      "name": "grass",
+      "info": {
+        "Material": {
+          "albedoTextureDataId": 243,
+          "metallicTextureDataId": null,
+          "roughnessTextureDataId": 253,
+          "normalTextureDataId": 249,
+          "alphaMode": "Opaque"
+        }
+      }
+    },
+    "114": {
+      "id": 114,
+      "name": "LegBL",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.93,
+              "g": 0.62,
+              "b": 0.68
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "44": {
+      "id": 44,
+      "name": "Barn",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "100": {
+      "id": 100,
+      "name": "PigMoveAnim",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "109": {
+      "id": 109,
+      "name": "EarL",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.93,
+              "g": 0.62,
+              "b": 0.68
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "76": {
+      "id": 76,
+      "name": "tag_detection",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "43": {
+      "id": 43,
+      "name": "LobbyRailWest",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.35,
+              "g": 0.45,
+              "b": 0.6
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "106": {
+      "id": 106,
+      "name": "LegFR",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.93,
+              "g": 0.62,
+              "b": 0.68
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "113": {
+      "id": 113,
+      "name": "EarR",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.93,
+              "g": 0.62,
+              "b": 0.68
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "62": {
+      "id": 62,
+      "name": "Rock1",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.45,
+              "g": 0.45,
+              "b": 0.47
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "74": {
+      "id": 74,
+      "name": "spawn_players",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "66": {
+      "id": 66,
+      "name": "Rock5",
+      "info": {
+        "Ball": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.45,
+              "g": 0.45,
+              "b": 0.47
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "15": {
+      "id": 15,
+      "name": "WallNorth",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.5,
+              "g": 0.5,
+              "b": 0.52
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "55": {
+      "id": 55,
+      "name": "BarnSouthRight",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.55,
+              "g": 0.22,
+              "b": 0.16
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "107": {
+      "id": 107,
+      "name": "Snout",
+      "info": {
+        "Cylinder": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.93,
+              "g": 0.62,
+              "b": 0.68
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "52": {
+      "id": 52,
+      "name": "BarnNorthLeft",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.55,
+              "g": 0.22,
+              "b": 0.16
+            },
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "117": {
+      "id": 117,
+      "name": "BreathAnimator_animation",
+      "info": {
+        "PropertyAnimation": {
+          "duration": 1.0,
+          "interpolationStyle": "EaseInOut"
+        }
+      }
+    },
+    "118": {
+      "id": 118,
+      "name": "BreathAnimator_kf0",
+      "info": {
+        "PropertyKeyframe": {
+          "time": 0.0,
+          "value": 1.3
+        }
+      }
+    },
+    "119": {
+      "id": 119,
+      "name": "BreathAnimator_kf1",
+      "info": {
+        "PropertyKeyframe": {
+          "time": 0.5,
+          "value": 1.38
+        }
+      }
+    },
+    "120": {
+      "id": 120,
+      "name": "BreathAnimator_kf2",
+      "info": {
+        "PropertyKeyframe": {
+          "time": 1.0,
+          "value": 1.3
+        }
+      }
+    }
+  },
+  "rootObjectId": 1,
+  "childrenOfId": {
+    "111": [],
+    "61": [],
+    "70": [],
+    "17": [],
+    "99": [],
+    "9": [
+      40,
+      38,
+      39,
+      42,
+      43,
+      41
+    ],
+    "102": [],
+    "39": [],
+    "38": [],
+    "75": [],
+    "65": [],
+    "57": [],
+    "15": [],
+    "12": [],
+    "18": [],
+    "66": [],
+    "5": [
+      74,
+      76,
+      75,
+      71,
+      116
+    ],
+    "63": [],
+    "58": [],
+    "113": [],
+    "46": [
+      60,
+      59,
+      61
+    ],
+    "110": [],
+    "59": [],
+    "107": [],
+    "103": [],
+    "109": [],
+    "56": [],
+    "54": [],
+    "68": [],
+    "52": [],
+    "45": [
+      57,
+      56,
+      58
+    ],
+    "71": [],
+    "1": [
+      6,
+      13,
+      12,
+      3,
+      4,
+      5,
+      2
+    ],
+    "112": [],
+    "97": [
+      99,
+      100,
+      98,
+      101,
+      117
+    ],
+    "4": [],
+    "55": [],
+    "47": [
+      65,
+      62,
+      63,
+      64
+    ],
+    "69": [],
+    "16": [],
+    "67": [],
+    "98": [],
+    "64": [],
+    "49": [
+      69,
+      70
+    ],
+    "76": [],
+    "105": [],
+    "62": [],
+    "3": [],
+    "42": [],
+    "100": [],
+    "41": [],
+    "44": [
+      50,
+      52,
+      51,
+      54,
+      53,
+      55
+    ],
+    "104": [],
+    "2": [],
+    "106": [],
+    "6": [
+      7,
+      97,
+      8,
+      10,
+      9
+    ],
+    "114": [],
+    "40": [],
+    "74": [],
+    "10": [],
+    "101": [
+      107,
+      108,
+      103,
+      111,
+      114,
+      112,
+      102,
+      106,
+      109,
+      104,
+      113,
+      110,
+      105
+    ],
+    "53": [],
+    "108": [],
+    "43": [],
+    "51": [],
+    "116": [],
+    "60": [],
+    "48": [
+      68,
+      66,
+      67
+    ],
+    "7": [
+      18,
+      16,
+      17,
+      15
+    ],
+    "13": [],
+    "50": [],
+    "8": [
+      44,
+      47,
+      48,
+      45,
+      49,
+      46
+    ],
+    "117": [
+      118,
+      119,
+      120
+    ],
+    "118": [],
+    "119": [],
+    "120": []
+  },
+  "scriptRawCodeOfId": {
+    "74": "'use server'\n\n// Clones the permanent master pig (parked out of view, named \"PigSource\") for\n// every joining player and wires up their character/head. New players always\n// appear in the lobby -- round_manager.ts moves them onto the map once a round\n// actually starts.\n// (We use cloneObject on a live master copy rather than a template: pasted\n// templates aren't available inside a fresh playtest/production server snapshot.\n// We look the master up by name rather than object id, because object ids are\n// not stable between the editor session and a freshly loaded server snapshot.)\n\nconst LOBBY_FLOOR_HALF = 13;\n\nconst pigRootIdByPlayerObjId = new Map<number, number>();\n\nfunction randomLobbySpot() {\n  return {\n    x: (Math.random() * 2 - 1) * LOBBY_FLOOR_HALF,\n    y: 45.55,\n    z: (Math.random() * 2 - 1) * LOBBY_FLOOR_HALF,\n  };\n}\n\ngame.objectService.addObjectCreatedListener((player) => {\n  try {\n    console.log(`[spawn_players] player joined: ${player.userid}`);\n    const pigMaster = game.objectService.getObjectByName(\"PigSource\");\n    if (!pigMaster) {\n      console.log(`[spawn_players] ERROR: master pig \"PigSource\" not found`);\n      return;\n    }\n    const pigRoot = game.objectService.cloneObject(pigMaster.id, `Pig_${player.userid}`);\n    const body = pigRoot.getChild(\"PigBody\");\n    if (!body) {\n      console.log(`[spawn_players] ERROR: cloned pig has no PigBody child`);\n      return;\n    }\n\n    game.objectService.moveObjectTo(body.id, randomLobbySpot());\n    player.headObjectId = body.id;\n    player.characterObjectId = body.id;\n\n    pigRootIdByPlayerObjId.set(player.id, pigRoot.id);\n    console.log(`[spawn_players] pig spawned for ${player.userid} at pigRoot=${pigRoot.id} body=${body.id}`);\n  } catch (e) {\n    console.log(`[spawn_players] EXCEPTION: ${e}`);\n  }\n}, \"player\");\n\ngame.objectService.addObjectDeletedListener((playerObjectId) => {\n  const pigRootId = pigRootIdByPlayerObjId.get(playerObjectId);\n  if (pigRootId !== undefined) {\n    game.objectService.deleteObject(pigRootId);\n    pigRootIdByPlayerObjId.delete(playerObjectId);\n  }\n}, \"player\");\n",
+    "76": "'use client'\n\nimport { reportCollision } from './round_manager';\n\n// Walks up from whatever subitem collided to the pig's RigidGroup root\n// (identified by having a \"Torso\" child), so we ignore collisions with\n// walls, crates, rocks, etc.\ngame.collisionService.addCollisionListener((obj1: any, obj2: any) => {\n  function findPigRoot(obj: any) {\n    let current = obj;\n    while (current) {\n      if (current.type === \"rigidGroup\" && current.getChild(\"Torso\")) {\n        return current;\n      }\n      current = current.parent;\n    }\n    return null;\n  }\n\n  const root1 = findPigRoot(obj1);\n  const root2 = findPigRoot(obj2);\n  if (root1 && root2 && root1.id !== root2.id) {\n    reportCollision(root1.id, root2.id);\n  }\n});\n",
+    "75": "'use server'\n\n// Shared game phase / countdown / result text is broadcast to clients by writing\n// a small JSON blob into the \"GameState\" marker object's `name` field. Every\n// object is replicated automatically, so a client script can just read it back --\n// no client RPC needed. Looked up by name (not object id) since ids are not\n// stable between the editor session and a freshly loaded server snapshot.\n\ntype Phase = 'lobby' | 'playing' | 'ended';\n\nconst LOBBY_MS = 30_000;\nconst ROUND_MS = 5 * 60 * 1000;\nconst RESULT_PAUSE_MS = 6_000;\n\nconst MAP_SPAWNS = [\n  { x: 0, y: 1.05, z: 50 },\n  { x: 0, y: 1.05, z: -50 },\n  { x: 50, y: 1.05, z: 0 },\n  { x: -50, y: 1.05, z: 0 },\n  { x: 35, y: 1.05, z: 35 },\n  { x: -35, y: 1.05, z: -35 },\n  { x: -35, y: 1.05, z: 35 },\n  { x: 35, y: 1.05, z: -35 },\n  { x: 65, y: 1.05, z: 65 },\n  { x: -65, y: 1.05, z: -65 },\n];\n\nconst PIG_COLOR = { r: 0.93, g: 0.62, b: 0.68 };\nconst TAGGER_COLOR = { r: 0.75, g: 0.08, b: 0.08 };\nconst PIG_COLOR_PARTS = [\"Torso\", \"Head\", \"LegFL\", \"LegFR\", \"LegBL\", \"LegBR\", \"EarL\", \"EarR\", \"Snout\"];\n\nconst LOBBY_FLOOR_HALF = 13;\n\nlet phase: Phase = 'lobby';\nlet phaseEndTime = getTime() + LOBBY_MS;\nconst taggerUserIds = new Set<string>();\nlet phaseTimeoutHandle: ReturnType<typeof setTimeout> | null = null;\n\nfunction randomLobbySpot() {\n  return {\n    x: (Math.random() * 2 - 1) * LOBBY_FLOOR_HALF,\n    y: 45.55,\n    z: (Math.random() * 2 - 1) * LOBBY_FLOOR_HALF,\n  };\n}\n\nfunction shuffled<T>(items: T[]): T[] {\n  const copy = [...items];\n  for (let i = copy.length - 1; i > 0; i--) {\n    const j = Math.floor(Math.random() * (i + 1));\n    [copy[i], copy[j]] = [copy[j], copy[i]];\n  }\n  return copy;\n}\n\nfunction recolorPig(characterObjectId: number, isTagger: boolean) {\n  const root = game.objectService.getObjectById(characterObjectId);\n  if (!root) return;\n  const color = isTagger ? TAGGER_COLOR : PIG_COLOR;\n  for (const partName of PIG_COLOR_PARTS) {\n    const part = root.getChild(partName);\n    if (part && (part.type === \"ball\" || part.type === \"brick\" || part.type === \"cylinder\")) {\n      part.color = color;\n    }\n  }\n  const horn = root.getChild(\"Horn\");\n  if (horn && (horn.type === \"ball\" || horn.type === \"brick\" || horn.type === \"cylinder\")) {\n    horn.opacity = isTagger ? 1 : 0;\n  }\n}\n\nfunction broadcast(resultText: string | null) {\n  const stateHolder = game.objectService.getObjectByName(\"GameState\");\n  if (!stateHolder) return;\n  stateHolder.name = JSON.stringify({\n    phase,\n    endTimeMs: phaseEndTime,\n    resultText,\n    taggerCount: taggerUserIds.size,\n  });\n}\n\nfunction clearPhaseTimeout() {\n  if (phaseTimeoutHandle !== null) {\n    clearTimeout(phaseTimeoutHandle);\n    phaseTimeoutHandle = null;\n  }\n}\n\nfunction startLobby() {\n  console.log(`[round_manager] entering lobby phase`);\n  clearPhaseTimeout();\n  phase = 'lobby';\n  phaseEndTime = getTime() + LOBBY_MS;\n  taggerUserIds.clear();\n\n  for (const p of game.playerService.getAllPlayers()) {\n    if (p.characterObjectId) {\n      recolorPig(p.characterObjectId, false);\n      game.objectService.moveObjectTo(p.characterObjectId, randomLobbySpot());\n    }\n  }\n\n  broadcast(null);\n  phaseTimeoutHandle = setTimeout(startRound, LOBBY_MS);\n}\n\nfunction startRound() {\n  clearPhaseTimeout();\n  const players = game.playerService.getAllPlayers().filter((p) => p.characterObjectId !== null);\n\n  if (players.length < 1) {\n    // Nobody around to play with yet -- wait a bit and check again.\n    phaseTimeoutHandle = setTimeout(startLobby, 2000);\n    return;\n  }\n\n  phase = 'playing';\n  phaseEndTime = getTime() + ROUND_MS;\n  taggerUserIds.clear();\n\n  const taggerIndex = Math.floor(Math.random() * players.length);\n  const spawns = shuffled(MAP_SPAWNS);\n\n  players.forEach((p, i) => {\n    const isTagger = i === taggerIndex;\n    if (isTagger) taggerUserIds.add(p.userid);\n    const spot = spawns[i % spawns.length];\n    game.objectService.moveObjectTo(p.characterObjectId as number, spot);\n    recolorPig(p.characterObjectId as number, isTagger);\n  });\n\n  console.log(`[round_manager] round started with ${players.length} players, tagger=${players[taggerIndex].userid}`);\n  broadcast(null);\n  phaseTimeoutHandle = setTimeout(() => endRound('pigs'), ROUND_MS);\n}\n\nfunction endRound(winner: 'pigs' | 'taggers') {\n  console.log(`[round_manager] round ended, winner=${winner}`);\n  clearPhaseTimeout();\n  phase = 'ended';\n  phaseEndTime = getTime();\n\n  broadcast(\n    winner === 'pigs'\n      ? 'The pigs survived! Pigs win the round.'\n      : 'Every pig got tagged! Taggers win the round.'\n  );\n\n  phaseTimeoutHandle = setTimeout(startLobby, RESULT_PAUSE_MS);\n}\n\nexport async function reportCollision(objId1: number, objId2: number) {\n  if (phase !== 'playing') return;\n\n  const players = game.playerService.getAllPlayers();\n  const p1 = players.find((p) => p.characterObjectId === objId1);\n  const p2 = players.find((p) => p.characterObjectId === objId2);\n  if (!p1 || !p2) return;\n\n  const p1Tagger = taggerUserIds.has(p1.userid);\n  const p2Tagger = taggerUserIds.has(p2.userid);\n  if (p1Tagger === p2Tagger) return; // both taggers or both pigs -- nothing to do\n\n  const newlyTagged = p1Tagger ? p2 : p1;\n  if (taggerUserIds.has(newlyTagged.userid)) return; // already processed\n\n  taggerUserIds.add(newlyTagged.userid);\n  if (newlyTagged.characterObjectId) {\n    recolorPig(newlyTagged.characterObjectId, true);\n  }\n  console.log(`[round_manager] ${newlyTagged.userid} got tagged (${taggerUserIds.size}/${players.length} now taggers)`);\n  broadcast(null);\n\n  if (taggerUserIds.size >= players.length) {\n    endRound('taggers');\n  }\n}\n\n// Kick off the very first lobby countdown when the server boots.\nstartLobby();\n",
+    "116": "'use client'\n\n// Reads the shared game state that round_manager.ts (Server) writes into the\n// GameState marker object's `name` field every phase change. Object properties\n// replicate to every client automatically, so no RPC is needed here. Looked up\n// by name since object ids are not stable across a fresh server snapshot.\n\ntype RoundState = {\n  phase: 'lobby' | 'playing' | 'ended';\n  endTimeMs: number;\n  resultText: string | null;\n  taggerCount: number;\n};\n\nconst DEFAULT_STATE: RoundState = {\n  phase: 'lobby',\n  endTimeMs: getTime() + 30_000,\n  resultText: null,\n  taggerCount: 0,\n};\n\nconst uiState = createState<RoundState>(DEFAULT_STATE);\n\nsetInterval(() => {\n  const holder = game.objectService.getObjectByName(\"GameState\");\n  if (!holder) return;\n  try {\n    uiState.set(JSON.parse(holder.name) as RoundState);\n  } catch {\n    // holder.name hasn't been written yet -- keep the previous state\n  }\n}, 400);\n\nfunction formatTime(ms: number) {\n  const totalSeconds = Math.max(0, Math.ceil(ms / 1000));\n  const m = Math.floor(totalSeconds / 60);\n  const s = totalSeconds % 60;\n  return `${m}:${s.toString().padStart(2, \"0\")}`;\n}\n\nfunction RoundHud() {\n  const state = uiState.get();\n  const remaining = formatTime(state.endTimeMs - getTime());\n\n  const phaseLabel =\n    state.phase === \"lobby\"\n      ? `Next round starts in ${remaining}`\n      : state.phase === \"playing\"\n      ? `Tag other pigs to turn them red -- ${remaining} left`\n      : \"Round over\";\n\n  return (\n    <div className=\"flex flex-col items-center gap-1 px-5 py-3 rounded-2xl bg-black/60\">\n      <div className=\"text-lg font-bold text-white\">PIG TAG</div>\n      <div className=\"text-base text-white\">{phaseLabel}</div>\n      {state.resultText ? (\n        <div className=\"text-base font-bold text-yellow-300\">{state.resultText}</div>\n      ) : null}\n    </div>\n  );\n}\n\ngame.guiService.show(\"pig-tag-hud\", () => <RoundHud />, \"top\");\n",
+    "100": "'use client'\n\n// Speeds up the pig's idle \"breathing\" animation clock while it is moving,\n// so it reads as a bouncy waddle instead of a static breathing pose.\n// Runs once per pasted pig copy; reads local velocity so it needs no server round trip.\n\nconst pigRoot = script.parent;\nconst body = pigRoot ? pigRoot.getChild(\"PigBody\") : null;\nconst clock = pigRoot ? pigRoot.getChild(\"BreathClock\") : null;\n\nif (body && clock) {\n  setInterval(() => {\n    const vel = game.objectService.getVelocityRelativeToGround(body.id);\n    const groundSpeed = Math.sqrt(vel.x * vel.x + vel.z * vel.z);\n    const targetSpeed = groundSpeed > 0.5 ? 3.2 : 1.0;\n    game.clockService.setSpeed(clock.id, targetSpeed);\n  }, 200);\n}\n"
+  },
+  "physicsInfo3DOfId": {
+    "103": {
+      "location": {
+        "position": [
+          0.0,
+          62.95,
+          301.3
+        ],
+        "quaternion": [
+          -0.7071068,
+          0.0,
+          0.0,
+          0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "104": {
+      "location": {
+        "position": [
+          -0.55,
+          60.45,
+          300.75
+        ],
+        "quaternion": [
+          -0.7071068,
+          0.0,
+          0.0,
+          0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "38": {
+      "location": {
+        "position": [
+          0.0,
+          45.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "16": {
+      "location": {
+        "position": [
+          0.0,
+          6.0,
+          -90.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "64": {
+      "location": {
+        "position": [
+          30.0,
+          2.7,
+          -68.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "52": {
+      "location": {
+        "position": [
+          -59.25,
+          4.0,
+          60.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "71": {
+      "location": {
+        "position": [
+          0.0,
+          1.5,
+          80.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "61": {
+      "location": {
+        "position": [
+          -62.0,
+          5.5,
+          -55.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "43": {
+      "location": {
+        "position": [
+          -15.0,
+          47.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.7071068,
+          0.0,
+          -0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "63": {
+      "location": {
+        "position": [
+          32.0,
+          3.4,
+          -63.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "51": {
+      "location": {
+        "position": [
+          -48.0,
+          4.0,
+          55.0
+        ],
+        "quaternion": [
+          0.0,
+          0.7071068,
+          0.0,
+          -0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "55": {
+      "location": {
+        "position": [
+          -50.75,
+          4.0,
+          50.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "53": {
+      "location": {
+        "position": [
+          -50.75,
+          4.0,
+          60.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "54": {
+      "location": {
+        "position": [
+          -59.25,
+          4.0,
+          50.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "42": {
+      "location": {
+        "position": [
+          15.0,
+          47.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.7071068,
+          0.0,
+          -0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "18": {
+      "location": {
+        "position": [
+          -90.0,
+          6.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.7071068,
+          0.0,
+          -0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "114": {
+      "location": {
+        "position": [
+          -0.55,
+          60.45,
+          299.25
+        ],
+        "quaternion": [
+          -0.7071068,
+          0.0,
+          0.0,
+          0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "56": {
+      "location": {
+        "position": [
+          58.0,
+          2.5,
+          -40.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "15": {
+      "location": {
+        "position": [
+          0.0,
+          6.0,
+          90.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "110": {
+      "location": {
+        "position": [
+          0.0,
+          61.9,
+          301.55
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "65": {
+      "location": {
+        "position": [
+          34.0,
+          3.1,
+          -67.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "40": {
+      "location": {
+        "position": [
+          0.0,
+          47.0,
+          15.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "62": {
+      "location": {
+        "position": [
+          28.0,
+          2.9,
+          -65.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "60": {
+      "location": {
+        "position": [
+          -58.0,
+          2.5,
+          -55.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "57": {
+      "location": {
+        "position": [
+          62.0,
+          2.5,
+          -40.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "102": {
+      "location": {
+        "position": [
+          0.0,
+          61.55,
+          300.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "108": {
+      "location": {
+        "position": [
+          0.35,
+          62.05,
+          302.25
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "68": {
+      "location": {
+        "position": [
+          -31.0,
+          3.5,
+          69.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "111": {
+      "location": {
+        "position": [
+          -0.35,
+          62.05,
+          302.25
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "70": {
+      "location": {
+        "position": [
+          53.0,
+          3.0,
+          20.0
+        ],
+        "quaternion": [
+          0.0,
+          0.7071068,
+          0.0,
+          -0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "39": {
+      "location": {
+        "position": [
+          0.0,
+          22.74,
+          0.0
+        ],
+        "quaternion": [
+          -0.7071068,
+          0.0,
+          0.0,
+          0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "50": {
+      "location": {
+        "position": [
+          -62.0,
+          4.0,
+          55.0
+        ],
+        "quaternion": [
+          0.0,
+          0.7071068,
+          0.0,
+          -0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "58": {
+      "location": {
+        "position": [
+          58.0,
+          5.5,
+          -40.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "112": {
+      "location": {
+        "position": [
+          0.55,
+          60.45,
+          299.25
+        ],
+        "quaternion": [
+          -0.7071068,
+          0.0,
+          0.0,
+          0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "59": {
+      "location": {
+        "position": [
+          -62.0,
+          2.5,
+          -55.0
+        ],
+        "quaternion": [
+          0.0,
+          -0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "17": {
+      "location": {
+        "position": [
+          90.0,
+          6.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.7071068,
+          0.0,
+          -0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "41": {
+      "location": {
+        "position": [
+          0.0,
+          47.0,
+          -15.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "113": {
+      "location": {
+        "position": [
+          0.5,
+          62.55,
+          301.35
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          -0.1736482,
+          0.9848078
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "67": {
+      "location": {
+        "position": [
+          -32.0,
+          2.8,
+          63.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "69": {
+      "location": {
+        "position": [
+          45.0,
+          3.0,
+          16.0
+        ],
+        "quaternion": [
+          0.0,
+          0.7071068,
+          0.0,
+          -0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "107": {
+      "location": {
+        "position": [
+          0.0,
+          61.75,
+          302.375
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "101": {
+      "location": {
+        "position": [
+          0.0,
+          60.0,
+          300.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "2": {
+      "location": {
+        "position": [
+          0.0,
+          0.5,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "66": {
+      "location": {
+        "position": [
+          -28.0,
+          3.2,
+          65.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "105": {
+      "location": {
+        "position": [
+          0.0,
+          61.85,
+          298.55
+        ],
+        "quaternion": [
+          -0.9238798,
+          0.0,
+          0.0,
+          0.3826829
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "106": {
+      "location": {
+        "position": [
+          0.55,
+          60.45,
+          300.75
+        ],
+        "quaternion": [
+          -0.7071068,
+          0.0,
+          0.0,
+          0.7071068
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "109": {
+      "location": {
+        "position": [
+          -0.5,
+          62.55,
+          301.35
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.1736482,
+          0.9848078
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "physicsToggles3DOfId": {
+    "67": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "60": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "62": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "55": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "104": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "57": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "39": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "64": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "110": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "52": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "109": {
+      "isWalkthrough": true,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "63": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "41": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "16": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "111": {
+      "isWalkthrough": true,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "70": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "103": {
+      "isWalkthrough": true,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "112": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "106": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "53": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "71": {
+      "isWalkthrough": true,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "59": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "56": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "51": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "68": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "43": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "2": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "108": {
+      "isWalkthrough": true,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "58": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "38": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "40": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "61": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "107": {
+      "isWalkthrough": true,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "114": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "17": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "113": {
+      "isWalkthrough": true,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "69": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "42": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "50": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "66": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "18": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "54": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "102": {
+      "isWalkthrough": false,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "15": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    },
+    "105": {
+      "isWalkthrough": true,
+      "isAnchored": false,
+      "density": 1.0
+    },
+    "65": {
+      "isWalkthrough": false,
+      "isAnchored": true,
+      "density": 1.0
+    }
+  },
+  "primitiveSettingsOfId": {
+    "50": {
+      "Brick": {
+        "size": [
+          10.0,
+          6.0,
+          1.0
+        ]
+      }
+    },
+    "16": {
+      "Brick": {
+        "size": [
+          180.0,
+          10.0,
+          2.0
+        ]
+      }
+    },
+    "57": {
+      "Brick": {
+        "size": [
+          3.0,
+          3.0,
+          3.0
+        ]
+      }
+    },
+    "2": {
+      "Brick": {
+        "size": [
+          184.0,
+          1.0,
+          184.0
+        ]
+      }
+    },
+    "51": {
+      "Brick": {
+        "size": [
+          10.0,
+          6.0,
+          1.0
+        ]
+      }
+    },
+    "54": {
+      "Brick": {
+        "size": [
+          4.5,
+          6.0,
+          1.0
+        ]
+      }
+    },
+    "61": {
+      "Brick": {
+        "size": [
+          3.0,
+          3.0,
+          3.0
+        ]
+      }
+    },
+    "38": {
+      "Brick": {
+        "size": [
+          31.0,
+          1.0,
+          31.0
+        ]
+      }
+    },
+    "68": {
+      "Ball": {
+        "radius": 2.6
+      }
+    },
+    "103": {
+      "Cylinder": {
+        "radius": 0.15,
+        "length": 0.40000153
+      }
+    },
+    "114": {
+      "Cylinder": {
+        "radius": 0.25,
+        "length": 0.9000015
+      }
+    },
+    "102": {
+      "Ball": {
+        "radius": 1.3
+      }
+    },
+    "17": {
+      "Brick": {
+        "size": [
+          178.0,
+          10.0,
+          2.0
+        ]
+      }
+    },
+    "53": {
+      "Brick": {
+        "size": [
+          4.5,
+          6.0,
+          1.0
+        ]
+      }
+    },
+    "63": {
+      "Ball": {
+        "radius": 2.5
+      }
+    },
+    "113": {
+      "Brick": {
+        "size": [
+          0.45,
+          0.55,
+          0.15
+        ]
+      }
+    },
+    "41": {
+      "Brick": {
+        "size": [
+          30.0,
+          3.0,
+          1.0
+        ]
+      }
+    },
+    "110": {
+      "Ball": {
+        "radius": 0.85
+      }
+    },
+    "67": {
+      "Ball": {
+        "radius": 1.9
+      }
+    },
+    "62": {
+      "Ball": {
+        "radius": 2.0
+      }
+    },
+    "56": {
+      "Brick": {
+        "size": [
+          3.0,
+          3.0,
+          3.0
+        ]
+      }
+    },
+    "60": {
+      "Brick": {
+        "size": [
+          3.0,
+          3.0,
+          3.0
+        ]
+      }
+    },
+    "43": {
+      "Brick": {
+        "size": [
+          29.0,
+          3.0,
+          1.0
+        ]
+      }
+    },
+    "39": {
+      "Cylinder": {
+        "radius": 3.0,
+        "length": 43.52
+      }
+    },
+    "104": {
+      "Cylinder": {
+        "radius": 0.25,
+        "length": 0.9000015
+      }
+    },
+    "58": {
+      "Brick": {
+        "size": [
+          3.0,
+          3.0,
+          3.0
+        ]
+      }
+    },
+    "70": {
+      "Brick": {
+        "size": [
+          12.0,
+          4.0,
+          1.0
+        ]
+      }
+    },
+    "15": {
+      "Brick": {
+        "size": [
+          180.0,
+          10.0,
+          2.0
+        ]
+      }
+    },
+    "71": {
+      "Brick": {
+        "size": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "107": {
+      "Cylinder": {
+        "radius": 0.35,
+        "length": 0.3499999
+      }
+    },
+    "18": {
+      "Brick": {
+        "size": [
+          178.0,
+          10.0,
+          2.0
+        ]
+      }
+    },
+    "64": {
+      "Ball": {
+        "radius": 1.8
+      }
+    },
+    "69": {
+      "Brick": {
+        "size": [
+          12.0,
+          4.0,
+          1.0
+        ]
+      }
+    },
+    "55": {
+      "Brick": {
+        "size": [
+          4.5,
+          6.0,
+          1.0
+        ]
+      }
+    },
+    "105": {
+      "Cylinder": {
+        "radius": 0.12,
+        "length": 0.4242636
+      }
+    },
+    "52": {
+      "Brick": {
+        "size": [
+          4.5,
+          6.0,
+          1.0
+        ]
+      }
+    },
+    "108": {
+      "Ball": {
+        "radius": 0.12
+      }
+    },
+    "65": {
+      "Ball": {
+        "radius": 2.2
+      }
+    },
+    "42": {
+      "Brick": {
+        "size": [
+          29.0,
+          3.0,
+          1.0
+        ]
+      }
+    },
+    "109": {
+      "Brick": {
+        "size": [
+          0.45,
+          0.55,
+          0.15
+        ]
+      }
+    },
+    "111": {
+      "Ball": {
+        "radius": 0.12
+      }
+    },
+    "66": {
+      "Ball": {
+        "radius": 2.3
+      }
+    },
+    "112": {
+      "Cylinder": {
+        "radius": 0.25,
+        "length": 0.9000015
+      }
+    },
+    "106": {
+      "Cylinder": {
+        "radius": 0.25,
+        "length": 0.9000015
+      }
+    },
+    "40": {
+      "Brick": {
+        "size": [
+          30.0,
+          3.0,
+          1.0
+        ]
+      }
+    },
+    "59": {
+      "Brick": {
+        "size": [
+          3.0,
+          3.0,
+          3.0
+        ]
+      }
+    }
+  }
+}

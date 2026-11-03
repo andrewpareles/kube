@@ -1,0 +1,31 @@
+{
+  "worldSchemaVersion": 74,
+  "fallback_camera_location": {
+    "position": [
+      0.0,
+      3.0,
+      7.0
+    ],
+    "orientation": {
+      "theta": 3.1415927,
+      "phi": 0.1418971
+    }
+  },
+  "objectOfId": {
+    "1": {
+      "id": 1,
+      "name": "root",
+      "info": {
+        "LocalGroup": {}
+      }
+    }
+  },
+  "rootObjectId": 1,
+  "childrenOfId": {
+    "1": []
+  },
+  "scriptRawCodeOfId": {},
+  "physicsInfo3DOfId": {},
+  "physicsToggles3DOfId": {},
+  "primitiveSettingsOfId": {}
+}

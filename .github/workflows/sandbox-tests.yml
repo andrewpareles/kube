@@ -1,0 +1,31 @@
+name: Sandbox Tests
+
+# The sandbox's Landlock tests can't run on a Mac, since Docker Desktop's kernel has no Landlock. GitHub's Ubuntu
+# runners do.
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - crates/editor_server/linux-sandbox/**
+      - .github/workflows/sandbox-tests.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sandbox-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sandbox-tests:
+    name: Sandbox Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Run the sandbox tests
+        run: docker build --target sandbox_tests -f crates/editor_server/linux-sandbox/Dockerfile .

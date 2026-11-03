@@ -1,0 +1,9885 @@
+{
+  "worldSchemaVersion": 81,
+  "fallback_camera_location": {
+    "position": [
+      0.0,
+      100.0,
+      -100.0
+    ],
+    "orientation": {
+      "theta": 0.0,
+      "phi": 0.7853982
+    }
+  },
+  "objectOfId": {
+    "1": {
+      "id": 1,
+      "name": "root",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "2": {
+      "id": 2,
+      "name": "DefaultCharacter",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "3": {
+      "id": 3,
+      "name": "spawn",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "8": {
+      "id": 8,
+      "name": "animation",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "24": {
+      "id": 24,
+      "info": {
+        "LocalGroup": {}
+      },
+      "name": "Character"
+    },
+    "483": {
+      "id": 483,
+      "info": {
+        "SkAnimator": {
+          "weight": 0.0,
+          "clockId": 484,
+          "priority": 6,
+          "skeletonId": 37,
+          "skAnimationId": 54,
+          "weightTransition": null
+        }
+      },
+      "name": "WalkAnimator"
+    },
+    "484": {
+      "id": 484,
+      "info": {
+        "Clock": {
+          "speed": 1.0,
+          "clockState": {
+            "Playing": {
+              "localStartMs": 0.0,
+              "timeLocation": "Server"
+            }
+          },
+          "shouldLoop": true
+        }
+      },
+      "name": "Clock"
+    },
+    "481": {
+      "id": 481,
+      "info": {
+        "SkAnimator": {
+          "weight": 100.0,
+          "clockId": 482,
+          "priority": 5,
+          "skeletonId": 37,
+          "skAnimationId": 232,
+          "weightTransition": null
+        }
+      },
+      "name": "IdleAnimator"
+    },
+    "482": {
+      "id": 482,
+      "info": {
+        "Clock": {
+          "speed": 1.0,
+          "clockState": {
+            "Playing": {
+              "localStartMs": 0.0,
+              "timeLocation": "Server"
+            }
+          },
+          "shouldLoop": true
+        }
+      },
+      "name": "Clock"
+    },
+    "37": {
+      "id": 37,
+      "info": {
+        "Skeleton": {}
+      },
+      "name": "Skeleton"
+    },
+    "38": {
+      "id": 38,
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "43": {
+      "id": 43,
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "39": {
+      "id": 39,
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "42": {
+      "id": 42,
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "40": {
+      "id": 40,
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "41": {
+      "id": 41,
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "44": {
+      "id": 44,
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "25": {
+      "id": 25,
+      "info": {
+        "RigidGroup": {
+          "followSkeletonId": 37
+        }
+      },
+      "name": "Body"
+    },
+    "30": {
+      "id": 30,
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "glow": 0.0,
+            "color": {
+              "b": 0.9,
+              "g": 0.55,
+              "r": 0.25
+            },
+            "opacity": 1.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      },
+      "name": "Cap"
+    },
+    "49": {
+      "id": 49,
+      "info": {
+        "SkAttachment": {
+          "objectId": 30,
+          "jointName": "Head",
+          "offsetFromJoint": {
+            "position": [
+              0.0,
+              1.1000001,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "HeadSkAttachment"
+    },
+    "34": {
+      "id": 34,
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "glow": 0.0,
+            "color": {
+              "b": 0.3,
+              "g": 0.22,
+              "r": 0.2
+            },
+            "opacity": 1.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "53": {
+      "id": 53,
+      "info": {
+        "SkAttachment": {
+          "objectId": 34,
+          "jointName": "RightLeg",
+          "offsetFromJoint": {
+            "position": [
+              -0.01,
+              -0.7,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLegSkAttachment"
+    },
+    "26": {
+      "id": 26,
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "glow": 0.0,
+            "color": {
+              "b": 0.9,
+              "g": 0.55,
+              "r": 0.25
+            },
+            "opacity": 1.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "45": {
+      "id": 45,
+      "info": {
+        "SkAttachment": {
+          "objectId": 26,
+          "jointName": "Torso",
+          "offsetFromJoint": {
+            "position": [
+              0.0,
+              0.6999999,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "TorsoSkAttachment"
+    },
+    "27": {
+      "id": 27,
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "glow": 0.0,
+            "color": {
+              "b": 0.65,
+              "g": 0.8,
+              "r": 0.95
+            },
+            "opacity": 1.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "46": {
+      "id": 46,
+      "info": {
+        "SkAttachment": {
+          "objectId": 27,
+          "jointName": "Head",
+          "offsetFromJoint": {
+            "position": [
+              0.0,
+              0.5,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "HeadSkAttachment"
+    },
+    "28": {
+      "id": 28,
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "glow": 0.0,
+            "color": {
+              "b": 0.12,
+              "g": 0.1,
+              "r": 0.1
+            },
+            "opacity": 1.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      },
+      "name": "Eye"
+    },
+    "47": {
+      "id": 47,
+      "info": {
+        "SkAttachment": {
+          "objectId": 28,
+          "jointName": "Head",
+          "offsetFromJoint": {
+            "position": [
+              -0.2,
+              0.60000014,
+              0.5
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "HeadSkAttachment"
+    },
+    "32": {
+      "id": 32,
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "glow": 0.0,
+            "color": {
+              "b": 0.65,
+              "g": 0.8,
+              "r": 0.95
+            },
+            "opacity": 1.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "51": {
+      "id": 51,
+      "info": {
+        "SkAttachment": {
+          "objectId": 32,
+          "jointName": "RightArm",
+          "offsetFromJoint": {
+            "position": [
+              0.0,
+              -0.5,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightArmSkAttachment"
+    },
+    "31": {
+      "id": 31,
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "glow": 0.0,
+            "color": {
+              "b": 0.65,
+              "g": 0.8,
+              "r": 0.95
+            },
+            "opacity": 1.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "50": {
+      "id": 50,
+      "info": {
+        "SkAttachment": {
+          "objectId": 31,
+          "jointName": "LeftArm",
+          "offsetFromJoint": {
+            "position": [
+              0.0,
+              -0.5,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftArmSkAttachment"
+    },
+    "29": {
+      "id": 29,
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "glow": 0.0,
+            "color": {
+              "b": 0.12,
+              "g": 0.1,
+              "r": 0.1
+            },
+            "opacity": 1.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      },
+      "name": "Eye"
+    },
+    "48": {
+      "id": 48,
+      "info": {
+        "SkAttachment": {
+          "objectId": 29,
+          "jointName": "Head",
+          "offsetFromJoint": {
+            "position": [
+              0.2,
+              0.60000014,
+              0.5
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "HeadSkAttachment"
+    },
+    "33": {
+      "id": 33,
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "glow": 0.0,
+            "color": {
+              "b": 0.3,
+              "g": 0.22,
+              "r": 0.2
+            },
+            "opacity": 1.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "52": {
+      "id": 52,
+      "info": {
+        "SkAttachment": {
+          "objectId": 33,
+          "jointName": "LeftLeg",
+          "offsetFromJoint": {
+            "position": [
+              0.01,
+              -0.7,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLegSkAttachment"
+    },
+    "485": {
+      "id": 485,
+      "info": {
+        "SkAnimator": {
+          "weight": 0.0,
+          "clockId": 486,
+          "priority": 7,
+          "skeletonId": 37,
+          "skAnimationId": 143,
+          "weightTransition": null
+        }
+      },
+      "name": "JumpAnimator"
+    },
+    "486": {
+      "id": 486,
+      "info": {
+        "Clock": {
+          "speed": 1.0,
+          "clockState": {
+            "Playing": {
+              "localStartMs": 0.0,
+              "timeLocation": "Server"
+            }
+          },
+          "shouldLoop": true
+        }
+      },
+      "name": "Clock"
+    },
+    "487": {
+      "id": 487,
+      "info": {
+        "Label": {
+          "text": "Player",
+          "maxWidth": null,
+          "lineHeight": 0.5,
+          "billboardMode": "Full",
+          "isConstantSize": false,
+          "visualSettings": {
+            "glow": 0.0,
+            "color": {
+              "b": 1.0,
+              "g": 1.0,
+              "r": 1.0
+            },
+            "opacity": 1.0,
+            "isAlwaysOnTop": false
+          },
+          "backgroundColor": {
+            "b": 0.0,
+            "g": 0.0,
+            "r": 0.0
+          },
+          "horizontalAlign": "Center",
+          "offsetFromObject": [
+            0.0,
+            4.7,
+            0.0
+          ],
+          "physicalObjectId": 25,
+          "backgroundOpacity": 0.45,
+          "rotationFromObject": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      },
+      "name": "Nametag"
+    },
+    "232": {
+      "id": 232,
+      "info": {
+        "SkAnimation": {
+          "duration": 3.0,
+          "interpolationStyle": "Linear"
+        }
+      },
+      "name": "CharacterIdle"
+    },
+    "249": {
+      "id": 249,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.2
+        }
+      },
+      "name": "kf_2"
+    },
+    "255": {
+      "id": 255,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "252": {
+      "id": 252,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.06895435,
+              0.0,
+              0.9976198
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "250": {
+      "id": 250,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4081347,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "251": {
+      "id": 251,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "253": {
+      "id": 253,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.0106422445,
+              0.00035429222,
+              -0.033270802,
+              0.9993897
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "254": {
+      "id": 254,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.0106422445,
+              0.00035429222,
+              0.033270802,
+              0.9993897
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "256": {
+      "id": 256,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "297": {
+      "id": 297,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.8
+        }
+      },
+      "name": "kf_8"
+    },
+    "302": {
+      "id": 302,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.026008911,
+              0.0011330821,
+              0.043509115,
+              0.9987138
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "303": {
+      "id": 303,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "299": {
+      "id": 299,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "301": {
+      "id": 301,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.026008911,
+              0.0011330821,
+              -0.043509115,
+              0.9987138
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "304": {
+      "id": 304,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "300": {
+      "id": 300,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.031367835,
+              0.0,
+              0.9995079
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "298": {
+      "id": 298,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4198904,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "329": {
+      "id": 329,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.2
+        }
+      },
+      "name": "kf_12"
+    },
+    "335": {
+      "id": 335,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "334": {
+      "id": 334,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.015377359,
+              0.00056057953,
+              0.03642635,
+              0.99921787
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "333": {
+      "id": 333,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.015377359,
+              0.00056057953,
+              -0.03642635,
+              0.99921787
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "332": {
+      "id": 332,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.025352214,
+              0.0,
+              0.99967855
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "336": {
+      "id": 336,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "330": {
+      "id": 330,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4117557,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "331": {
+      "id": 331,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "313": {
+      "id": 313,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.0
+        }
+      },
+      "name": "kf_10"
+    },
+    "319": {
+      "id": 319,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "317": {
+      "id": 317,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.022651222,
+              0.0009359127,
+              -0.041272588,
+              0.9988907
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "320": {
+      "id": 320,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "314": {
+      "id": 314,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4173205,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "318": {
+      "id": 318,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.022651222,
+              0.0009359127,
+              0.041272588,
+              0.9988907
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "315": {
+      "id": 315,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "316": {
+      "id": 316,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0032937813,
+              0.0,
+              0.9999946
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "265": {
+      "id": 265,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.4
+        }
+      },
+      "name": "kf_4"
+    },
+    "272": {
+      "id": 272,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "270": {
+      "id": 270,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.019439353,
+              0.0007614448,
+              0.039132856,
+              0.9990446
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "268": {
+      "id": 268,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.067289285,
+              0.0,
+              0.99773353
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "269": {
+      "id": 269,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.019439353,
+              0.0007614448,
+              -0.039132856,
+              0.9990446
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "271": {
+      "id": 271,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "266": {
+      "id": 266,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4148629,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "267": {
+      "id": 267,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "337": {
+      "id": 337,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.3
+        }
+      },
+      "name": "kf_13"
+    },
+    "342": {
+      "id": 342,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.0106422445,
+              0.00035429222,
+              0.033270802,
+              0.9993897
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "339": {
+      "id": 339,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "340": {
+      "id": 340,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.03831534,
+              0.0,
+              0.9992657
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "341": {
+      "id": 341,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.0106422445,
+              0.00035429222,
+              -0.033270802,
+              0.9993897
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "338": {
+      "id": 338,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4081347,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "344": {
+      "id": 344,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "343": {
+      "id": 343,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "289": {
+      "id": 289,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.7
+        }
+      },
+      "name": "kf_7"
+    },
+    "293": {
+      "id": 293,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.026008911,
+              0.0011330821,
+              -0.043509115,
+              0.9987138
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "292": {
+      "id": 292,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.043640323,
+              0.0,
+              0.9990473
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "295": {
+      "id": 295,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "296": {
+      "id": 296,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "291": {
+      "id": 291,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "290": {
+      "id": 290,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4198904,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "294": {
+      "id": 294,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.026008911,
+              0.0011330821,
+              0.043509115,
+              0.9987138
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "385": {
+      "id": 385,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.9
+        }
+      },
+      "name": "kf_19"
+    },
+    "389": {
+      "id": 389,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.019452563,
+              -0.00025697582,
+              -0.0132067315,
+              0.9997235
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "391": {
+      "id": 391,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "392": {
+      "id": 392,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "390": {
+      "id": 390,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.019452563,
+              -0.00025697582,
+              0.0132067315,
+              0.9997235
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "386": {
+      "id": 386,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3851371,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "387": {
+      "id": 387,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "388": {
+      "id": 388,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.067289285,
+              0.0,
+              0.99773353
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "281": {
+      "id": 281,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.6
+        }
+      },
+      "name": "kf_6"
+    },
+    "284": {
+      "id": 284,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.054001212,
+              0.0,
+              0.9985409
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "286": {
+      "id": 286,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.024873251,
+              0.0010647025,
+              0.042752706,
+              0.9987755
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "288": {
+      "id": 288,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "282": {
+      "id": 282,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4190211,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "287": {
+      "id": 287,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "283": {
+      "id": 283,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "285": {
+      "id": 285,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.024873251,
+              0.0010647025,
+              -0.042752706,
+              0.9987755
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "305": {
+      "id": 305,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.9
+        }
+      },
+      "name": "kf_9"
+    },
+    "308": {
+      "id": 308,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.017719692,
+              0.0,
+              0.999843
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "306": {
+      "id": 306,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4190211,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "310": {
+      "id": 310,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.024873251,
+              0.0010647025,
+              0.042752706,
+              0.9987755
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "312": {
+      "id": 312,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "307": {
+      "id": 307,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "309": {
+      "id": 309,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.024873251,
+              0.0010647025,
+              -0.042752706,
+              0.9987755
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "311": {
+      "id": 311,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "409": {
+      "id": 409,
+      "info": {
+        "SkKeyframe": {
+          "time": 2.2
+        }
+      },
+      "name": "kf_22"
+    },
+    "412": {
+      "id": 412,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.043640323,
+              0.0,
+              0.9990473
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "414": {
+      "id": 414,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.026032567,
+              -0.00022967195,
+              0.008819153,
+              0.99962217
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "410": {
+      "id": 410,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3801095,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "416": {
+      "id": 416,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "413": {
+      "id": 413,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.026032567,
+              -0.00022967195,
+              -0.008819153,
+              0.99962217
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "411": {
+      "id": 411,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "415": {
+      "id": 415,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "401": {
+      "id": 401,
+      "info": {
+        "SkKeyframe": {
+          "time": 2.1
+        }
+      },
+      "name": "kf_21"
+    },
+    "405": {
+      "id": 405,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.024894886,
+              -0.00023852199,
+              -0.009577756,
+              0.99964416
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "403": {
+      "id": 403,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "407": {
+      "id": 407,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "402": {
+      "id": 402,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3809788,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "404": {
+      "id": 404,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.054001212,
+              0.0,
+              0.9985409
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "406": {
+      "id": 406,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.024894886,
+              -0.00023852199,
+              0.009577756,
+              0.99964416
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "408": {
+      "id": 408,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "473": {
+      "id": 473,
+      "info": {
+        "SkKeyframe": {
+          "time": 3.0
+        }
+      },
+      "name": "kf_30"
+    },
+    "475": {
+      "id": 475,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "477": {
+      "id": 477,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -6.410038e-18,
+              -1.6785277e-19,
+              -0.02617695,
+              0.99965733
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "478": {
+      "id": 478,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              6.410038e-18,
+              -1.6785277e-19,
+              0.02617695,
+              0.99965733
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "479": {
+      "id": 479,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "476": {
+      "id": 476,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.05871197,
+              0.0,
+              0.998275
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "480": {
+      "id": 480,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "474": {
+      "id": 474,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "345": {
+      "id": 345,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.4
+        }
+      },
+      "name": "kf_14"
+    },
+    "347": {
+      "id": 347,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "352": {
+      "id": 352,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "348": {
+      "id": 348,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.04959919,
+              0.0,
+              0.9987692
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "346": {
+      "id": 346,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4041582,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "350": {
+      "id": 350,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.00544067,
+              0.00016222727,
+              0.029803827,
+              0.9995409
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "351": {
+      "id": 351,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "349": {
+      "id": 349,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.00544067,
+              0.00016222727,
+              -0.029803827,
+              0.9995409
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "449": {
+      "id": 449,
+      "info": {
+        "SkKeyframe": {
+          "time": 2.7
+        }
+      },
+      "name": "kf_27"
+    },
+    "456": {
+      "id": 456,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "454": {
+      "id": 454,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.015385624,
+              -0.00024497756,
+              0.015918594,
+              0.9997549
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "455": {
+      "id": 455,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "451": {
+      "id": 451,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "450": {
+      "id": 450,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3882443,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "453": {
+      "id": 453,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.015385624,
+              -0.00024497756,
+              -0.015918594,
+              0.9997549
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "452": {
+      "id": 452,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.025352214,
+              0.0,
+              0.99967855
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "417": {
+      "id": 417,
+      "info": {
+        "SkKeyframe": {
+          "time": 2.3
+        }
+      },
+      "name": "kf_23"
+    },
+    "419": {
+      "id": 419,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "421": {
+      "id": 421,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.026032567,
+              -0.00022967195,
+              -0.008819153,
+              0.99962217
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "420": {
+      "id": 420,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.031367835,
+              0.0,
+              0.9995079
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "424": {
+      "id": 424,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "423": {
+      "id": 423,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "422": {
+      "id": 422,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.026032567,
+              -0.00022967195,
+              0.008819153,
+              0.99962217
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "418": {
+      "id": 418,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3801095,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "273": {
+      "id": 273,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.5
+        }
+      },
+      "name": "kf_5"
+    },
+    "279": {
+      "id": 279,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "280": {
+      "id": 280,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "276": {
+      "id": 276,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.061999753,
+              0.0,
+              0.99807614
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "275": {
+      "id": 275,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "277": {
+      "id": 277,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.022651222,
+              0.0009359127,
+              -0.041272588,
+              0.9988907
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "274": {
+      "id": 274,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4173205,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "278": {
+      "id": 278,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.022651222,
+              0.0009359127,
+              0.041272588,
+              0.9988907
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "233": {
+      "id": 233,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.0
+        }
+      },
+      "name": "kf_0"
+    },
+    "237": {
+      "id": 237,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.02617695,
+              0.99965733
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "240": {
+      "id": 240,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "236": {
+      "id": 236,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.05871197,
+              0.0,
+              0.998275
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "239": {
+      "id": 239,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "235": {
+      "id": 235,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "234": {
+      "id": 234,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "238": {
+      "id": 238,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.02617695,
+              0.99965733
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "425": {
+      "id": 425,
+      "info": {
+        "SkKeyframe": {
+          "time": 2.4
+        }
+      },
+      "name": "kf_24"
+    },
+    "431": {
+      "id": 431,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "426": {
+      "id": 426,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3809788,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "427": {
+      "id": 427,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "432": {
+      "id": 432,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "429": {
+      "id": 429,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.024894886,
+              -0.00023852199,
+              -0.009577756,
+              0.99964416
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "430": {
+      "id": 430,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.024894886,
+              -0.00023852199,
+              0.009577756,
+              0.99964416
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "428": {
+      "id": 428,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.017719692,
+              0.0,
+              0.999843
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "321": {
+      "id": 321,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.1
+        }
+      },
+      "name": "kf_11"
+    },
+    "322": {
+      "id": 322,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4148629,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "325": {
+      "id": 325,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.019439353,
+              0.0007614448,
+              -0.039132856,
+              0.9990446
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "327": {
+      "id": 327,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "324": {
+      "id": 324,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.01127676,
+              0.0,
+              0.9999364
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "323": {
+      "id": 323,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "326": {
+      "id": 326,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.019439353,
+              0.0007614448,
+              0.039132856,
+              0.9990446
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "328": {
+      "id": 328,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "241": {
+      "id": 241,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.1
+        }
+      },
+      "name": "kf_1"
+    },
+    "244": {
+      "id": 244,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.065258086,
+              0.0,
+              0.9978684
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "243": {
+      "id": 243,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "248": {
+      "id": 248,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "246": {
+      "id": 246,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.00544067,
+              0.00016222727,
+              0.029803827,
+              0.9995409
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "247": {
+      "id": 247,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "245": {
+      "id": 245,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.00544067,
+              0.00016222727,
+              -0.029803827,
+              0.9995409
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "242": {
+      "id": 242,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4041582,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "353": {
+      "id": 353,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.5
+        }
+      },
+      "name": "kf_15"
+    },
+    "354": {
+      "id": 354,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "360": {
+      "id": 360,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "359": {
+      "id": 359,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "355": {
+      "id": 355,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "356": {
+      "id": 356,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.05871197,
+              0.0,
+              0.998275
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "357": {
+      "id": 357,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              3.205019e-18,
+              8.3926385e-20,
+              -0.02617695,
+              0.99965733
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "358": {
+      "id": 358,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -3.205019e-18,
+              8.3926385e-20,
+              0.02617695,
+              0.99965733
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "369": {
+      "id": 369,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.7
+        }
+      },
+      "name": "kf_17"
+    },
+    "370": {
+      "id": 370,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3918653,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "374": {
+      "id": 374,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.010646202,
+              -0.0002031653,
+              0.019078804,
+              0.9997613
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "376": {
+      "id": 376,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "371": {
+      "id": 371,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "372": {
+      "id": 372,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.06895435,
+              0.0,
+              0.9976198
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "373": {
+      "id": 373,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.010646202,
+              -0.0002031653,
+              -0.019078804,
+              0.9997613
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "375": {
+      "id": 375,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "465": {
+      "id": 465,
+      "info": {
+        "SkKeyframe": {
+          "time": 2.9
+        }
+      },
+      "name": "kf_29"
+    },
+    "471": {
+      "id": 471,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "469": {
+      "id": 469,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.0054417043,
+              -0.00012273774,
+              -0.022548947,
+              0.9997309
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "470": {
+      "id": 470,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.0054417043,
+              -0.00012273774,
+              0.022548947,
+              0.9997309
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "466": {
+      "id": 466,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3958417,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "467": {
+      "id": 467,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "472": {
+      "id": 472,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "468": {
+      "id": 468,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.04959919,
+              0.0,
+              0.9987692
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "377": {
+      "id": 377,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.8
+        }
+      },
+      "name": "kf_18"
+    },
+    "380": {
+      "id": 380,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.069641285,
+              0.0,
+              0.9975721
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "382": {
+      "id": 382,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.015385624,
+              -0.00024497756,
+              0.015918594,
+              0.9997549
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "378": {
+      "id": 378,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3882443,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "384": {
+      "id": 384,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "383": {
+      "id": 383,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "381": {
+      "id": 381,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.015385624,
+              -0.00024497756,
+              -0.015918594,
+              0.9997549
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "379": {
+      "id": 379,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "433": {
+      "id": 433,
+      "info": {
+        "SkKeyframe": {
+          "time": 2.5
+        }
+      },
+      "name": "kf_25"
+    },
+    "440": {
+      "id": 440,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "434": {
+      "id": 434,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3826795,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "439": {
+      "id": 439,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "438": {
+      "id": 438,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.02266916,
+              -0.00025084324,
+              0.011061874,
+              0.9996818
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "436": {
+      "id": 436,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.0032937813,
+              0.0,
+              0.9999946
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "435": {
+      "id": 435,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "437": {
+      "id": 437,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.02266916,
+              -0.00025084324,
+              -0.011061874,
+              0.9996818
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "441": {
+      "id": 441,
+      "info": {
+        "SkKeyframe": {
+          "time": 2.6
+        }
+      },
+      "name": "kf_26"
+    },
+    "446": {
+      "id": 446,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.019452563,
+              -0.00025697582,
+              0.0132067315,
+              0.9997235
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "442": {
+      "id": 442,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3851371,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "443": {
+      "id": 443,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "444": {
+      "id": 444,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.01127676,
+              0.0,
+              0.9999364
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "445": {
+      "id": 445,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.019452563,
+              -0.00025697582,
+              -0.0132067315,
+              0.9997235
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "448": {
+      "id": 448,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "447": {
+      "id": 447,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "457": {
+      "id": 457,
+      "info": {
+        "SkKeyframe": {
+          "time": 2.8
+        }
+      },
+      "name": "kf_28"
+    },
+    "458": {
+      "id": 458,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3918653,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "463": {
+      "id": 463,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "460": {
+      "id": 460,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.03831534,
+              0.0,
+              0.9992657
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "462": {
+      "id": 462,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.010646202,
+              -0.0002031653,
+              0.019078804,
+              0.9997613
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "461": {
+      "id": 461,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.010646202,
+              -0.0002031653,
+              -0.019078804,
+              0.9997613
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "464": {
+      "id": 464,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "459": {
+      "id": 459,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "393": {
+      "id": 393,
+      "info": {
+        "SkKeyframe": {
+          "time": 2.0
+        }
+      },
+      "name": "kf_20"
+    },
+    "395": {
+      "id": 395,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "397": {
+      "id": 397,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.02266916,
+              -0.00025084324,
+              -0.011061874,
+              0.9996818
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "394": {
+      "id": 394,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3826795,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "396": {
+      "id": 396,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.061999753,
+              0.0,
+              0.99807614
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "398": {
+      "id": 398,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.02266916,
+              -0.00025084324,
+              0.011061874,
+              0.9996818
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "400": {
+      "id": 400,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "399": {
+      "id": 399,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "361": {
+      "id": 361,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.6
+        }
+      },
+      "name": "kf_16"
+    },
+    "364": {
+      "id": 364,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              -0.065258086,
+              0.0,
+              0.9978684
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "367": {
+      "id": 367,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "363": {
+      "id": 363,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "362": {
+      "id": 362,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3958417,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "366": {
+      "id": 366,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.0054417043,
+              -0.00012273774,
+              0.022548947,
+              0.9997309
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "368": {
+      "id": 368,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "365": {
+      "id": 365,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.0054417043,
+              -0.00012273774,
+              -0.022548947,
+              0.9997309
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "257": {
+      "id": 257,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.3
+        }
+      },
+      "name": "kf_3"
+    },
+    "260": {
+      "id": 260,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.069641285,
+              0.0,
+              0.9975721
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "258": {
+      "id": 258,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4117557,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "259": {
+      "id": 259,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "264": {
+      "id": 264,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "263": {
+      "id": 263,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "261": {
+      "id": 261,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.015377359,
+              0.00056057953,
+              -0.03642635,
+              0.99921787
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "262": {
+      "id": 262,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.015377359,
+              0.00056057953,
+              0.03642635,
+              0.99921787
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "54": {
+      "id": 54,
+      "info": {
+        "SkAnimation": {
+          "duration": 1.0,
+          "interpolationStyle": "Linear"
+        }
+      },
+      "name": "CharacterWalk"
+    },
+    "103": {
+      "id": 103,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.6
+        }
+      },
+      "name": "kf_6"
+    },
+    "107": {
+      "id": 107,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.17856595,
+              0.0,
+              0.0,
+              0.98392797
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "104": {
+      "id": 104,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4154508,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "106": {
+      "id": 106,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "108": {
+      "id": 108,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.17856595,
+              0.0,
+              0.0,
+              0.98392797
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "110": {
+      "id": 110,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.20373924,
+              0.0,
+              0.0,
+              0.9790252
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "109": {
+      "id": 109,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.20373924,
+              0.0,
+              0.0,
+              0.9790252
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "105": {
+      "id": 105,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.02617144,
+              -0.020509105,
+              -0.00053704984,
+              0.9994469
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "79": {
+      "id": 79,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.3
+        }
+      },
+      "name": "kf_3"
+    },
+    "81": {
+      "id": 81,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.026162528,
+              0.033180665,
+              0.00086886634,
+              0.9991065
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "85": {
+      "id": 85,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.32591683,
+              0.0,
+              0.0,
+              0.94539845
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "83": {
+      "id": 83,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.28641567,
+              0.0,
+              0.0,
+              0.95810544
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "84": {
+      "id": 84,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.28641567,
+              0.0,
+              0.0,
+              0.95810544
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "80": {
+      "id": 80,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3595492,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "86": {
+      "id": 86,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.32591683,
+              0.0,
+              0.0,
+              0.94539845
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "82": {
+      "id": 82,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "111": {
+      "id": 111,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.7
+        }
+      },
+      "name": "kf_7"
+    },
+    "115": {
+      "id": 115,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.28641567,
+              0.0,
+              0.0,
+              0.95810544
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "116": {
+      "id": 116,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.28641567,
+              0.0,
+              0.0,
+              0.95810544
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "117": {
+      "id": 117,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.32591683,
+              0.0,
+              0.0,
+              0.94539845
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "113": {
+      "id": 113,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.026162528,
+              -0.033180665,
+              -0.00086886634,
+              0.9991065
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "114": {
+      "id": 114,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "112": {
+      "id": 112,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3595492,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "118": {
+      "id": 118,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.32591683,
+              0.0,
+              0.0,
+              0.94539845
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "135": {
+      "id": 135,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.0
+        }
+      },
+      "name": "kf_10"
+    },
+    "139": {
+      "id": 139,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              7.4809414e-17,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "137": {
+      "id": 137,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.02617695,
+              -8.546718e-18,
+              -2.238037e-19,
+              0.99965733
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "142": {
+      "id": 142,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              8.5496475e-17,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "140": {
+      "id": 140,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -7.4809414e-17,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "138": {
+      "id": 138,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "141": {
+      "id": 141,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -8.5496475e-17,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "136": {
+      "id": 136,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.45,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "87": {
+      "id": 87,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.4
+        }
+      },
+      "name": "kf_4"
+    },
+    "90": {
+      "id": 90,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "88": {
+      "id": 88,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4154508,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "91": {
+      "id": 91,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.17856595,
+              0.0,
+              0.0,
+              0.98392797
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "94": {
+      "id": 94,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.20373924,
+              0.0,
+              0.0,
+              0.9790252
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "92": {
+      "id": 92,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.17856595,
+              0.0,
+              0.0,
+              0.98392797
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "93": {
+      "id": 93,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.20373924,
+              0.0,
+              0.0,
+              0.9790252
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "89": {
+      "id": 89,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.02617144,
+              0.020509105,
+              0.00053704984,
+              0.9994469
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "71": {
+      "id": 71,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.2
+        }
+      },
+      "name": "kf_2"
+    },
+    "73": {
+      "id": 73,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.026162528,
+              0.033180665,
+              0.00086886634,
+              0.9991065
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "72": {
+      "id": 72,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3595492,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "75": {
+      "id": 75,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.28641567,
+              0.0,
+              0.0,
+              0.95810544
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "76": {
+      "id": 76,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.28641567,
+              0.0,
+              0.0,
+              0.95810544
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "74": {
+      "id": 74,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "77": {
+      "id": 77,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.32591683,
+              0.0,
+              0.0,
+              0.94539845
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "78": {
+      "id": 78,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.32591683,
+              0.0,
+              0.0,
+              0.94539845
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "127": {
+      "id": 127,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.9
+        }
+      },
+      "name": "kf_9"
+    },
+    "134": {
+      "id": 134,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.20373924,
+              0.0,
+              0.0,
+              0.9790252
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "131": {
+      "id": 131,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.17856595,
+              0.0,
+              0.0,
+              0.98392797
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "133": {
+      "id": 133,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.20373924,
+              0.0,
+              0.0,
+              0.9790252
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "129": {
+      "id": 129,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.02617144,
+              -0.020509105,
+              -0.00053704984,
+              0.9994469
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "132": {
+      "id": 132,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.17856595,
+              0.0,
+              0.0,
+              0.98392797
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "130": {
+      "id": 130,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "128": {
+      "id": 128,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4154508,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "95": {
+      "id": 95,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.5
+        }
+      },
+      "name": "kf_5"
+    },
+    "99": {
+      "id": 99,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -3.7404707e-17,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "101": {
+      "id": 101,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              4.2748237e-17,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "96": {
+      "id": 96,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.45,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "98": {
+      "id": 98,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "100": {
+      "id": 100,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              3.7404707e-17,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "97": {
+      "id": 97,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.02617695,
+              4.273359e-18,
+              1.1190185e-19,
+              0.99965733
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "102": {
+      "id": 102,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -4.2748237e-17,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "63": {
+      "id": 63,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.1
+        }
+      },
+      "name": "kf_1"
+    },
+    "65": {
+      "id": 65,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.02617144,
+              0.020509105,
+              0.00053704984,
+              0.9994469
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "69": {
+      "id": 69,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.20373924,
+              0.0,
+              0.0,
+              0.9790252
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "68": {
+      "id": 68,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.17856595,
+              0.0,
+              0.0,
+              0.98392797
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "67": {
+      "id": 67,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.17856595,
+              0.0,
+              0.0,
+              0.98392797
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "70": {
+      "id": 70,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.20373924,
+              0.0,
+              0.0,
+              0.9790252
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "66": {
+      "id": 66,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "64": {
+      "id": 64,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4154508,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "119": {
+      "id": 119,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.8
+        }
+      },
+      "name": "kf_8"
+    },
+    "122": {
+      "id": 122,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "121": {
+      "id": 121,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.026162528,
+              -0.033180665,
+              -0.00086886634,
+              0.9991065
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "125": {
+      "id": 125,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.32591683,
+              0.0,
+              0.0,
+              0.94539845
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "123": {
+      "id": 123,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.28641567,
+              0.0,
+              0.0,
+              0.95810544
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "126": {
+      "id": 126,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.32591683,
+              0.0,
+              0.0,
+              0.94539845
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "124": {
+      "id": 124,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.28641567,
+              0.0,
+              0.0,
+              0.95810544
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "120": {
+      "id": 120,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.3595492,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "55": {
+      "id": 55,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.0
+        }
+      },
+      "name": "kf_0"
+    },
+    "61": {
+      "id": 61,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "62": {
+      "id": 62,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "59": {
+      "id": 59,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "57": {
+      "id": 57,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.02617695,
+              0.0,
+              0.0,
+              0.99965733
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "58": {
+      "id": 58,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "60": {
+      "id": 60,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "56": {
+      "id": 56,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.45,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "143": {
+      "id": 143,
+      "info": {
+        "SkAnimation": {
+          "duration": 2.0,
+          "interpolationStyle": "EaseInOut"
+        }
+      },
+      "name": "CharacterJump"
+    },
+    "160": {
+      "id": 160,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.0
+        }
+      },
+      "name": "kf_2"
+    },
+    "165": {
+      "id": 165,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.99512905,
+              0.0870625,
+              0.015351472,
+              0.043619387
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "164": {
+      "id": 164,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.88353115,
+              -0.07729895,
+              -0.013629895,
+              0.4617486
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "163": {
+      "id": 163,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "162": {
+      "id": 162,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.043619387,
+              0.0,
+              0.0,
+              0.99904823
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "167": {
+      "id": 167,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.25881904,
+              0.0,
+              0.0,
+              0.9659258
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "166": {
+      "id": 166,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.25881904,
+              0.0,
+              0.0,
+              0.9659258
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "161": {
+      "id": 161,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "168": {
+      "id": 168,
+      "info": {
+        "SkKeyframe": {
+          "time": 1.5
+        }
+      },
+      "name": "kf_3"
+    },
+    "171": {
+      "id": 171,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "175": {
+      "id": 175,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.25881904,
+              0.0,
+              0.0,
+              0.9659258
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "172": {
+      "id": 172,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.99512905,
+              -0.0870625,
+              -0.015351472,
+              0.043619387
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "169": {
+      "id": 169,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "170": {
+      "id": 170,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.043619387,
+              0.0,
+              0.0,
+              0.99904823
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "174": {
+      "id": 174,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.25881904,
+              0.0,
+              0.0,
+              0.9659258
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "173": {
+      "id": 173,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.88353115,
+              0.07729895,
+              0.013629895,
+              0.4617486
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "144": {
+      "id": 144,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.0
+        }
+      },
+      "name": "kf_0"
+    },
+    "146": {
+      "id": 146,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.043619387,
+              0.0,
+              0.0,
+              0.99904823
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "148": {
+      "id": 148,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.88353115,
+              -0.07729895,
+              -0.013629895,
+              0.4617486
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "145": {
+      "id": 145,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "150": {
+      "id": 150,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.25881904,
+              0.0,
+              0.0,
+              0.9659258
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "147": {
+      "id": 147,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "151": {
+      "id": 151,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.25881904,
+              0.0,
+              0.0,
+              0.9659258
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "149": {
+      "id": 149,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.99512905,
+              0.0870625,
+              0.015351472,
+              0.043619387
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "152": {
+      "id": 152,
+      "info": {
+        "SkKeyframe": {
+          "time": 0.5
+        }
+      },
+      "name": "kf_1"
+    },
+    "158": {
+      "id": 158,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.25881904,
+              0.0,
+              0.0,
+              0.9659258
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "157": {
+      "id": 157,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.88353115,
+              0.07729895,
+              0.013629895,
+              0.4617486
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "156": {
+      "id": 156,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.99512905,
+              -0.0870625,
+              -0.015351472,
+              0.043619387
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "155": {
+      "id": 155,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "154": {
+      "id": 154,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.043619387,
+              0.0,
+              0.0,
+              0.99904823
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "159": {
+      "id": 159,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.25881904,
+              0.0,
+              0.0,
+              0.9659258
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "153": {
+      "id": 153,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "176": {
+      "id": 176,
+      "info": {
+        "SkKeyframe": {
+          "time": 2.0
+        }
+      },
+      "name": "kf_4"
+    },
+    "181": {
+      "id": 181,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightArm",
+          "localPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.99512905,
+              0.0870625,
+              0.015351472,
+              0.043619387
+            ]
+          }
+        }
+      },
+      "name": "RightArm"
+    },
+    "180": {
+      "id": 180,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftArm",
+          "localPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              -0.88353115,
+              -0.07729895,
+              -0.013629895,
+              0.4617486
+            ]
+          }
+        }
+      },
+      "name": "LeftArm"
+    },
+    "179": {
+      "id": 179,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Head",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Head"
+    },
+    "178": {
+      "id": 178,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Torso",
+          "localPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.043619387,
+              0.0,
+              0.0,
+              0.99904823
+            ]
+          }
+        }
+      },
+      "name": "Torso"
+    },
+    "183": {
+      "id": 183,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "RightLeg",
+          "localPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              -0.25881904,
+              0.0,
+              0.0,
+              0.9659258
+            ]
+          }
+        }
+      },
+      "name": "RightLeg"
+    },
+    "182": {
+      "id": 182,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "LeftLeg",
+          "localPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.25881904,
+              0.0,
+              0.0,
+              0.9659258
+            ]
+          }
+        }
+      },
+      "name": "LeftLeg"
+    },
+    "177": {
+      "id": 177,
+      "info": {
+        "SkKeyframePose": {
+          "jointName": "Hips",
+          "localPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "name": "Hips"
+    },
+    "488": {
+      "id": 488,
+      "name": "HatSpot",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 0.0,
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "489": {
+      "id": 489,
+      "name": "HeadSkAttachment",
+      "info": {
+        "SkAttachment": {
+          "objectId": 488,
+          "jointName": "Head",
+          "offsetFromJoint": {
+            "position": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "490": {
+      "id": 490,
+      "name": "appearance",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "491": {
+      "id": 491,
+      "name": "zoom_fade",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    }
+  },
+  "rootObjectId": 1,
+  "childrenOfId": {
+    "1": [
+      2
+    ],
+    "2": [
+      3,
+      24,
+      232,
+      54,
+      143,
+      490,
+      491
+    ],
+    "3": [],
+    "8": [],
+    "24": [
+      483,
+      481,
+      37,
+      25,
+      485,
+      487,
+      8
+    ],
+    "483": [
+      484
+    ],
+    "484": [],
+    "481": [
+      482
+    ],
+    "482": [],
+    "37": [
+      38
+    ],
+    "38": [
+      43,
+      39,
+      44
+    ],
+    "43": [],
+    "39": [
+      42,
+      40,
+      41
+    ],
+    "42": [],
+    "40": [],
+    "41": [],
+    "44": [],
+    "25": [
+      30,
+      34,
+      26,
+      27,
+      28,
+      32,
+      31,
+      29,
+      33,
+      488
+    ],
+    "30": [
+      49
+    ],
+    "49": [],
+    "34": [
+      53
+    ],
+    "53": [],
+    "26": [
+      45
+    ],
+    "45": [],
+    "27": [
+      46
+    ],
+    "46": [],
+    "28": [
+      47
+    ],
+    "47": [],
+    "32": [
+      51
+    ],
+    "51": [],
+    "31": [
+      50
+    ],
+    "50": [],
+    "29": [
+      48
+    ],
+    "48": [],
+    "33": [
+      52
+    ],
+    "52": [],
+    "485": [
+      486
+    ],
+    "486": [],
+    "487": [],
+    "232": [
+      249,
+      297,
+      329,
+      313,
+      265,
+      337,
+      289,
+      385,
+      281,
+      305,
+      409,
+      401,
+      473,
+      345,
+      449,
+      417,
+      273,
+      233,
+      425,
+      321,
+      241,
+      353,
+      369,
+      465,
+      377,
+      433,
+      441,
+      457,
+      393,
+      361,
+      257
+    ],
+    "249": [
+      255,
+      252,
+      250,
+      251,
+      253,
+      254,
+      256
+    ],
+    "255": [],
+    "252": [],
+    "250": [],
+    "251": [],
+    "253": [],
+    "254": [],
+    "256": [],
+    "297": [
+      302,
+      303,
+      299,
+      301,
+      304,
+      300,
+      298
+    ],
+    "302": [],
+    "303": [],
+    "299": [],
+    "301": [],
+    "304": [],
+    "300": [],
+    "298": [],
+    "329": [
+      335,
+      334,
+      333,
+      332,
+      336,
+      330,
+      331
+    ],
+    "335": [],
+    "334": [],
+    "333": [],
+    "332": [],
+    "336": [],
+    "330": [],
+    "331": [],
+    "313": [
+      319,
+      317,
+      320,
+      314,
+      318,
+      315,
+      316
+    ],
+    "319": [],
+    "317": [],
+    "320": [],
+    "314": [],
+    "318": [],
+    "315": [],
+    "316": [],
+    "265": [
+      272,
+      270,
+      268,
+      269,
+      271,
+      266,
+      267
+    ],
+    "272": [],
+    "270": [],
+    "268": [],
+    "269": [],
+    "271": [],
+    "266": [],
+    "267": [],
+    "337": [
+      342,
+      339,
+      340,
+      341,
+      338,
+      344,
+      343
+    ],
+    "342": [],
+    "339": [],
+    "340": [],
+    "341": [],
+    "338": [],
+    "344": [],
+    "343": [],
+    "289": [
+      293,
+      292,
+      295,
+      296,
+      291,
+      290,
+      294
+    ],
+    "293": [],
+    "292": [],
+    "295": [],
+    "296": [],
+    "291": [],
+    "290": [],
+    "294": [],
+    "385": [
+      389,
+      391,
+      392,
+      390,
+      386,
+      387,
+      388
+    ],
+    "389": [],
+    "391": [],
+    "392": [],
+    "390": [],
+    "386": [],
+    "387": [],
+    "388": [],
+    "281": [
+      284,
+      286,
+      288,
+      282,
+      287,
+      283,
+      285
+    ],
+    "284": [],
+    "286": [],
+    "288": [],
+    "282": [],
+    "287": [],
+    "283": [],
+    "285": [],
+    "305": [
+      308,
+      306,
+      310,
+      312,
+      307,
+      309,
+      311
+    ],
+    "308": [],
+    "306": [],
+    "310": [],
+    "312": [],
+    "307": [],
+    "309": [],
+    "311": [],
+    "409": [
+      412,
+      414,
+      410,
+      416,
+      413,
+      411,
+      415
+    ],
+    "412": [],
+    "414": [],
+    "410": [],
+    "416": [],
+    "413": [],
+    "411": [],
+    "415": [],
+    "401": [
+      405,
+      403,
+      407,
+      402,
+      404,
+      406,
+      408
+    ],
+    "405": [],
+    "403": [],
+    "407": [],
+    "402": [],
+    "404": [],
+    "406": [],
+    "408": [],
+    "473": [
+      475,
+      477,
+      478,
+      479,
+      476,
+      480,
+      474
+    ],
+    "475": [],
+    "477": [],
+    "478": [],
+    "479": [],
+    "476": [],
+    "480": [],
+    "474": [],
+    "345": [
+      347,
+      352,
+      348,
+      346,
+      350,
+      351,
+      349
+    ],
+    "347": [],
+    "352": [],
+    "348": [],
+    "346": [],
+    "350": [],
+    "351": [],
+    "349": [],
+    "449": [
+      456,
+      454,
+      455,
+      451,
+      450,
+      453,
+      452
+    ],
+    "456": [],
+    "454": [],
+    "455": [],
+    "451": [],
+    "450": [],
+    "453": [],
+    "452": [],
+    "417": [
+      419,
+      421,
+      420,
+      424,
+      423,
+      422,
+      418
+    ],
+    "419": [],
+    "421": [],
+    "420": [],
+    "424": [],
+    "423": [],
+    "422": [],
+    "418": [],
+    "273": [
+      279,
+      280,
+      276,
+      275,
+      277,
+      274,
+      278
+    ],
+    "279": [],
+    "280": [],
+    "276": [],
+    "275": [],
+    "277": [],
+    "274": [],
+    "278": [],
+    "233": [
+      237,
+      240,
+      236,
+      239,
+      235,
+      234,
+      238
+    ],
+    "237": [],
+    "240": [],
+    "236": [],
+    "239": [],
+    "235": [],
+    "234": [],
+    "238": [],
+    "425": [
+      431,
+      426,
+      427,
+      432,
+      429,
+      430,
+      428
+    ],
+    "431": [],
+    "426": [],
+    "427": [],
+    "432": [],
+    "429": [],
+    "430": [],
+    "428": [],
+    "321": [
+      322,
+      325,
+      327,
+      324,
+      323,
+      326,
+      328
+    ],
+    "322": [],
+    "325": [],
+    "327": [],
+    "324": [],
+    "323": [],
+    "326": [],
+    "328": [],
+    "241": [
+      244,
+      243,
+      248,
+      246,
+      247,
+      245,
+      242
+    ],
+    "244": [],
+    "243": [],
+    "248": [],
+    "246": [],
+    "247": [],
+    "245": [],
+    "242": [],
+    "353": [
+      354,
+      360,
+      359,
+      355,
+      356,
+      357,
+      358
+    ],
+    "354": [],
+    "360": [],
+    "359": [],
+    "355": [],
+    "356": [],
+    "357": [],
+    "358": [],
+    "369": [
+      370,
+      374,
+      376,
+      371,
+      372,
+      373,
+      375
+    ],
+    "370": [],
+    "374": [],
+    "376": [],
+    "371": [],
+    "372": [],
+    "373": [],
+    "375": [],
+    "465": [
+      471,
+      469,
+      470,
+      466,
+      467,
+      472,
+      468
+    ],
+    "471": [],
+    "469": [],
+    "470": [],
+    "466": [],
+    "467": [],
+    "472": [],
+    "468": [],
+    "377": [
+      380,
+      382,
+      378,
+      384,
+      383,
+      381,
+      379
+    ],
+    "380": [],
+    "382": [],
+    "378": [],
+    "384": [],
+    "383": [],
+    "381": [],
+    "379": [],
+    "433": [
+      440,
+      434,
+      439,
+      438,
+      436,
+      435,
+      437
+    ],
+    "440": [],
+    "434": [],
+    "439": [],
+    "438": [],
+    "436": [],
+    "435": [],
+    "437": [],
+    "441": [
+      446,
+      442,
+      443,
+      444,
+      445,
+      448,
+      447
+    ],
+    "446": [],
+    "442": [],
+    "443": [],
+    "444": [],
+    "445": [],
+    "448": [],
+    "447": [],
+    "457": [
+      458,
+      463,
+      460,
+      462,
+      461,
+      464,
+      459
+    ],
+    "458": [],
+    "463": [],
+    "460": [],
+    "462": [],
+    "461": [],
+    "464": [],
+    "459": [],
+    "393": [
+      395,
+      397,
+      394,
+      396,
+      398,
+      400,
+      399
+    ],
+    "395": [],
+    "397": [],
+    "394": [],
+    "396": [],
+    "398": [],
+    "400": [],
+    "399": [],
+    "361": [
+      364,
+      367,
+      363,
+      362,
+      366,
+      368,
+      365
+    ],
+    "364": [],
+    "367": [],
+    "363": [],
+    "362": [],
+    "366": [],
+    "368": [],
+    "365": [],
+    "257": [
+      260,
+      258,
+      259,
+      264,
+      263,
+      261,
+      262
+    ],
+    "260": [],
+    "258": [],
+    "259": [],
+    "264": [],
+    "263": [],
+    "261": [],
+    "262": [],
+    "54": [
+      103,
+      79,
+      111,
+      135,
+      87,
+      71,
+      127,
+      95,
+      63,
+      119,
+      55
+    ],
+    "103": [
+      107,
+      104,
+      106,
+      108,
+      110,
+      109,
+      105
+    ],
+    "107": [],
+    "104": [],
+    "106": [],
+    "108": [],
+    "110": [],
+    "109": [],
+    "105": [],
+    "79": [
+      81,
+      85,
+      83,
+      84,
+      80,
+      86,
+      82
+    ],
+    "81": [],
+    "85": [],
+    "83": [],
+    "84": [],
+    "80": [],
+    "86": [],
+    "82": [],
+    "111": [
+      115,
+      116,
+      117,
+      113,
+      114,
+      112,
+      118
+    ],
+    "115": [],
+    "116": [],
+    "117": [],
+    "113": [],
+    "114": [],
+    "112": [],
+    "118": [],
+    "135": [
+      139,
+      137,
+      142,
+      140,
+      138,
+      141,
+      136
+    ],
+    "139": [],
+    "137": [],
+    "142": [],
+    "140": [],
+    "138": [],
+    "141": [],
+    "136": [],
+    "87": [
+      90,
+      88,
+      91,
+      94,
+      92,
+      93,
+      89
+    ],
+    "90": [],
+    "88": [],
+    "91": [],
+    "94": [],
+    "92": [],
+    "93": [],
+    "89": [],
+    "71": [
+      73,
+      72,
+      75,
+      76,
+      74,
+      77,
+      78
+    ],
+    "73": [],
+    "72": [],
+    "75": [],
+    "76": [],
+    "74": [],
+    "77": [],
+    "78": [],
+    "127": [
+      134,
+      131,
+      133,
+      129,
+      132,
+      130,
+      128
+    ],
+    "134": [],
+    "131": [],
+    "133": [],
+    "129": [],
+    "132": [],
+    "130": [],
+    "128": [],
+    "95": [
+      99,
+      101,
+      96,
+      98,
+      100,
+      97,
+      102
+    ],
+    "99": [],
+    "101": [],
+    "96": [],
+    "98": [],
+    "100": [],
+    "97": [],
+    "102": [],
+    "63": [
+      65,
+      69,
+      68,
+      67,
+      70,
+      66,
+      64
+    ],
+    "65": [],
+    "69": [],
+    "68": [],
+    "67": [],
+    "70": [],
+    "66": [],
+    "64": [],
+    "119": [
+      122,
+      121,
+      125,
+      123,
+      126,
+      124,
+      120
+    ],
+    "122": [],
+    "121": [],
+    "125": [],
+    "123": [],
+    "126": [],
+    "124": [],
+    "120": [],
+    "55": [
+      61,
+      62,
+      59,
+      57,
+      58,
+      60,
+      56
+    ],
+    "61": [],
+    "62": [],
+    "59": [],
+    "57": [],
+    "58": [],
+    "60": [],
+    "56": [],
+    "143": [
+      160,
+      168,
+      144,
+      152,
+      176
+    ],
+    "210": [],
+    "213": [],
+    "214": [],
+    "215": [],
+    "209": [],
+    "211": [],
+    "212": [],
+    "160": [
+      165,
+      164,
+      163,
+      162,
+      167,
+      166,
+      161
+    ],
+    "165": [],
+    "164": [],
+    "163": [],
+    "162": [],
+    "167": [],
+    "166": [],
+    "161": [],
+    "168": [
+      171,
+      175,
+      172,
+      169,
+      170,
+      174,
+      173
+    ],
+    "171": [],
+    "175": [],
+    "172": [],
+    "169": [],
+    "170": [],
+    "174": [],
+    "173": [],
+    "204": [],
+    "205": [],
+    "203": [],
+    "207": [],
+    "206": [],
+    "201": [],
+    "202": [],
+    "193": [],
+    "194": [],
+    "199": [],
+    "198": [],
+    "197": [],
+    "195": [],
+    "196": [],
+    "144": [
+      146,
+      148,
+      145,
+      150,
+      147,
+      151,
+      149
+    ],
+    "146": [],
+    "148": [],
+    "145": [],
+    "150": [],
+    "147": [],
+    "151": [],
+    "149": [],
+    "227": [],
+    "225": [],
+    "228": [],
+    "231": [],
+    "229": [],
+    "230": [],
+    "226": [],
+    "152": [
+      158,
+      157,
+      156,
+      155,
+      154,
+      159,
+      153
+    ],
+    "158": [],
+    "157": [],
+    "156": [],
+    "155": [],
+    "154": [],
+    "159": [],
+    "153": [],
+    "219": [],
+    "221": [],
+    "222": [],
+    "218": [],
+    "217": [],
+    "223": [],
+    "220": [],
+    "176": [
+      181,
+      180,
+      179,
+      178,
+      183,
+      182,
+      177
+    ],
+    "181": [],
+    "180": [],
+    "179": [],
+    "178": [],
+    "183": [],
+    "182": [],
+    "177": [],
+    "186": [],
+    "188": [],
+    "190": [],
+    "189": [],
+    "187": [],
+    "191": [],
+    "185": [],
+    "488": [
+      489
+    ],
+    "490": [],
+    "491": []
+  },
+  "scriptRawCodeOfId": {
+    "3": "",
+    "8": "",
+    "490": "'use server'\n",
+    "491": "'use client'\n"
+  },
+  "physicsInfo3DOfId": {
+    "25": {
+      "location": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "30": {
+      "location": {
+        "position": [
+          0.0,
+          3.9,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "34": {
+      "location": {
+        "position": [
+          0.29,
+          0.7,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "26": {
+      "location": {
+        "position": [
+          0.0,
+          2.1,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "27": {
+      "location": {
+        "position": [
+          0.0,
+          3.3,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "28": {
+      "location": {
+        "position": [
+          -0.2,
+          3.4,
+          0.5
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "32": {
+      "location": {
+        "position": [
+          0.8,
+          2.15,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "31": {
+      "location": {
+        "position": [
+          -0.8,
+          2.15,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "29": {
+      "location": {
+        "position": [
+          0.2,
+          3.4,
+          0.5
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "33": {
+      "location": {
+        "position": [
+          -0.29,
+          0.7,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "488": {
+      "location": {
+        "position": [
+          0.0,
+          3.8,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "physicsToggles3DOfId": {
+    "26": {
+      "density": 1.0,
+      "isAnchored": false,
+      "isWalkthrough": false
+    },
+    "27": {
+      "density": 1.0,
+      "isAnchored": false,
+      "isWalkthrough": false
+    },
+    "28": {
+      "density": 0.01,
+      "isAnchored": false,
+      "isWalkthrough": true
+    },
+    "29": {
+      "density": 0.01,
+      "isAnchored": false,
+      "isWalkthrough": true
+    },
+    "30": {
+      "density": 1.0,
+      "isAnchored": false,
+      "isWalkthrough": true
+    },
+    "31": {
+      "density": 1.0,
+      "isAnchored": false,
+      "isWalkthrough": true
+    },
+    "32": {
+      "density": 1.0,
+      "isAnchored": false,
+      "isWalkthrough": true
+    },
+    "33": {
+      "density": 1.0,
+      "isAnchored": false,
+      "isWalkthrough": false
+    },
+    "34": {
+      "density": 1.0,
+      "isAnchored": false,
+      "isWalkthrough": false
+    },
+    "488": {
+      "density": 1.0,
+      "isAnchored": false,
+      "isWalkthrough": true
+    }
+  },
+  "primitiveSettingsOfId": {
+    "26": {
+      "Brick": {
+        "size": [
+          1.2,
+          1.4,
+          0.7
+        ]
+      }
+    },
+    "27": {
+      "Brick": {
+        "size": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "28": {
+      "Brick": {
+        "size": [
+          0.16,
+          0.22,
+          0.06
+        ]
+      }
+    },
+    "29": {
+      "Brick": {
+        "size": [
+          0.16,
+          0.22,
+          0.06
+        ]
+      }
+    },
+    "30": {
+      "Brick": {
+        "size": [
+          1.1,
+          0.2,
+          1.1
+        ]
+      }
+    },
+    "31": {
+      "Brick": {
+        "size": [
+          0.4,
+          1.3,
+          0.4
+        ]
+      }
+    },
+    "32": {
+      "Brick": {
+        "size": [
+          0.4,
+          1.3,
+          0.4
+        ]
+      }
+    },
+    "33": {
+      "Brick": {
+        "size": [
+          0.58,
+          1.4,
+          0.6
+        ]
+      }
+    },
+    "34": {
+      "Brick": {
+        "size": [
+          0.58,
+          1.4,
+          0.6
+        ]
+      }
+    },
+    "488": {
+      "Brick": {
+        "size": [
+          0.1,
+          0.1,
+          0.1
+        ]
+      }
+    }
+  }
+}
