@@ -22,27 +22,19 @@ async fn gui_getters_can_read_the_world_and_modify_the_script_manager() -> anyho
     world.markScriptAsReadyToRun(
         2,
         r#"'use client'
-Deno.core.ops.__setRustGuiRoot__(script.id, "hud", JSON.stringify({ children: [] }));
-Deno.core.ops.__setRustGuiRoot__(script.id, "hud", JSON.stringify({
-    get children() {
-        Deno.core.ops.__clearRustGuiRoot__(script.id, "hud");
-        return [{ text: { nodeId: "message", get text() { return game.world.name; } } }];
-    },
-}));
+game.guiService.show("hud", () => null);
+game.guiService.show("hud", () => {
+    game.guiService.hide("hud");
+    return game.world.name;
+});
 let rejected = false;
 try {
-    Deno.core.ops.__setRustGuiRoot__(script.id, "hud", JSON.stringify({ get children() { throw new Error("GUI getter failed"); } }));
+    game.guiService.show("hud", () => { throw new Error("GUI getter failed"); });
 } catch (error) {
     rejected = true;
     if (!String(error).includes("GUI getter failed")) throw error;
 }
 if (!rejected) throw new Error("Expected GUI input conversion to fail");
-rejected = false;
-try { Deno.core.ops.__setRustGuiRoot__(script.id, "hud", "{"); } catch (error) {
-    rejected = true;
-    if (!(error instanceof Error)) throw error;
-}
-if (!rejected) throw new Error("Expected invalid GUI JSON to fail");
 "#
         .to_string(),
     );

@@ -85,7 +85,7 @@ let callCount = 0;
 export const result = () => {
     if (++callCount === 3) return;
     return { get value() {
-        Deno.core.ops.__getRustObject__(Deno.core.ops.__getRustRootObjectId__());
+        game.world.name;
         if (callCount === 1) throw new Error("result getter failed");
         return 42;
     } };

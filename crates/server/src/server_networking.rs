@@ -57,8 +57,11 @@ use tokio_util::{sync::CancellationToken, task::TaskTracker};
 // ----------------- Constants -----------------
 
 pub const GAME_CHAT_SUBMISSION_INTERVAL: Duration = Duration::from_millis(500); // TODO: AI-PICKED-VALUE: Process at most two messages per second from each connection, using stream backpressure.
+pub const SERVER_FN_CALL_INTERVAL: Duration = Duration::from_nanos(1_000_000_000 / 120); // TODO: AI-PICKED-VALUE: Start at most 120 'use server' calls a second from each connection, twice the tick rate.
 
 const REVALIDATE_USERS_POLL_SECS: u64 = 10; // kick players with a changed play_auth
+
+const SCRIPT_RAW_CODE_SEND_TIMEOUT: Duration = Duration::from_secs(10); // TODO: AI-PICKED-VALUE: A player has 10 seconds to take the code of the scripts a tick added before they are disconnected.
 
 // What a snapshot costs before any changes go in. It leaves 2 bytes for the change count to grow past 250.
 fn empty_snapshot_size(message_num: MessageNum, live_server_sim_ms: f64) -> u64 {
@@ -205,7 +208,6 @@ pub struct Server {
     userConnectionInfoOfPlayerObjectId: RwLock<HashMap<ObjectId, UserConnectionInfo>>,
     connection_of_player_object_id_arc: Arc<MultiThreadHashMap<ObjectId, Connection>>,
     startTime: Instant,
-    new_user_mutex: Mutex<()>,
     game_chat_arc: Arc<Mutex<ServerGameChat>>,
     player_cleanup_tasks_tracker: TaskTracker,
 }
@@ -224,7 +226,6 @@ impl Server {
             userConnectionInfoOfPlayerObjectId: RwLock::new(HashMap::new()),
             connection_of_player_object_id_arc,
             startTime,
-            new_user_mutex: Mutex::new(()),
             game_chat_arc: Arc::new(Mutex::new(ServerGameChat::new(js_callback_inputs_tx))),
             player_cleanup_tasks_tracker,
         }
@@ -422,31 +423,45 @@ impl Server {
             .map(|user_connection_info| user_connection_info.connection.clone())
             .collect();
         drop(users_lock);
+        if new_script_deltas.is_empty() {
+            return;
+        }
 
         // send raw code of any scripts that were just added, over dedicated reliable streams
+        // Each player's sends run on their own, since a stream only opens once that player lets it, and the tick holds the world lock.
+        let new_script_deltas_arc = Arc::new(new_script_deltas);
         for connection in script_raw_code_connections {
-            for (object_id, raw_code) in &new_script_deltas {
-                let mut send_stream_script_raw_code = match connection.open_uni().await {
-                    Ok(send_stream_script_raw_code) => send_stream_script_raw_code,
-                    Err(error) => {
-                        log::warn!("Error opening script raw code stream: {}", error);
-                        break;
+            let new_script_deltas_arc = new_script_deltas_arc.clone();
+            tokio::spawn(async move {
+                let send_script_raw_codes = async {
+                    for (object_id, raw_code) in new_script_deltas_arc.iter() {
+                        let mut send_stream_script_raw_code = match connection.open_uni().await {
+                            Ok(send_stream_script_raw_code) => send_stream_script_raw_code,
+                            Err(error) => {
+                                log::warn!("Error opening script raw code stream: {}", error);
+                                break;
+                            }
+                        };
+                        let send_result = sendTcpMessage(
+                            &mut send_stream_script_raw_code,
+                            &ServerScriptRawCodeMessage {
+                                object_id: *object_id,
+                                raw_code: raw_code.clone(),
+                            },
+                        )
+                        .await;
+                        if let Err(error) = send_result {
+                            log::warn!("Error sending script raw code to user: {}", error);
+                            break;
+                        }
+                        let _ = send_stream_script_raw_code.finish();
                     }
                 };
-                let send_result = sendTcpMessage(
-                    &mut send_stream_script_raw_code,
-                    &ServerScriptRawCodeMessage {
-                        object_id: *object_id,
-                        raw_code: raw_code.clone(),
-                    },
-                )
-                .await;
-                if let Err(error) = send_result {
-                    log::warn!("Error sending script raw code to user: {}", error);
-                    break;
+                // A player who doesn't take a script's code can't run the game, and their waiting sends would pile up every tick.
+                if tokio::time::timeout(SCRIPT_RAW_CODE_SEND_TIMEOUT, send_script_raw_codes).await.is_err() {
+                    Self::closeConnection(connection, "The game could not send you its scripts in time.");
                 }
-                let _ = send_stream_script_raw_code.finish();
-            }
+            });
         }
     }
 
@@ -1136,9 +1151,6 @@ impl Server {
             let foreign_player_dto_tx = foreign_player_dto_tx.clone();
             let server_js_fn_request_tx = server_js_fn_request_tx.clone();
             tokio::spawn(async move {
-                // this whole block of code is a critical section that should be executed by 1 user at a time
-                let new_user_mutex_lock = selfArc.new_user_mutex.lock().await;
-
                 // await handshake or fail/stop
                 let connection = match incoming_handshake.await {
                     Ok(conn) => conn,
@@ -1209,9 +1221,22 @@ impl Server {
                 };
                 log::info!("Connection {}: validated userid={:?}", remote_addr, userid);
 
+                // This is so players joining at the same time don't both get processed together. Objects not sent out yet would reach this player twice,
+                // in their world and again from the next tick as new objects, so the join waits for a tick to send them.
+                // Held until the player is registered below, or a tick in between would send its changes to everyone but them.
+                // Checking for the account under the same lock means one account can't get in twice by joining twice at once.
+                let mut world_lock = loop {
+                    let world_lock = worldArc.write().await;
+                    // This always ends: every tick sends out everything added before it, and between ticks only a join adds an object, so each tick lets at least one waiting join in.
+                    if world_lock.addedObjectIds.is_empty() {
+                        break world_lock;
+                    }
+                    drop(world_lock);
+                    tokio::time::sleep(Duration::from_secs_f32(SERVER_SIM_AND_SEND_SECS)).await;
+                };
+
                 // if userid already exists, close connection
                 // A playtest lets that account's next player in as a guest instead, since one account can run several test players.
-                let world_lock = worldArc.read().await;
                 let is_account_in_game = userid.is_some()
                     && world_lock._kindOfObjectId.get_keys(&ObjectKind::Player).is_some_and(|player_object_ids| {
                         player_object_ids
@@ -1221,7 +1246,6 @@ impl Server {
                                 _ => false,
                             })
                     });
-                drop(world_lock);
                 let (username, userid, profile) = match (is_account_in_game, &selfArc.server_mode) {
                     (false, _) => (username, userid, profile),
                     (true, ServerMode::Playtest(_)) => ("Guest".to_string(), None, PlayerProfile::GUEST),
@@ -1234,18 +1258,6 @@ impl Server {
                 // get the stored world string without the player in it - that caused a lot of very confusing behavior since addObject marks as dirty already
                 // they get the same stored world everyone else has. updating the player later sends them and everyone else the new player object.
                 log::info!("Connection {}: serializing initial world for userid {:?}", remote_addr, userid);
-                // This is so players joining at the same time don't both get processed together. Objects not sent out yet would reach this player twice,
-                // in their world and again from the next tick as new objects, so the join waits for a tick to send them.
-                // Held until the player is registered below, or a tick in between would send its changes to everyone but them.
-                let mut world_lock = loop {
-                    let world_lock = worldArc.write().await;
-                    // This always ends: every tick sends out everything added before it, and between ticks only a join adds an object, so each tick lets at least one waiting join in.
-                    if world_lock.addedObjectIds.is_empty() {
-                        break world_lock;
-                    }
-                    drop(world_lock);
-                    tokio::time::sleep(Duration::from_secs_f32(SERVER_SIM_AND_SEND_SECS)).await;
-                };
                 let stored_world_string = match world_lock.toStoredWorldString() {
                     Ok(stored_world_string) => stored_world_string,
                     Err(e) => {
@@ -1464,7 +1476,6 @@ impl Server {
                 drop(users_lock);
                 log::info!("Connection {}: snapshot stream marked ready for player {}", remote_addr, player_object_id);
 
-                drop(new_user_mutex_lock);
                 log::info!("Connection {}: handshake complete for player {}", remote_addr, player_object_id);
 
                 // start a task to listen to all server-function requests from the client
@@ -1531,7 +1542,11 @@ impl Server {
                             });
 
                             // send foreign character to main game loop
-                            if let Some(foreign_character_delta) = foreign_character_delta {
+                            // A pose must be as valid as a saved world's. A NaN would reach the other players, the pose history scripts read, and the world
+                            // every new player is sent, which no player can read with a NaN in it.
+                            if let Some(foreign_character_delta) = foreign_character_delta
+                                && foreign_character_delta.physicsInfo3D.validate().is_ok()
+                            {
                                 // the player only ever moves its own object. it doesnt even identify the object it controls
                                 let foreign_character_dto = ServerForeignCharacterDTO {
                                     came_from_player_object_id: player_object_id,
@@ -1735,6 +1750,7 @@ pub fn start_receiving_client_messages_tcp_in_bg(
         let game_chat_slot_arc = Arc::new(Semaphore::new(1));
         // Keep the submission limit per connection, even when requests use different streams.
         let next_game_chat_submission_arc = Arc::new(Mutex::new(tokio::time::Instant::now()));
+        let next_server_fn_call_arc = Arc::new(Mutex::new(tokio::time::Instant::now()));
         loop {
             // wait for the next incoming server-function stream
             let (mut send_stream, mut recv_stream) = match connection.accept_bi().await {
@@ -1750,6 +1766,7 @@ pub fn start_receiving_client_messages_tcp_in_bg(
                 let game_chat_arc = game_chat_arc.clone();
                 let game_chat_slot_arc = game_chat_slot_arc.clone();
                 let next_game_chat_submission_arc = next_game_chat_submission_arc.clone();
+                let next_server_fn_call_arc = next_server_fn_call_arc.clone();
                 let username = username.clone();
                 let server_js_fn_request_tx = server_js_fn_request_tx.clone();
                 async move {
@@ -1763,6 +1780,10 @@ pub fn start_receiving_client_messages_tcp_in_bg(
                             }
                             ClientMessageTCP::ServerFnCall(server_function_call_message) => {
                                 // wait for the next incoming server-function call message
+                                let mut next_server_fn_call_lock = next_server_fn_call_arc.lock().await;
+                                tokio::time::sleep_until(*next_server_fn_call_lock).await;
+                                *next_server_fn_call_lock = tokio::time::Instant::now() + SERVER_FN_CALL_INTERVAL;
+                                drop(next_server_fn_call_lock);
 
                                 // send the server-function call to the js runtime to run
                                 let (server_js_fn_oneshot_tx, server_js_fn_oneshot_rx) = oneshot::channel::<anyhow::Result<String>>();

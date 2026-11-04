@@ -3,7 +3,7 @@ mod helpers;
 use game_types::object_types::{ObjectBeingAdded, ObjectId, ObjectLocation, PhysicsInfo3D, ScriptInfo};
 use glam::{Quat, Vec3};
 use helpers::world_test_helpers::{add_brick, add_player, make_world};
-use shared::game::jsRuntime::{JsRuntimeInitialization, callJsFn, callRegisteredServerFn, initializeJsAndRunInitialScripts, initializeJsRuntime};
+use shared::game::jsRuntime::{JsRuntimeInitialization, callJsFn, initializeJsAndRunInitialScripts, initializeJsRuntime};
 use shared::game::world::World;
 
 const CHARACTER_ID: ObjectId = 3;
@@ -105,11 +105,10 @@ export const check = () => {{
     let (mut js_runtime, script_manager_rc) = initializeJsRuntime(JsRuntimeInitialization::NoNetworking, None).await?;
     initializeJsAndRunInitialScripts(&mut js_runtime, &mut world, 0.0, None, &script_manager_rc).await?;
 
-    let result = callRegisteredServerFn(
+    let result = helpers::call_server_fn(
         &mut js_runtime,
         &mut world,
         300.0,
-        None,
         &script_manager_rc,
         player_id,
         "check#root/checks",

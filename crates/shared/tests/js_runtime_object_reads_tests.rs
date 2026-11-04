@@ -3,7 +3,7 @@ mod helpers;
 use game_types::object_types::{ObjectBeingAdded, ObjectLocation, ScriptInfo};
 use glam::Vec3;
 use helpers::world_test_helpers::{add_brick, make_world};
-use shared::game::jsRuntime::{JsRuntimeInitialization, callRegisteredServerFn, initializeJsAndRunInitialScripts, initializeJsRuntime};
+use shared::game::jsRuntime::{JsRuntimeInitialization, initializeJsAndRunInitialScripts, initializeJsRuntime};
 use shared::game::physics::SetPhysicsInfo3D;
 
 // Reads share one copy of an object until something could have changed it, so each way of changing it must show in the next read.
@@ -43,11 +43,10 @@ export const readX = () => brick.location.position.x;
     let (mut js_runtime, script_manager_rc) = initializeJsRuntime(JsRuntimeInitialization::NoNetworking, None).await?;
     initializeJsAndRunInitialScripts(&mut js_runtime, &mut world, 0.0, None, &script_manager_rc).await?;
 
-    let result = callRegisteredServerFn(
+    let result = helpers::call_server_fn(
         &mut js_runtime,
         &mut world,
         0.0,
-        None,
         &script_manager_rc,
         0,
         "readAndChange#root/reads",
@@ -68,17 +67,7 @@ export const readX = () => brick.location.position.x;
         },
         false,
     );
-    let result = callRegisteredServerFn(
-        &mut js_runtime,
-        &mut world,
-        0.0,
-        None,
-        &script_manager_rc,
-        0,
-        "readX#root/reads",
-        r#"{"json":[]}"#,
-    )
-    .await?;
+    let result = helpers::call_server_fn(&mut js_runtime, &mut world, 0.0, &script_manager_rc, 0, "readX#root/reads", r#"{"json":[]}"#).await?;
     assert_eq!(helpers::remote_json_result::<serde_json::Value>(&result)?.as_f64(), Some(11.0));
     Ok(())
 }

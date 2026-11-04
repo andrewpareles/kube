@@ -135,8 +135,6 @@ export const readClock = () => {
         readings.add(performance.now());
         readings.add(performance.mark("clock").startTime);
     }
-    // A short buffer must not panic the process.
-    Deno.core.ops.op_now(new Uint8Array(1));
     return [...readings];
 };
 "#

@@ -130,9 +130,7 @@ sequenceDiagram
 
 We have a server-authoritative architecture where players' worlds live slightly in the past so that changes are synchronously applied (see the [Networking blog](https://kube.new/blog/networking)). We simply timestamp all changes (using NTP) and interpolate locally. There is a network-layer filter to guarantee changes are commutative. Scripting allows the game to have lag compensation, client or server-side collision detection, and server validation. 
 
-There are a few games where something like the Photon Quantum architecture would be useful (eg the Mario example). We allow the AI to support a state-space variant of this (rather than input-space) by using [`setLocalPlayerMetadata`](https://kube.new/docs#PlayerService), which is broadcast every tick by the client (see the above diagram).
-
-Here's [Live Canvas](https://kube.new/games/397), which shares every player's mouse this way:
+There are a few games where something like the Photon Quantum architecture would be useful (eg the Mario example). We allow the AI to support a state-space variant of this (rather than input-space) by using [`setLocalPlayerMetadata`](https://kube.new/docs#PlayerService), which is broadcast every tick by the client (see the above diagram). This allows, for example, for games like [Live Canvas](https://kube.new/games/397) below:
 
 ![Two players draw on the same canvas, and each one sees the other's mouse and strokes live](./assets/readme/live-canvas.avif)
 

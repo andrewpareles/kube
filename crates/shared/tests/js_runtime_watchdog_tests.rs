@@ -9,7 +9,7 @@ use game_types::object_types::{ObjectBeingAdded, ObjectId, ObjectLocation, Scrip
 use helpers::world_test_helpers::make_world;
 use js_cpu_watchdog::ThreadCpuHandle;
 use shared::game::{
-    jsRuntime::{JsRuntimeInitialization, callRegisteredServerFn, initializeJsAndRunInitialScripts, initializeJsRuntime, runPendingJS, runTemporaryScript},
+    jsRuntime::{JsRuntimeInitialization, callJsFn, initializeJsAndRunInitialScripts, initializeJsRuntime, runPendingJS, runTemporaryScript},
     world::World,
 };
 use std::{sync::Arc, time::Duration};
@@ -154,6 +154,15 @@ export const healthy = () => 42;
     )
     .await?;
     initializeJsAndRunInitialScripts(&mut runtime, &mut world, 0.0, None, &manager_rc).await?;
+    // callJsFn runs a call to its end under one budget. The server instead finishes a 'use server' call on its ticks.
+    let mut call = async |name: &str| -> anyhow::Result<String> {
+        let server_fn = manager_rc
+            .borrow()
+            .get_server_js_fn(&format!("{name}#root/calls"))
+            .expect("Expected the registered server function")
+            .clone();
+        callJsFn(&mut runtime, &mut world, 0.0, None, &server_fn, r#"{"json":[]}"#).await
+    };
 
     let other_task = tokio::spawn(async move {
         tokio::time::timeout(Duration::from_secs(5), waiting_rx.recv())
@@ -162,25 +171,14 @@ export const healthy = () => 42;
             .unwrap();
         burn_cpu(Duration::from_millis(250));
     });
-    let result = callRegisteredServerFn(&mut runtime, &mut world, 0.0, None, &manager_rc, 0, "wait#root/calls", r#"{"json":[]}"#).await?;
+    let result = call("wait").await?;
     assert_eq!(helpers::remote_json_result::<i32>(&result)?, 42);
     other_task.await?;
 
     for name in ["burn", "runaway"] {
-        let error = callRegisteredServerFn(
-            &mut runtime,
-            &mut world,
-            0.0,
-            None,
-            &manager_rc,
-            0,
-            &format!("{name}#root/calls"),
-            r#"{"json":[]}"#,
-        )
-        .await
-        .unwrap_err();
+        let error = call(name).await.unwrap_err();
         assert!(error.to_string().contains("CPU time budget"), "{error}");
-        let result = callRegisteredServerFn(&mut runtime, &mut world, 0.0, None, &manager_rc, 0, "healthy#root/calls", r#"{"json":[]}"#).await?;
+        let result = call("healthy").await?;
         assert_eq!(helpers::remote_json_result::<i32>(&result)?, 42);
     }
     Ok(())
@@ -227,7 +225,7 @@ export const healthy = () => 42;
     // Each call keeps another 32 MB, so the 1 GB heap fills after about 30 calls.
     let mut memory_error = None;
     for _ in 0..100 {
-        if let Err(error) = callRegisteredServerFn(&mut runtime, &mut world, 0.0, None, &manager_rc, 0, "hoard#root/hoarder", r#"{"json":[]}"#).await
+        if let Err(error) = helpers::call_server_fn(&mut runtime, &mut world, 0.0, &manager_rc, 0, "hoard#root/hoarder", r#"{"json":[]}"#).await
             && error.to_string().contains("memory limit")
         {
             memory_error = Some(error);
@@ -235,7 +233,7 @@ export const healthy = () => 42;
         }
     }
     assert!(memory_error.is_some(), "the heap never filled");
-    let result = callRegisteredServerFn(&mut runtime, &mut world, 0.0, None, &manager_rc, 0, "healthy#root/hoarder", r#"{"json":[]}"#).await?;
+    let result = helpers::call_server_fn(&mut runtime, &mut world, 0.0, &manager_rc, 0, "healthy#root/hoarder", r#"{"json":[]}"#).await?;
     assert_eq!(helpers::remote_json_result::<i32>(&result)?, 42);
     Ok(())
 }
@@ -257,9 +255,16 @@ export const healthy = () => 42;
     );
     let (mut runtime, manager_rc) = initializeJsRuntime(JsRuntimeInitialization::NoNetworking, None).await?;
     initializeJsAndRunInitialScripts(&mut runtime, &mut world, 0.0, None, &manager_rc).await?;
+    let get_server_fn = |name: &str| {
+        manager_rc
+            .borrow()
+            .get_server_js_fn(&format!("{name}#root/cancellation"))
+            .expect("Expected the registered server function")
+            .clone()
+    };
     let cancelled = tokio::time::timeout(
         Duration::from_millis(20),
-        callRegisteredServerFn(&mut runtime, &mut world, 0.0, None, &manager_rc, 0, "wait#root/cancellation", r#"{"json":[]}"#),
+        callJsFn(&mut runtime, &mut world, 0.0, None, &get_server_fn("wait"), r#"{"json":[]}"#),
     )
     .await;
     assert!(cancelled.is_err());
@@ -267,17 +272,7 @@ export const healthy = () => 42;
 
     // Work after cancellation must not trigger a delayed termination of the next call.
     burn_cpu(Duration::from_millis(250));
-    let result = callRegisteredServerFn(
-        &mut runtime,
-        &mut world,
-        0.0,
-        None,
-        &manager_rc,
-        0,
-        "healthy#root/cancellation",
-        r#"{"json":[]}"#,
-    )
-    .await?;
+    let result = callJsFn(&mut runtime, &mut world, 0.0, None, &get_server_fn("healthy"), r#"{"json":[]}"#).await?;
     assert_eq!(helpers::remote_json_result::<i32>(&result)?, 42);
     Ok(())
 }
@@ -297,11 +292,11 @@ export const healthy = () => 42;
     let (mut runtime, manager_rc) = initializeJsRuntime(JsRuntimeInitialization::NoNetworking, None).await?;
     initializeJsAndRunInitialScripts(&mut runtime, &mut world, 0.0, None, &manager_rc).await?;
     for _ in 0..10 {
-        let error = callRegisteredServerFn(&mut runtime, &mut world, 0.0, None, &manager_rc, 0, "runaway#root/microtasks", r#"{"json":[]}"#)
+        let error = helpers::call_server_fn(&mut runtime, &mut world, 0.0, &manager_rc, 0, "runaway#root/microtasks", r#"{"json":[]}"#)
             .await
             .unwrap_err();
         assert!(error.to_string().contains("CPU time budget"), "{error}");
-        let result = callRegisteredServerFn(&mut runtime, &mut world, 0.0, None, &manager_rc, 0, "healthy#root/microtasks", r#"{"json":[]}"#).await?;
+        let result = helpers::call_server_fn(&mut runtime, &mut world, 0.0, &manager_rc, 0, "healthy#root/microtasks", r#"{"json":[]}"#).await?;
         assert_eq!(helpers::remote_json_result::<i32>(&result)?, 42);
     }
     Ok(())

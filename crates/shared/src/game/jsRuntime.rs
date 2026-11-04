@@ -7,11 +7,11 @@ use crate::helpers::multi_thread_hashmap::MultiThreadHashMap;
 use deno_core::{
     Extension, ExtensionFileSource, JsRuntime, ModuleCodeString, ModuleLoadOptions, ModuleLoadReferrer, ModuleLoadResponse, ModuleLoader,
     ModuleResolveResponse, ModuleSource, ModuleSourceCode, ModuleSpecifier, ModuleType, OpState, PollEventLoopOptions, ResolutionKind, RuntimeOptions,
-    resolve_import, resolve_url, serde_v8, v8,
+    error::JsError, resolve_import, resolve_url, serde_v8, v8,
 };
 use deno_error::JsErrorBox;
 use deno_web::{BlobStore, InMemoryBroadcastChannel};
-use futures::FutureExt;
+use futures::{FutureExt, future::LocalBoxFuture};
 use game_types::consts::{CLIENT_WORLD_DELAY_BASE_MS, DEFAULT_CAMERA_ZOOM, MAX_CAMERA_ZOOM, MIN_CAMERA_ZOOM};
 use game_types::data_types::DataId;
 use game_types::object_types::{ObjectBeingAdded, ObjectId, ObjectInfo, ObjectKind, ObjectLocation, Orientation3D, ScriptInfo};
@@ -19,7 +19,11 @@ use glam::Vec3;
 use indexmap::IndexMap;
 use quinn::Connection;
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
-use std::{future::Future, sync::Arc, task::Poll};
+use std::{
+    future::Future,
+    sync::Arc,
+    task::{Context, Poll, Waker},
+};
 use tokio::sync::{mpsc, oneshot};
 
 // -------------- Getters from JsOps --------------
@@ -797,6 +801,9 @@ async fn loadKubeTsApi(jsRuntime: &mut JsRuntime) -> anyhow::Result<()> {
     let kube_ts_api_module_id = jsRuntime.load_side_es_module(&kube_ts_api_url).await?;
     let module_evaluation = jsRuntime.mod_evaluate(kube_ts_api_module_id);
     jsRuntime.with_event_loop_promise(module_evaluation, PollEventLoopOptions::default()).await?;
+    // kube-ts-api has kept the ops it uses, so take every op away from user code, which runs next. Through Deno.core.ops or
+    // __bootstrap.core.ops a script could call any op with any arguments, like op_panic, which stops the whole process.
+    jsRuntime.execute_script("game:/__internal__/hide_ops", "delete globalThis.Deno; delete globalThis.__bootstrap;")?;
     Ok(())
 }
 
@@ -1181,13 +1188,7 @@ pub async fn callJsFn(
 
         let call = jsRuntime.call_with_args(js_fn, &args);
         let js_result = jsRuntime.with_event_loop_promise(call, PollEventLoopOptions::default()).await?;
-        let js_result_string = {
-            deno_core::scope!(scope, jsRuntime);
-            let js_result = v8::Local::<v8::String>::try_from(v8::Local::new(scope, js_result))
-                .map_err(|_| anyhow::anyhow!("Expected an encoded remote function result"))?;
-            js_result.to_rust_string_lossy(scope)
-        };
-        Ok(js_result_string)
+        readRemoteFnResult(jsRuntime, js_result)
     })
     .await;
 
@@ -1195,16 +1196,27 @@ pub async fn callJsFn(
     result
 }
 
-pub async fn callRegisteredServerFn(
+fn readRemoteFnResult(jsRuntime: &mut JsRuntime, js_result: v8::Global<v8::Value>) -> anyhow::Result<String> {
+    deno_core::scope!(scope, jsRuntime);
+    let js_result =
+        v8::Local::<v8::String>::try_from(v8::Local::new(scope, js_result)).map_err(|_| anyhow::anyhow!("Expected an encoded remote function result"))?;
+    Ok(js_result.to_rust_string_lossy(scope))
+}
+
+// A 'use server' call from when it starts until its promise settles.
+pub type ServerFnCall = LocalBoxFuture<'static, Result<v8::Global<v8::Value>, Box<JsError>>>;
+
+// Runs a 'use server' call up to its first await. The rest runs on the event loop with the other scripts, so a call that
+// waits never holds up the tick.
+pub fn startRegisteredServerFn(
     jsRuntime: &mut JsRuntime,
     world: &mut World,
     est_live_server_sim_ms: f64,
-    live_client_sim_ms: Option<f64>,
     script_manager_rc: &Rc<RefCell<ScriptManager>>,
     server_fn_caller_object_id: ObjectId,
     fn_id: &str,
     js_args: &str,
-) -> anyhow::Result<String> {
+) -> anyhow::Result<ServerFnCall> {
     let server_fn = {
         let script_manager = script_manager_rc.borrow();
         let Some(server_fn) = script_manager.get_server_js_fn(fn_id) else {
@@ -1218,9 +1230,32 @@ pub async fn callRegisteredServerFn(
         .borrow_mut()
         .borrow_mut::<JsRuntimeServerFnCaller>()
         .set(Some(server_fn_caller_object_id));
-    let result = callJsFn(jsRuntime, world, est_live_server_sim_ms, live_client_sim_ms, &server_fn, js_args).await;
+    beforeRunJS(jsRuntime, world, est_live_server_sim_ms, None);
+    let result = JsCpuWatchdog::run_sync(jsRuntime, JS_CPU_BUDGET, |jsRuntime| {
+        let args = {
+            deno_core::scope!(scope, jsRuntime);
+            let args: v8::Local<v8::Value> = v8::String::new(scope, js_args)
+                .ok_or_else(|| anyhow::anyhow!("Could not create remote argument string"))?
+                .into();
+            [v8::Global::new(scope, args)]
+        };
+        Ok(jsRuntime.call_with_args(&server_fn, &args).boxed_local())
+    });
+    afterRunJS(jsRuntime);
     opStateRc.borrow_mut().borrow_mut::<JsRuntimeServerFnCaller>().set(None);
     result
+}
+
+// The event loop settles calls, so the result of a call shows up after a runPendingJS.
+pub fn pollServerFnCall(jsRuntime: &mut JsRuntime, server_fn_call: &mut ServerFnCall) -> Poll<anyhow::Result<String>> {
+    let Poll::Ready(js_result) = server_fn_call.poll_unpin(&mut Context::from_waker(Waker::noop())) else {
+        return Poll::Pending;
+    };
+    Poll::Ready(
+        js_result
+            .map_err(anyhow::Error::from)
+            .and_then(|js_result| readRemoteFnResult(jsRuntime, js_result)),
+    )
 }
 
 pub async fn callRegisteredGuiHandler(

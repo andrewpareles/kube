@@ -1495,7 +1495,7 @@ async fn __callJsClientFnFromServer__(
 #[op2(fast)]
 fn __getTimeSinceStartInSteps__(state: &mut OpState, #[buffer] time: &mut [u8]) {
     const CLOCK_STEP_NANOSECONDS: u32 = 2_000_000;
-    // Scripts can reach this op with any buffer, and a panic here would stop the whole process.
+    // Only deno_web's performance clock calls this op, but a panic here would stop the whole process.
     if time.len() < 8 {
         return;
     }
@@ -1512,7 +1512,8 @@ deno_core::extension!(
     esm_entry_point = "ext:aaa/bootstrap.js",
     esm = ["ext:aaa/bootstrap.js" = {
         source = r#"
-const { loadExtScript } = Deno.core;
+// Deno is taken away from scripts once kube-ts-api has loaded, so the console keeps its own reference to the ops.
+const { loadExtScript, ops } = Deno.core;
 const consoleModule = loadExtScript("ext:deno_web/01_console.js");
 const urlModule = loadExtScript("ext:deno_web/00_url.js");
 const urlPatternModule = loadExtScript("ext:deno_web/01_urlpattern.js");
@@ -1556,7 +1557,7 @@ Object.defineProperties(globalThis, {
         consoleLogLevel = "error";
         break;
     }
-    Deno.core.ops.__pushConsoleLogString__(msg, consoleLogLevel);
+    ops.__pushConsoleLogString__(msg, consoleLogLevel);
   })),
   URL: writable(urlModule.URL),
   URLPattern: writable(urlPatternModule.URLPattern),

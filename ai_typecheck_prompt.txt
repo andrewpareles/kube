@@ -1,3 +1,0 @@
-iterate through each ObjectData:: match, and for each, indicate any fields that are different from the JS counterpart. do not include trivial differences like number vs u8, only include mismatches. also, i indicated differences in types.ts, do not include the things i already notated.
-
-then, make any relevant fixes. look at rust_js_bindings as a place to fix, too.

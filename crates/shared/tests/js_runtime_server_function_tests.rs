@@ -3,8 +3,11 @@ mod helpers;
 use game_types::object_types::{ObjectBeingAdded, ObjectId, ObjectLocation, ScriptInfo};
 use glam::Vec3;
 use helpers::world_test_helpers::{add_brick, make_world, make_world_controlled_by_player};
-use shared::game::jsRuntime::{JsRuntimeInitialization, callJsFn, initializeJsAndRunInitialScripts, initializeJsRuntime};
+use shared::game::jsRuntime::{
+    JsRuntimeInitialization, callJsFn, initializeJsAndRunInitialScripts, initializeJsRuntime, pollServerFnCall, runPendingJS, startRegisteredServerFn,
+};
 use shared::game::world::World;
+use std::{task::Poll, time::Duration};
 
 fn add_named_script(world: &mut World, object_id: ObjectId, parent_id: ObjectId, name: &str, object_location: ObjectLocation, raw_code: &str) {
     world.addObjectWithId(
@@ -96,6 +99,81 @@ export const first = (value) => value;
         assert_eq!(call("first", &missing_arg).await?, no_return);
         assert_eq!(call("first", r#"{"json":[null]}"#).await?, null_return);
     }
+    Ok(())
+}
+
+// The server starts a call and moves on, so a call that awaits finishes on a later tick. Two players' calls wait at once, and
+// each saw its own caller when it started.
+#[tokio::test]
+async fn server_functions_that_await_finish_on_later_ticks() -> anyhow::Result<()> {
+    let mut world = make_world()?;
+    let root_object_id = world.getRootObjectId();
+    add_named_script(
+        &mut world,
+        2,
+        root_object_id,
+        "callers",
+        ObjectLocation::Server,
+        r#"'use server'
+export const whoCalled = async () => {
+    const caller = game.playerService.getServerFnCaller();
+    await tick();
+    await new Promise((resolve) => setTimeout(resolve, 1));
+    return caller;
+};
+export const failAfterTick = async () => {
+    await tick();
+    throw new Error("failed after a tick");
+};
+"#,
+    );
+    let (mut js_runtime, script_manager_rc) = initializeJsRuntime(JsRuntimeInitialization::NoNetworking, None).await?;
+    initializeJsAndRunInitialScripts(&mut js_runtime, &mut world, 0.0, None, &script_manager_rc).await?;
+
+    let mut server_fn_calls = Vec::new();
+    for caller in [7, 8] {
+        let mut server_fn_call = startRegisteredServerFn(
+            &mut js_runtime,
+            &mut world,
+            0.0,
+            &script_manager_rc,
+            caller,
+            "whoCalled#root/callers",
+            r#"{"json":[]}"#,
+        )?;
+        assert!(pollServerFnCall(&mut js_runtime, &mut server_fn_call).is_pending());
+        server_fn_calls.push((caller, server_fn_call));
+    }
+    let (_js_callback_inputs_tx, mut js_callback_inputs_rx) = tokio::sync::mpsc::unbounded_channel();
+    tokio::time::timeout(Duration::from_secs(5), async {
+        while !server_fn_calls.is_empty() {
+            runPendingJS(&mut js_runtime, &mut world, 0.0, None, &script_manager_rc, &mut js_callback_inputs_rx).await?;
+            server_fn_calls.retain_mut(|(caller, server_fn_call)| {
+                let Poll::Ready(result) = pollServerFnCall(&mut js_runtime, server_fn_call) else {
+                    return true;
+                };
+                assert_eq!(helpers::remote_json_result::<ObjectId>(&result.unwrap()).unwrap(), *caller);
+                false
+            });
+            tokio::time::sleep(Duration::from_millis(1)).await;
+        }
+        anyhow::Ok(())
+    })
+    .await
+    .expect("both calls should finish")?;
+
+    let error = helpers::call_server_fn(
+        &mut js_runtime,
+        &mut world,
+        0.0,
+        &script_manager_rc,
+        7,
+        "failAfterTick#root/callers",
+        r#"{"json":[]}"#,
+    )
+    .await
+    .unwrap_err();
+    assert!(error.to_string().contains("failed after a tick"), "{error}");
     Ok(())
 }
 

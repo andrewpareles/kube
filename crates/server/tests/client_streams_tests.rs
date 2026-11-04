@@ -3,7 +3,7 @@ use std::{sync::Arc, time::Duration};
 use game_types::object_types::{ObjectId, player::UserId};
 use quinn::{ClientConfig, Connection, Endpoint, RecvStream, ServerConfig};
 use rustls::pki_types::PrivateKeyDer;
-use server::{GAME_CHAT_SUBMISSION_INTERVAL, ServerGameChat, send_game_chat_messages, start_receiving_client_messages_tcp_in_bg};
+use server::{GAME_CHAT_SUBMISSION_INTERVAL, SERVER_FN_CALL_INTERVAL, ServerGameChat, send_game_chat_messages, start_receiving_client_messages_tcp_in_bg};
 use shared::protocol::{
     messages::{
         ClientGameChatMessage, ClientMessageTCP, GameChatEntry, ServerFnCallMessage, ServerFunctionResultMessage, ServerGameChatMessage,
@@ -213,6 +213,19 @@ async fn separate_game_chat_request_streams_share_the_connection_rate_limit() {
     })
     .await
     .expect("chat request rate limit test timed out");
+}
+
+#[tokio::test]
+async fn separate_script_call_streams_share_the_connection_rate_limit() {
+    tokio::time::timeout(Duration::from_secs(10), async {
+        let mut test = ConnectionTest::new().await;
+        let started = tokio::time::Instant::now();
+        test.call_server_function().await;
+        test.call_server_function().await;
+        assert!(started.elapsed() >= SERVER_FN_CALL_INTERVAL);
+    })
+    .await
+    .expect("script call rate limit test timed out");
 }
 
 #[tokio::test]

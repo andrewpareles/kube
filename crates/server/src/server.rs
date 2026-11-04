@@ -8,7 +8,10 @@ use game_types::{
 };
 use quinn::Connection;
 use shared::game::{
-    jsRuntime::{JsConsoleLogCallback, JsRuntimeInitialization, callRegisteredServerFn, initializeJsAndRunInitialScripts, initializeJsRuntime, runPendingJS},
+    jsRuntime::{
+        JsConsoleLogCallback, JsRuntimeInitialization, initializeJsAndRunInitialScripts, initializeJsRuntime, pollServerFnCall, runPendingJS,
+        startRegisteredServerFn,
+    },
     world::{JsCallbackInputs, World, WorldControlMode},
 };
 use shared::{
@@ -18,11 +21,14 @@ use shared::{
 use std::{
     collections::HashMap,
     sync::Arc,
+    task::Poll,
     time::{Duration, Instant},
 };
 use tokio::sync::{RwLock, mpsc, oneshot};
 use tokio::time::MissedTickBehavior;
 use tokio_util::{sync::CancellationToken, task::TaskTracker};
+
+const SERVER_FN_CALL_START_TIME_PER_TICK: Duration = Duration::from_millis(8); // TODO: AI-PICKED-VALUE: about half of a 60 Hz tick, so calls can't crowd out physics and snapshots.
 
 pub fn start_running_server_in_bg(
     stored_world_string: &str,
@@ -158,6 +164,7 @@ async fn run_server_on_current_thread_forever(
     let mut foreign_player_dtos = HashMap::new();
     let mut next_player_pings_live_server_wall_ms = 0.0;
     let mut did_prev_tick_overrun_budget = false;
+    let mut waiting_server_fn_calls = Vec::new();
 
     loop {
         enum Tick {
@@ -247,29 +254,27 @@ async fn run_server_on_current_thread_forever(
                 // 2. apply server-owned object updates
                 // (there are none other than just running physics)
 
-                // 3. drain queued ordered server function calls on the JS thread.
-                while let Ok((player_object_id, server_function_call_message, server_js_fn_oneshot_tx)) = server_js_fn_request_rx.try_recv() {
-                    let ServerFnCallMessage { fn_id, js_args } = server_function_call_message;
-                    let server_fn_result = callRegisteredServerFn(
+                // 3. start queued server function calls on the JS thread, in order. Each runs up to its first await, and the rest of it
+                // runs with the other scripts in step 5. Calls that don't fit in this tick's time start on the next tick.
+                let server_fn_calls_started_at = Instant::now();
+                while server_fn_calls_started_at.elapsed() < SERVER_FN_CALL_START_TIME_PER_TICK
+                    && let Ok((player_object_id, ServerFnCallMessage { fn_id, js_args }, server_js_fn_oneshot_tx)) = server_js_fn_request_rx.try_recv()
+                {
+                    match startRegisteredServerFn(
                         &mut jsRuntime,
                         &mut world_lock,
                         live_server_sim_ms,
-                        None,
                         &script_manager_rc,
                         player_object_id,
-                        fn_id.as_str(),
-                        js_args.as_str(),
-                    )
-                    .await;
-                    let server_js_fn_result = match server_fn_result {
-                        Ok(js_result) => Ok(js_result),
+                        &fn_id,
+                        &js_args,
+                    ) {
+                        Ok(server_fn_call) => waiting_server_fn_calls.push((server_fn_call, server_js_fn_oneshot_tx)),
                         Err(error) => {
                             log::warn!("Error calling server function {} for player {}: {}", fn_id, player_object_id, error);
                             let _ = server_js_fn_oneshot_tx.send(Err(error));
-                            continue;
                         }
-                    };
-                    let _ = server_js_fn_oneshot_tx.send(server_js_fn_result);
+                    }
                 }
 
                 // 4. step physics
@@ -291,6 +296,17 @@ async fn run_server_on_current_thread_forever(
                 .await
                 {
                     log::error!("Error running JS: {}", e);
+                }
+
+                // send the result of each server function call that settled. A call whose player left is forgotten, though its JS keeps running.
+                for (mut server_fn_call, server_js_fn_oneshot_tx) in std::mem::take(&mut waiting_server_fn_calls) {
+                    match pollServerFnCall(&mut jsRuntime, &mut server_fn_call) {
+                        Poll::Ready(server_fn_result) => {
+                            let _ = server_js_fn_oneshot_tx.send(server_fn_result);
+                        }
+                        Poll::Pending if server_js_fn_oneshot_tx.is_closed() => {}
+                        Poll::Pending => waiting_server_fn_calls.push((server_fn_call, server_js_fn_oneshot_tx)),
+                    }
                 }
 
                 // 6. apply transitions
