@@ -1267,7 +1267,7 @@ dependencies = [
 
 [[package]]
 name = "client"
-version = "0.1.136"
+version = "0.1.137"
 dependencies = [
  "anyhow",
  "block2 0.6.2",
@@ -2245,7 +2245,7 @@ dependencies = [
 
 [[package]]
 name = "editor_server"
-version = "0.1.136"
+version = "0.1.137"
 dependencies = [
  "anyhow",
  "axum",
@@ -2669,7 +2669,7 @@ dependencies = [
 
 [[package]]
 name = "game_types"
-version = "0.1.136"
+version = "0.1.137"
 dependencies = [
  "anyhow",
  "glam 0.33.2",
@@ -4045,7 +4045,7 @@ checksum = "32a66949e030da00e8c7d4434b251670a91556f4144941d37452769c25d58a53"
 
 [[package]]
 name = "linux_sandbox"
-version = "0.1.136"
+version = "0.1.137"
 dependencies = [
  "anyhow",
  "base64 0.22.1",
@@ -5514,7 +5514,7 @@ dependencies = [
 
 [[package]]
 name = "profanity"
-version = "0.1.136"
+version = "0.1.137"
 dependencies = [
  "rustrict",
  "wasm-bindgen",
@@ -5923,7 +5923,7 @@ checksum = "dc897dd8d9e8bd1ed8cdad82b5966c3e0ecae09fb1907d58efaa013543185d0a"
 
 [[package]]
 name = "render_core"
-version = "0.1.136"
+version = "0.1.137"
 dependencies = [
  "anyhow",
  "bytemuck",
@@ -5940,7 +5940,7 @@ dependencies = [
 
 [[package]]
 name = "render_web"
-version = "0.1.136"
+version = "0.1.137"
 dependencies = [
  "anyhow",
  "bincode",
@@ -6567,7 +6567,7 @@ dependencies = [
 
 [[package]]
 name = "server"
-version = "0.1.136"
+version = "0.1.137"
 dependencies = [
  "anyhow",
  "base64 0.22.1",
@@ -6647,7 +6647,7 @@ dependencies = [
 
 [[package]]
 name = "shared"
-version = "0.1.136"
+version = "0.1.137"
 dependencies = [
  "anyhow",
  "arc-swap",
