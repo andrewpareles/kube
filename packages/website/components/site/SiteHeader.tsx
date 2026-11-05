@@ -274,7 +274,7 @@ export const SiteHeader = () => {
           side="bottom"
           className=""
           trigger={
-            <a href={GITHUB_URL} target="_blank" rel="noreferrer noopener" aria-label="GitHub" className="site-community-link text-gray-600">
+            <a href={GITHUB_URL} target="_blank" rel="noreferrer noopener" aria-label="GitHub" className="site-community-link text-foreground">
               <span className="site-community-inner">
                 <FaGithub className="size-5" />
               </span>

@@ -90,7 +90,8 @@ html body[data-scroll-locked] { margin-right: 0 !important; }
 .site-nav-link { position: relative; z-index: 0; display: inline-flex; align-items: center; font-size: 14px; padding-inline: 20px; }
 .site-nav-link::before { content: ''; position: absolute; z-index: -1; inset-inline: 10px; top: 50%; height: calc(1lh + 12px); translate: 0 -50%; border-radius: 8px; background: rgba(0, 0, 0, .08); opacity: 0; transition: opacity .15s; }
 .site-nav-link:hover::before { opacity: 1; }
-.site-balance, .site-header-name, .site-settings-trigger { padding-inline: 12px; }
+.site-balance, .site-settings-trigger { padding-inline: 12px; }
+.site-header-name { padding-inline: 24px; }
 .site-settings-trigger { position: relative; z-index: 0; width: auto; height: auto; padding-block: 8px; border-radius: 8px; }
 .site-settings-trigger::before { content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit; background: rgba(0, 0, 0, .08); opacity: 0; transition: opacity .15s; }
 .site-settings-trigger:hover::before { opacity: 1; }
