@@ -35,6 +35,7 @@ export const PLANS_RETURN_PATH = `${PLANS_PATH}/return`
 export const PRIVACY_PATH = '/privacy'
 export const TERMS_PATH = '/terms'
 export const DISCORD_URL = 'https://discord.gg/4uZsGRtGT'
+export const GITHUB_URL = 'https://github.com/andrewpareles/kube'
 
 // The header is fixed to the top of every page, so anything you jump to with a #anchor lands under it
 // unless it keeps some room above itself. Put ANCHOR_SCROLL_MARGIN_CLASS_NAME on the element that the

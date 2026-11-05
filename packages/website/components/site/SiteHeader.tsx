@@ -5,10 +5,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { LogOut, Menu, Settings } from "lucide-react";
 import posthog from "posthog-js";
-import { FaDiscord } from "react-icons/fa";
+import { FaDiscord, FaGithub } from "react-icons/fa";
 import { usePlayerLook, usePlayerName, usePlayerUserId, useUser } from "@/components/context/useUser";
 import { clearDesktopAuthSessions } from "@/app/server-actions/auth";
-import { DISCORD_URL, isResourceNavigationItemActive, siteHeaderSignedInResourceNavigationItems, siteHeaderTopNavigationItems, siteResourceNavigationItems } from "@/lib/siteNavigation";
+import { DISCORD_URL, GITHUB_URL, isResourceNavigationItemActive, siteHeaderSignedInResourceNavigationItems, siteHeaderTopNavigationItems, siteResourceNavigationItems } from "@/lib/siteNavigation";
 // import { CREDIT_ICON, CREDIT_ICON_CLASS_NAME, dailyFreeReward } from "@/lib/pricing";
 import { HoverTooltip } from "@/components/site/HoverTooltip";
 import { supabaseOnClient } from "@/supabase/supabaseOnClient";
@@ -261,8 +261,8 @@ export const SiteHeader = () => {
           side="bottom"
           className=""
           trigger={
-            <a href={DISCORD_URL} target="_blank" rel="noreferrer noopener nofollow" aria-label="Discord" className="site-discord-link">
-              <span className="site-discord-inner">
+            <a href={DISCORD_URL} target="_blank" rel="noreferrer noopener nofollow" aria-label="Discord" className="site-community-link ml-auto">
+              <span className="site-community-inner">
                 <FaDiscord className="size-5" />
               </span>
             </a>
@@ -270,6 +270,12 @@ export const SiteHeader = () => {
         >
           Join the Discord community.
         </HoverTooltip>
+        <a href={GITHUB_URL} target="_blank" rel="noreferrer noopener" aria-label="Star on GitHub" className="site-community-link">
+          <span className="site-community-inner">
+            <FaGithub className="size-5" />
+            <span className="site-github-label">Star on GitHub!</span>
+          </span>
+        </a>
 
         {/* Signed out there is no sidebar, so the resources it would hold sit on the right of the header. */}
         {!user && (
