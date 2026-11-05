@@ -261,7 +261,7 @@ export const SiteHeader = () => {
           side="bottom"
           className=""
           trigger={
-            <a href={DISCORD_URL} target="_blank" rel="noreferrer noopener nofollow" aria-label="Discord" className="site-community-link ml-auto">
+            <a href={DISCORD_URL} target="_blank" rel="noreferrer noopener nofollow" aria-label="Discord" className="site-community-link ml-auto text-blue-700">
               <span className="site-community-inner">
                 <FaDiscord className="size-5" />
               </span>
@@ -270,12 +270,19 @@ export const SiteHeader = () => {
         >
           Join the Discord community.
         </HoverTooltip>
-        <a href={GITHUB_URL} target="_blank" rel="noreferrer noopener" aria-label="Star on GitHub" className="site-community-link">
-          <span className="site-community-inner">
-            <FaGithub className="size-5" />
-            <span className="site-github-label">Star on GitHub!</span>
-          </span>
-        </a>
+        <HoverTooltip
+          side="bottom"
+          className=""
+          trigger={
+            <a href={GITHUB_URL} target="_blank" rel="noreferrer noopener" aria-label="GitHub" className="site-community-link text-gray-600">
+              <span className="site-community-inner">
+                <FaGithub className="size-5" />
+              </span>
+            </a>
+          }
+        >
+          Star on GitHub!
+        </HoverTooltip>
 
         {/* Signed out there is no sidebar, so the resources it would hold sit on the right of the header. */}
         {!user && (
