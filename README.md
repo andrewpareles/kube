@@ -9,13 +9,16 @@
 	/>
 </div>
 
+
 # Welcome to Kube.
 
-[Kube.new](https://kube.new) is a platform where you make games without coding. 
+[Kube.new](https://kube.new/) is a platform where you make games without coding.
 
-The underlying game engine is made entirely from scratch in Rust. 
+The underlying game engine is made from scratch in Rust! That includes custom wgpu shaders that compile to Metal/Vulkan, custom QUIC networking protocols, object types, a V8 TS scripting API & Rust/JS bridge, headless server containers, desktop deeplinks and web auth syncing,  agent sandboxes/harnesses, etc!
 
-This allows us to cross-compile to the browser (to edit games) and as a native desktop app (to play games).
+Building an engine from scratch is now possible with AI, and we picked it to have a much better understanding of hosting, auth, assets, and security without having to build a giant harness on eg Godot and hack through a big codebase.
+
+We cross-compile Kube to both the browser (to edit games) and as a native desktop app (to play games).
 
 - 🧭 [Website](https://kube.new)
 - 🔨 [Docs](https://kube.new/docs) 
@@ -25,70 +28,6 @@ This allows us to cross-compile to the browser (to edit games) and as a native d
 <img src="./assets/readme/canyon.avif" alt="A mech team brawl in a canyon in the desktop app" width="49%" /> <img src="./assets/readme/pin-panic.avif" alt="Two bowling pins dodging balls in the desktop app" width="49%" />
 <img src="./assets/readme/zombies.avif" alt="Zombies overrun a town in the desktop app" width="49%" /> <img src="./assets/readme/orbit.avif" alt="Running through a space station and putting out a fire in the desktop app" width="49%" />
 <img src="./assets/readme/crossy.avif" alt="A chicken crossing a busy road and train tracks in the desktop app" width="49%" /> <img src="./assets/readme/sushi.avif" alt="A sushi game with a conveyor belt in the desktop app" width="49%" />
-
-
-## Features
-
-### Native Desktop App
-
-Our desktop app feels as fast as a native game because we use `wgpu` to compile our custom shaders to Metal/Vulkan/etc.
-
-  ![Pressing Play on the website opens the game in the desktop app](./assets/readme/launch.avif)
-
-### An In-Browser Editor
-
-You can edit from any browser, including your phone (or embedded in Claude or Codex)!
-
-<img src="./assets/readme/browser-editor.jpg" alt="The editor in a browser with the Explorer open" width="77%" /> <img src="./assets/readme/phone-editor.jpg" alt="The editor on a phone, with the Player standing on a green field" width="21%" />
-
-
-### Edit Live with Friends, or via MCP
-
-The editor server allows invite codes so that you can edit with your friends.
-
-![Clicking Share opens a menu with an invite link and an MCP link](./assets/readme/share.avif)
-
-
-#### Editing Live with Friends:
-
-All edits are synced when editing with friends.
-
-  ![Two people in the same editor. One asks the AI for midnight, and the sky and lighting change on both screens](./assets/readme/two-editors.avif)
-
-#### Playtesting with Friends:
-
-The editor server lets you playtest live with friends too!
-
-  ![Two people press Playtest, meet in the same aisle, and ram each other's carts](./assets/readme/playtest.avif)
-
-
-#### Editing via MCP Server:
-
-You can share your live editor with an AI, the same exact way you share it with friends.
-
-![Codex adds a player with a jetpack through the MCP link, and it appears in the editor in the browser](./assets/readme/codex-mcp.avif)
-
-
-### WASM Cross-Compiling
-Our Rust renderer runs in the browser as WASM, and also natively in the desktop app. This means users get the best of both worlds: the performance of a desktop app, and the convenience and embeddability of a browser editor.
-
-<img src="./assets/readme/rat-browser.avif" alt="A 3D rat on its asset page in a browser" width="49%" /> <img src="./assets/readme/rat-desktop.avif" alt="The same rat racing in the desktop app" width="49%" />
-
-### Simple Object Types
-
-We have a collection of [object_types.rs](./crates/game_types/src/object_types.rs) that are extremely simple to understand and "Turing complete" for building games. Our [API](https://kube.new/docs) covers all the types and more.
-
-### Scripting in TS
-
-Scripts all run in TypeScript (see [the blog](https://kube.new/blog/why-ts)), and can live on both the server and the client.
-
-We implemented `'use server'` and `'use client'` so that scripts can talk with each other across the network ([blog here](https://kube.new/blog/use-server)).
-
-### Turing Complete
-
-You can make anything in Kube. Here's Mario, created by Opus 5.5. Everything you see is really running on Kube's TypeScript scripting API and game engine (and the game even works in multiplayer)!
-
-  ![A side-scrolling platformer in the desktop app](./assets/readme/kube-bros.avif)
 
 
 
@@ -133,6 +72,78 @@ We have a server-authoritative architecture where players' worlds live slightly 
 There are a few games where something like the Photon Quantum architecture would be useful (eg the Mario example). We allow the AI to support a state-space variant of this (rather than input-space) by using [`setLocalPlayerMetadata`](https://kube.new/docs#PlayerService), which is broadcast every tick by the client (see the above diagram). This allows, for example, for games like [Live Canvas](https://kube.new/games/397) below:
 
 ![Two players draw on the same canvas, and each one sees the other's mouse and strokes live](./assets/readme/live-canvas.avif)
+
+
+
+
+## Features
+
+
+### Simple Object Types
+
+We have a collection of [object_types.rs](./crates/game_types/src/object_types.rs) that are extremely simple to understand and "Turing complete" for building games. Our [API](https://kube.new/docs) covers all the types and more.
+
+These integrate into the physics engine (built on Rapier) naturally. We built a large harness on top of Rapier; for example, [RigidGroup](https://kube.new/docs#rigidGroup) is the primitive we built that allows you to make a union rigid body, with methods to animate it using a [Skeleton](https://kube.new/docs#skeleton), [PropertyAnimator](https://kube.new/docs#propertyAnimator), or [Tween](https://kube.new/docs#tween). We also handle interpolation changes and physics sweeping automatically for you. Objects can be teleported like `obj.location.x = 10`, or with [ObjectService](https://kube.new/docs#ObjectService). See our full API for more details.
+
+### Native Desktop App
+
+Our desktop app feels as fast as a native game because we use `wgpu` to compile our custom shaders to Metal/Vulkan/etc.
+
+  ![Pressing Play on the website opens the game in the desktop app](./assets/readme/launch.avif)
+
+### Browser Editor
+
+You can edit from any browser, including your phone (or embedded in Claude or Codex)!
+
+<img src="./assets/readme/browser-editor.jpg" alt="The editor in a browser with the Explorer open" width="77%" /> <img src="./assets/readme/phone-editor.jpg" alt="The editor on a phone, with the Player standing on a green field" width="21%" />
+
+
+### Edit Live with Friends, or via MCP
+
+The editor server allows invite codes, so that you can (1) edit with your friends, (2) playtest live with friends, and (3) share the live server with an agent via MCP.
+
+
+
+(1) 
+![Two people in the same editor. One asks the AI for midnight, and the sky and lighting change on both screens](./assets/readme/two-editors.avif)
+
+(2)
+![Two people press Playtest, meet in the same aisle, and ram each other's carts](./assets/readme/playtest.avif)
+
+(3)
+![Codex adds a player with a jetpack through the MCP link, and it appears in the editor in the browser](./assets/readme/codex-mcp.avif)
+
+**Getting an invite code:**
+
+<img src="./assets/readme/share.avif" alt="Clicking Share opens a menu with an invite link and an MCP link" width="49%" />
+
+
+### WASM Cross-Compiling
+Our Rust renderer runs in the browser as WASM, and also natively in the desktop app. This means users get the best of both worlds: the performance of a desktop app, and the convenience and embeddability of a browser editor.
+
+Most of our renderer code lives [here](https://github.com/andrewpareles/kube/blob/master/crates/render_core/src/renderer.rs). The organization was first created by humans and is now entirely written by AI.
+
+<img src="./assets/readme/rat-browser.avif" alt="A 3D rat on its asset page in a browser" width="49%" /> <img src="./assets/readme/rat-desktop.avif" alt="The same rat racing in the desktop app" width="49%" />
+
+
+
+
+### Scripting in TS
+
+Scripts all run in TypeScript (see [the blog](https://kube.new/blog/why-ts)), and can live on both the server and the client.
+
+We implemented `'use server'` and `'use client'` so that scripts can talk with each other across the network ([blog here](https://kube.new/blog/use-server)).
+
+The Rust/JS bridge is was designed by humans but is now entirely maintained by AI. You can see it [here](https://github.com/andrewpareles/kube/blob/master/crates/shared/src/game/jsRustConversions.rs). 
+
+The code for running V8 and passing in high-level data structures is [here](https://github.com/andrewpareles/kube/blob/master/crates/shared/src/game/jsRuntime.rs).
+
+### Turing Complete
+
+You can make anything in Kube. Here's Mario, created by Opus 5.5. Everything you see is really running on Kube's TypeScript scripting API and game engine (and the game even works in multiplayer)!
+
+  ![A side-scrolling platformer in the desktop app](./assets/readme/kube-bros.avif)
+
 
 
 

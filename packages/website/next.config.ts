@@ -32,10 +32,10 @@ const nextConfig: NextConfig = {
     // time somebody added another place a name is accepted.
     '/**': ['./lib/gen/profanity/profanity_bg.wasm'],
   },
-  // The home page is the create page. Not permanent, since browsers keep a permanent redirect for good.
+  // The home page is the games page. Not permanent, since browsers keep a permanent redirect for good.
   async redirects() {
     return [
-      { source: '/', destination: '/create', permanent: false },
+      { source: '/', destination: '/games', permanent: false },
       // The docs moved from /api/scripting to /docs. Browsers keep the #anchor across a redirect.
       { source: '/api', destination: '/docs', permanent: false },
       { source: '/api/scripting', destination: '/docs', permanent: false },
