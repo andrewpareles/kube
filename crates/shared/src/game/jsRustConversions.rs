@@ -1,26 +1,26 @@
-use game_types::{
-    consts::{ANIMATOR_PRIORITY_MAX, ANIMATOR_WEIGHT_MAX},
-    data_types::DataId,
-    object_types::{
-        BallInfo, BallMaterialSettings, BillboardMode, BrickInfo, BrickMaterialSettings, ClockInfo, ClockState, CylinderInfo, CylinderMaterialSettings,
-        InterpolationStyle, LabelHorizontalAlign, LabelImageInfo, LabelInfo, LocalGroupInfo, Location3D, MaterialInfo, MeshInfo, MeshMaterialSettings, Movement3D,
-        ObjectBeingAdded, ObjectId, ObjectIdPointer, ObjectInfo, ObjectInfoTrackedFields, ObjectLocation, Orientation3D, PhysicsInfo3D, PhysicsToggles3D,
-        PivotInfo, PlayerInfo, RigidGroupInfo, ScriptInfo, SkAnimationInfo, SkAttachmentInfo, SkJointInfo, SkKeyframeInfo, SkKeyframePoseInfo,
-        SkeletonInfo, SoundPlayerInfo, TweenInfo, WeightTransition, WorldLightingInfo,
-        material::AlphaMode,
-        property_animation::PropertyAnimationInfo,
-        property_animator::PropertyAnimatorInfo,
-        property_keyframe::PropertyKeyframeInfo,
-        shared::{Color3, VisualSettings, euler_degrees_to_quat, quat_to_euler_degrees},
-        sk_animator::SkAnimatorInfo,
-    },
-    physics_primitive_types::{BallPrimitiveSettings, BrickPrimitiveSettings, CylinderPrimitiveSettings, PrimitiveSettings},
-};
 use crate::conversions::float_conversions::ToF64;
 use crate::game::physics::{SetOrForce, SetPhysicsInfo3D, SetPhysicsToggles3D};
 use crate::game::world::World;
 use crate::protocol::messages::{ObjectModifyFlags, someIffTrue};
 use deno_core::v8;
+use game_types::{
+    consts::{ANIMATOR_PRIORITY_MAX, ANIMATOR_WEIGHT_MAX},
+    data_types::DataId,
+    object_types::{
+        BallInfo, BallMaterialSettings, BillboardMode, BrickInfo, BrickMaterialSettings, ClockInfo, ClockState, CylinderInfo, CylinderMaterialSettings,
+        InterpolationStyle, LabelHorizontalAlign, LabelImageInfo, LabelInfo, LocalGroupInfo, Location3D, MaterialInfo, MeshInfo, MeshMaterialSettings,
+        Movement3D, ObjectBeingAdded, ObjectId, ObjectIdPointer, ObjectInfo, ObjectInfoTrackedFields, ObjectLocation, Orientation3D, PhysicsInfo3D,
+        PhysicsToggles3D, PivotInfo, PlayerInfo, RigidGroupInfo, ScriptInfo, SkAnimationInfo, SkAttachmentInfo, SkJointInfo, SkKeyframeInfo,
+        SkKeyframePoseInfo, SkeletonInfo, SoundPlayerInfo, TweenInfo, WeightTransition, WorldLightingInfo,
+        material::AlphaMode,
+        property_animation::PropertyAnimationInfo,
+        property_animator::PropertyAnimatorInfo,
+        property_keyframe::PropertyKeyframeInfo,
+        shared::{Color3, OutlineSettings, VisualSettings, euler_degrees_to_quat, quat_to_euler_degrees},
+        sk_animator::SkAnimatorInfo,
+    },
+    physics_primitive_types::{BallPrimitiveSettings, BrickPrimitiveSettings, CylinderPrimitiveSettings, PrimitiveSettings},
+};
 use glam::{Quat, Vec3};
 use serde_json::{Map, Number, Value}; // inner working types, different from v8::Value
 use v8::{Local, PinScope};
@@ -88,7 +88,9 @@ impl<'v, 'p> ValueWithPath<'v, 'p> {
 // {a: {b: value}} for the path [a, b]. Only enums need it: writing inside one variant, like clockState.Paused, parses the
 // whole tagged variant.
 fn jsonAlongPath(path: &[String], value: &Value) -> Value {
-    path.iter().rev().fold(value.clone(), |inner, field| Value::Object(Map::from_iter([(field.clone(), inner)])))
+    path.iter()
+        .rev()
+        .fold(value.clone(), |inner, field| Value::Object(Map::from_iter([(field.clone(), inner)])))
 }
 
 // ---------------- JS Helpers ----------------
@@ -1093,7 +1095,12 @@ fn jsSpreadWorldLightingInfo<'s>(obj: Local<v8::Object>, world_lighting: &WorldL
     jsSetField(obj, "ambientTopColor", |s| Ok(jsColor3(&world_lighting.ambientTopColor, s)?), scope)?;
     jsSetField(obj, "ambientBottomColor", |s| Ok(jsColor3(&world_lighting.ambientBottomColor, s)?), scope)?;
     jsSetField(obj, "ambientIntensity", |s| Ok(jsNumber(world_lighting.ambientIntensity, s)), scope)?;
-    jsSetField(obj, "ambientOcclusionIntensity", |s| Ok(jsNumber(world_lighting.ambientOcclusionIntensity, s)), scope)?;
+    jsSetField(
+        obj,
+        "ambientOcclusionIntensity",
+        |s| Ok(jsNumber(world_lighting.ambientOcclusionIntensity, s)),
+        scope,
+    )?;
     jsSetField(obj, "ambientOcclusionRadius", |s| Ok(jsNumber(world_lighting.ambientOcclusionRadius, s)), scope)?;
     jsSetField(
         obj,
@@ -1485,11 +1492,62 @@ fn rustUpdatePhysicsToggles3D<'v, 'p>(world: &mut World, objectId: ObjectId, val
 
 // ---------------- VisualToggles3D ----------------
 
+// ---------------- OutlineSettings ----------------
+
+fn jsOptionalOutlineSettings<'s>(outlineSettings: &Option<OutlineSettings>, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Value>> {
+    let Some(outlineSettings) = outlineSettings else {
+        return Ok(jsNull(scope).into());
+    };
+    let object = jsEmptyObject(scope);
+    jsSetField(object, "color", |s| Ok(jsColor3(&outlineSettings.color, s)?), scope)?;
+    jsSetField(object, "opacity", |s| Ok(jsNumber(outlineSettings.opacity, s)), scope)?;
+    jsSetField(object, "thickness", |s| Ok(jsNumber(outlineSettings.thickness, s)), scope)?;
+    Ok(object.into())
+}
+
+fn rustOptionalOutlineSettings(jsvalue: &Value) -> anyhow::Result<Option<OutlineSettings>> {
+    if jsvalue.is_null() {
+        return Ok(None);
+    }
+    let object = asJSON(jsvalue, "outline")?;
+    let outlineSettings = OutlineSettings {
+        color: rustColor3(readJSON(object, "color", "outline")?)?,
+        opacity: rustf32(readJSON(object, "opacity", "outline")?)?,
+        thickness: rustf32(readJSON(object, "thickness", "outline")?)?,
+    };
+    outlineSettings.validate()?;
+    Ok(Some(outlineSettings))
+}
+
+// An object with no outline has no field to set, so null or a whole outline replaces it, and a path into an outline changes one field.
+fn rustUpdateOptionalOutlineSettings<'v, 'p>(outlineSettings: &mut Option<OutlineSettings>, valueWithPath: ValueWithPath<'v, 'p>) -> anyhow::Result<()> {
+    if valueWithPath.fullRemainingPath.is_empty() {
+        *outlineSettings = rustOptionalOutlineSettings(valueWithPath.value)?;
+        return Ok(());
+    }
+    let Some(outlineSettings) = outlineSettings.as_mut() else {
+        return Err(anyhow::anyhow!("update_visualSettings.outline: set outline before updating nested fields"));
+    };
+    // The change is checked before it is kept, so a rejected edit leaves the outline as it was.
+    let mut updatedOutlineSettings = *outlineSettings;
+    let field = valueWithPath.nextFieldName("update_visualSettings.outline")?;
+    match field.as_str() {
+        "color" => rustUpdateColor3(&mut updatedOutlineSettings.color, valueWithPath.nextValue()?)?,
+        "opacity" => updatedOutlineSettings.opacity = rustf32(valueWithPath.expectFinalNextValue()?)?,
+        "thickness" => updatedOutlineSettings.thickness = rustf32(valueWithPath.expectFinalNextValue()?)?,
+        _ => return Err(anyhow::anyhow!("update_visualSettings.outline: color|opacity|thickness")),
+    }
+    updatedOutlineSettings.validate()?;
+    *outlineSettings = updatedOutlineSettings;
+    Ok(())
+}
+
 fn jsSpreadVisualSettings<'s>(obj: Local<v8::Object>, visualSettings: &VisualSettings, scope: &mut PinScope<'s, '_>) -> anyhow::Result<()> {
     jsSetField(obj, "opacity", |s| Ok(jsNumber(visualSettings.opacity, s)), scope)?;
     jsSetField(obj, "color", |s| Ok(jsColor3(&visualSettings.color, s)?), scope)?;
     jsSetField(obj, "glow", |s| Ok(jsNumber(visualSettings.glow, s)), scope)?;
     jsSetField(obj, "isAlwaysOnTop", |s| Ok(jsBoolean(visualSettings.isAlwaysOnTop, s)), scope)?;
+    jsSetField(obj, "outline", |s| jsOptionalOutlineSettings(&visualSettings.outline, s), scope)?;
     Ok(())
 }
 
@@ -1564,6 +1622,7 @@ fn rustVisualSettings(jsvalue: &Value) -> anyhow::Result<VisualSettings> {
         color: rustColor3(readJSON(object, "color", "set_visualSettings")?)?,
         glow: object.get("glow").map(rustf32).transpose()?.unwrap_or(0.0),
         isAlwaysOnTop: object.get("isAlwaysOnTop").map(rustBool).transpose()?.unwrap_or(false),
+        outline: object.get("outline").map(rustOptionalOutlineSettings).transpose()?.flatten(),
     })
 }
 
@@ -1573,7 +1632,8 @@ fn rustUpdateVisualSettingsField<'v, 'p>(visualSettings: &mut VisualSettings, fi
         "color" => rustUpdateColor3(&mut visualSettings.color, valueWithPath.nextValue()?)?,
         "glow" => visualSettings.glow = rustf32(valueWithPath.expectFinalNextValue()?)?,
         "isAlwaysOnTop" => visualSettings.isAlwaysOnTop = rustBool(valueWithPath.expectFinalNextValue()?)?,
-        _ => return Err(anyhow::anyhow!("update_visualSettings: opacity|color|glow|isAlwaysOnTop")),
+        "outline" => rustUpdateOptionalOutlineSettings(&mut visualSettings.outline, valueWithPath.nextValue()?)?,
+        _ => return Err(anyhow::anyhow!("update_visualSettings: opacity|color|glow|isAlwaysOnTop|outline")),
     }
     Ok(())
 }
@@ -1667,7 +1727,9 @@ fn rustUpdatePhysicsInfo3D<'v, 'p>(
     // create a physics info 3d rust object
     let physicsInfo3D = world.getObjectPhysicsInfo3D(objectId);
     let Some(mut physicsInfo3D) = physicsInfo3D else { return Ok(()) };
-    let Some(mut rotation_degrees) = world.getRotationDegrees(objectId) else { return Ok(()) };
+    let Some(mut rotation_degrees) = world.getRotationDegrees(objectId) else {
+        return Ok(());
+    };
 
     // modify the physics info 3d object, keeping track of changes as flags
     let flags;
@@ -1744,9 +1806,16 @@ pub fn jsLiveObjectOfRustLiveObject<'s>(world: &World, object_id: ObjectId, scop
             jsSpreadPhysicsInfo3D(js_obj, world, object.id, scope)?;
         }
         ObjectInfo::SkJoint(joint) => {
-            let rotation_degrees = world.getRotationDegrees(object.id).ok_or_else(|| anyhow::anyhow!("jsLiveObjectOfRustLiveObject: joint has no rotation"))?;
+            let rotation_degrees = world
+                .getRotationDegrees(object.id)
+                .ok_or_else(|| anyhow::anyhow!("jsLiveObjectOfRustLiveObject: joint has no rotation"))?;
             jsSetField(js_obj, "type", |s| Ok(jsString("skJoint", s)?), scope)?;
-            jsSetField(js_obj, "restPose", |s| Ok(jsLocation3DWithRotationDegrees(joint.restPose.position, rotation_degrees, s)?), scope)?;
+            jsSetField(
+                js_obj,
+                "restPose",
+                |s| Ok(jsLocation3DWithRotationDegrees(joint.restPose.position, rotation_degrees, s)?),
+                scope,
+            )?;
         }
         ObjectInfo::Skeleton(_) => {
             jsSetField(js_obj, "type", |s| Ok(jsString("skeleton", s)?), scope)?;
@@ -1811,12 +1880,7 @@ pub fn jsLiveObjectOfRustLiveObject<'s>(world: &World, object_id: ObjectId, scop
             jsSetField(js_obj, "backgroundColor", |s| Ok(jsOptionalColor3(&label.backgroundColor, s)?), scope)?;
             jsSetField(js_obj, "backgroundOpacity", |s| Ok(jsNumber(label.backgroundOpacity, s)), scope)?;
             jsSetField(js_obj, "offsetFromObject", |s| Ok(jsVec3(label.offsetFromObject, s)?), scope)?;
-            jsSetField(
-                js_obj,
-                "rotationFromObject",
-                |s| Ok(jsRotation(label.rotationFromObject, s)?),
-                scope,
-            )?;
+            jsSetField(js_obj, "rotationFromObject", |s| Ok(jsRotation(label.rotationFromObject, s)?), scope)?;
             jsSetField(js_obj, "physicalObjectId", |s| Ok(jsOptionalObjectId(physicalObjectId, s)), scope)?;
             jsSetField(js_obj, "billboardMode", |s| Ok(jsString(billboardModeName(label.billboardMode), s)?), scope)?;
             jsSetField(js_obj, "isConstantSize", |s| Ok(jsBoolean(label.isConstantSize, s)), scope)?;
@@ -2168,7 +2232,7 @@ pub fn rustUpdateObject<'v, 'p>(
                 world.setPrimitiveSettings(objectId, PrimitiveSettings::Ball(BallPrimitiveSettings { radius }), false)?;
                 objectModifyFlags.modifiedPrimitiveSettings = true;
             }
-            "opacity" | "color" | "glow" | "isAlwaysOnTop" => {
+            "opacity" | "color" | "glow" | "isAlwaysOnTop" | "outline" => {
                 rustUpdateVisualSettingsField(&mut ball.visualSettings, nextField.as_str(), valueWithPath)?;
                 objectModifyFlags.modifiedObjectInfo = true;
             }
@@ -2182,7 +2246,7 @@ pub fn rustUpdateObject<'v, 'p>(
             }
             _ => {
                 return Err(anyhow::anyhow!(
-                    "update_ball: location|movement|material|radius|opacity|color|glow|isAlwaysOnTop|isWalkthrough|isPushable|density"
+                    "update_ball: location|movement|material|radius|opacity|color|glow|isAlwaysOnTop|outline|isWalkthrough|isPushable|density"
                 ));
             }
         },
@@ -2221,7 +2285,7 @@ pub fn rustUpdateObject<'v, 'p>(
                 )?;
                 objectModifyFlags.modifiedPrimitiveSettings = true;
             }
-            "opacity" | "color" | "glow" | "isAlwaysOnTop" => {
+            "opacity" | "color" | "glow" | "isAlwaysOnTop" | "outline" => {
                 rustUpdateVisualSettingsField(&mut cylinder.visualSettings, nextField.as_str(), valueWithPath)?;
                 objectModifyFlags.modifiedObjectInfo = true;
             }
@@ -2235,14 +2299,16 @@ pub fn rustUpdateObject<'v, 'p>(
             }
             _ => {
                 return Err(anyhow::anyhow!(
-                    "update_cylinder: location|movement|material|radius|length|opacity|color|glow|isAlwaysOnTop|isWalkthrough|isPushable|density"
+                    "update_cylinder: location|movement|material|radius|length|opacity|color|glow|isAlwaysOnTop|outline|isWalkthrough|isPushable|density"
                 ));
             }
         },
         ObjectInfo::SkJoint(_) => match nextField.as_str() {
             "restPose" => {
                 // like location.rotation, a joint's restPose.rotation builds on the degrees it reads back as, and remembers the ones written to it
-                let mut rotation_degrees = world.getRotationDegrees(objectId).ok_or_else(|| anyhow::anyhow!("update_sk_joint: joint has no rotation"))?;
+                let mut rotation_degrees = world
+                    .getRotationDegrees(objectId)
+                    .ok_or_else(|| anyhow::anyhow!("update_sk_joint: joint has no rotation"))?;
                 let ObjectInfo::SkJoint(joint) = &mut world.getObjectMut(objectId)?.info else {
                     return Err(anyhow::anyhow!("update_sk_joint: not a joint"));
                 };
@@ -2324,7 +2390,7 @@ pub fn rustUpdateObject<'v, 'p>(
                 world.setPrimitiveSettings(objectId, PrimitiveSettings::Brick(BrickPrimitiveSettings { size }), false)?;
                 objectModifyFlags.modifiedPrimitiveSettings = true;
             }
-            "opacity" | "color" | "glow" | "isAlwaysOnTop" => {
+            "opacity" | "color" | "glow" | "isAlwaysOnTop" | "outline" => {
                 rustUpdateVisualSettingsField(&mut brick.visualSettings, nextField.as_str(), valueWithPath)?;
                 objectModifyFlags.modifiedObjectInfo = true;
             }
@@ -2338,7 +2404,7 @@ pub fn rustUpdateObject<'v, 'p>(
             }
             _ => {
                 return Err(anyhow::anyhow!(
-                    "update_brick: location|movement|material|size|opacity|color|glow|isAlwaysOnTop|isWalkthrough|isPushable|density"
+                    "update_brick: location|movement|material|size|opacity|color|glow|isAlwaysOnTop|outline|isWalkthrough|isPushable|density"
                 ));
             }
         },
@@ -2375,13 +2441,13 @@ pub fn rustUpdateObject<'v, 'p>(
                 rustUpdateOptionalMeshMaterialSettings(&mut mesh.material, valueWithPath.nextValue()?)?;
                 objectModifyFlags.modifiedObjectInfo = true;
             }
-            "opacity" | "color" | "glow" | "isAlwaysOnTop" => {
+            "opacity" | "color" | "glow" | "isAlwaysOnTop" | "outline" => {
                 rustUpdateVisualSettingsField(&mut mesh.visualSettings, nextField.as_str(), valueWithPath)?;
                 objectModifyFlags.modifiedObjectInfo = true;
             }
             _ => {
                 return Err(anyhow::anyhow!(
-                    "update_mesh: scale|meshDataId|followSkeletonId|physicalObjectId|material|opacity|color|glow|isAlwaysOnTop"
+                    "update_mesh: scale|meshDataId|followSkeletonId|physicalObjectId|material|opacity|color|glow|isAlwaysOnTop|outline"
                 ));
             }
         },
@@ -2432,13 +2498,13 @@ pub fn rustUpdateObject<'v, 'p>(
                 label.isConstantSize = rustBool(valueWithPath.expectFinalNextValue()?)?;
                 objectModifyFlags.modifiedObjectInfo = true;
             }
-            "opacity" | "color" | "glow" | "isAlwaysOnTop" => {
+            "opacity" | "color" | "glow" | "isAlwaysOnTop" | "outline" => {
                 rustUpdateVisualSettingsField(&mut label.visualSettings, nextField.as_str(), valueWithPath)?;
                 objectModifyFlags.modifiedObjectInfo = true;
             }
             _ => {
                 return Err(anyhow::anyhow!(
-                    "update_label: text|lineHeight|maxWidth|horizontalAlign|backgroundColor|backgroundOpacity|offsetFromObject|rotationFromObject|physicalObjectId|opacity|color|glow|isAlwaysOnTop|billboardMode|isConstantSize"
+                    "update_label: text|lineHeight|maxWidth|horizontalAlign|backgroundColor|backgroundOpacity|offsetFromObject|rotationFromObject|physicalObjectId|opacity|color|glow|isAlwaysOnTop|outline|billboardMode|isConstantSize"
                 ));
             }
         },
@@ -2476,13 +2542,13 @@ pub fn rustUpdateObject<'v, 'p>(
                 image.isConstantSize = rustBool(valueWithPath.expectFinalNextValue()?)?;
                 objectModifyFlags.modifiedObjectInfo = true;
             }
-            "opacity" | "color" | "glow" | "isAlwaysOnTop" => {
+            "opacity" | "color" | "glow" | "isAlwaysOnTop" | "outline" => {
                 rustUpdateVisualSettingsField(&mut image.visualSettings, nextField.as_str(), valueWithPath)?;
                 objectModifyFlags.modifiedObjectInfo = true;
             }
             _ => {
                 return Err(anyhow::anyhow!(
-                    "update_label_image: textureDataId|width|height|offsetFromObject|rotationFromObject|physicalObjectId|opacity|color|glow|isAlwaysOnTop|billboardMode|isConstantSize"
+                    "update_label_image: textureDataId|width|height|offsetFromObject|rotationFromObject|physicalObjectId|opacity|color|glow|isAlwaysOnTop|outline|billboardMode|isConstantSize"
                 ));
             }
         },
@@ -2675,7 +2741,11 @@ pub fn rustUpdateObject<'v, 'p>(
                 rustUpdateClockState(&mut tween.clockState, valueWithPath.nextValue()?)?;
                 objectModifyFlags.modifiedObjectInfo = true;
             }
-            _ => return Err(anyhow::anyhow!("update_tween: targetObjectId|propertyPath|fromValue|toValue|duration|interpolationStyle|clockState")),
+            _ => {
+                return Err(anyhow::anyhow!(
+                    "update_tween: targetObjectId|propertyPath|fromValue|toValue|duration|interpolationStyle|clockState"
+                ));
+            }
         },
         ObjectInfo::SoundPlayer(sound_player) => match nextField.as_str() {
             "soundDataId" => {

@@ -1366,6 +1366,29 @@ fn fs_selection_mask(in: VertexShaderOutput) -> @location(0) f32 {
     return 1.0;
 }
 
+// Outline masks hold the nearest outlined object at each pixel, for object_outline.wgsl to find their edges. The outlined
+// copy of each instance carries its outline number plus one in glow, since outlines never glow. The mask keeps the same
+// cutouts as the visible surface, and ignores the object's opacity so a see-through object still has an outline.
+struct OutlineMaskOutput {
+    @location(0) mask: vec4<f32>,
+};
+
+fn outline_mask_output(in: VertexShaderOutput) -> OutlineMaskOutput {
+    return OutlineMaskOutput(vec4<f32>(in.glow, in.position.z, distance(camera.camera_position.xyz, in.world_position), 1.0));
+}
+
+@fragment
+fn fs_outline_mask(in: VertexShaderOutput) -> OutlineMaskOutput {
+    let alpha = sample_non_normal_texture(basecolor_texture, in).a;
+    if (material_alpha_mode.alpha_mode == MATERIAL_ALPHA_MODE_MASK) {
+        discard_fragment_for_mask_alpha(alpha);
+    }
+    if (material_alpha_mode.alpha_mode == MATERIAL_ALPHA_MODE_BLEND && alpha <= 0.0) {
+        discard;
+    }
+    return outline_mask_output(in);
+}
+
 fn label_distance_from_edge(in: VertexShaderOutput) -> f32 {
     return sample_non_normal_texture(basecolor_texture, in).r - 0.5;
 }
@@ -1395,6 +1418,22 @@ fn fs_label_image_selection_mask(in: VertexShaderOutput) -> @location(0) f32 {
         discard;
     }
     return 1.0;
+}
+
+@fragment
+fn fs_label_outline_mask(in: VertexShaderOutput) -> OutlineMaskOutput {
+    if (label_coverage(in) <= LABEL_MIN_ALPHA) {
+        discard;
+    }
+    return outline_mask_output(in);
+}
+
+@fragment
+fn fs_label_image_outline_mask(in: VertexShaderOutput) -> OutlineMaskOutput {
+    if (textureSample(basecolor_texture, material_sampler, in.uv).a <= LABEL_MIN_ALPHA) {
+        discard;
+    }
+    return outline_mask_output(in);
 }
 
 // Both targets share one blend in renderer.rs OIT_BLENDING: color adds up, and alpha is multiplied by one minus each

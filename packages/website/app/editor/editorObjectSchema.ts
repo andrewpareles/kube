@@ -18,7 +18,9 @@ const orientation = z.object({ theta: number.meta({ control: 'degrees' }), phi: 
 const objectLocation = z.enum(['Client', 'Server'])
 const interpolation = z.enum(['Step', 'Linear', 'EaseInOut', 'EaseIn', 'EaseOut'])
 const reference = (objectKind: string) => objectId.meta({ control: 'reference', objectKind })
-const visual = z.object({ opacity: unit, color, glow: unit, isAlwaysOnTop: z.boolean() })
+// Match OutlineSettings' limits in crates/game_types/src/object_types/shared.rs.
+const outline = z.object({ color, opacity: unit.meta({ default: 1 }), thickness: number.min(0.5).max(8).meta({ default: 2 }) })
+const visual = z.object({ opacity: unit, color, glow: unit, isAlwaysOnTop: z.boolean(), outline: outline.nullable() })
 const weightTransition = z.object({ startedAtMs: number, timeLocation: objectLocation, initValue: number, finalValue: number, durationMs: positive, easing: interpolation })
 const animator = { clockId: reference('Clock').nullable(), priority: z.int().min(0).max(10), weight: number.min(0).max(100), weightTransition: weightTransition.nullable() }
 // Match the desktop defaults when enabling material tiling, alpha masking, and label wrapping.

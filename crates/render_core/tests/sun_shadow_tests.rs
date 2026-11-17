@@ -38,6 +38,7 @@ fn brick(position: Vec3, size: Vec3) -> RenderObject {
             color: Color3::WHITE,
             glow: 0.0,
             isAlwaysOnTop: false,
+            outline: None,
         },
         primitive: BrickPrimitiveSettings { size },
         material: None,

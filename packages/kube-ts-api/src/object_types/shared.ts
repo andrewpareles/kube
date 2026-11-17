@@ -52,6 +52,15 @@ export type Color3 = {
   b: number;
 };
 
+/** A colored border drawn around the outside of an object's silhouette on screen. */
+export type OutlineSettings = {
+  color: Color3;
+  /** 0-1. */
+  opacity: number;
+  /** Width of the outline in screen pixels, from 0.5 to 8. */
+  thickness: number;
+};
+
 /** A helper type. */
 export type VisualSettings = {
   /** 0-1. */
@@ -61,6 +70,8 @@ export type VisualSettings = {
   glow: number;
   /** Whether to render in front of everything even if visually blocked. This should almost never be used. */
   isAlwaysOnTop: boolean;
+  /** A colored border drawn around the object's silhouette. null means no outline. Still drawn when opacity is 0. */
+  outline: OutlineSettings | null;
 };
 
 /** A helper type. */

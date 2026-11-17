@@ -33,6 +33,8 @@ pub struct SimpleRenderer {
     pub gpu: Renderer,
     surface: wgpu::Surface<'static>,
     config: wgpu::SurfaceConfiguration,
+    // Read for its scale factor on each resize, so outlines keep their thickness on high density screens.
+    window_arc: Arc<Window>,
     render_scale: f32,                           // 1 draws the world at the window's size, 0.5 at half its width and height
     scaled_world_texture: Option<wgpu::Texture>, // below a render_scale of 1 the world is drawn here, then stretched onto the window
     texture_blitter: wgpu::util::TextureBlitter,
@@ -100,6 +102,7 @@ impl SimpleRenderer {
             gpu,
             surface,
             config,
+            window_arc: windowArc,
             render_scale: 1.0,
             scaled_world_texture: None,
             texture_blitter,
@@ -130,6 +133,7 @@ impl SimpleRenderer {
         let width = ((self.config.width as f32 * self.render_scale) as u32).max(1);
         let height = ((self.config.height as f32 * self.render_scale) as u32).max(1);
         self.gpu.resize(width, height);
+        self.gpu.set_device_pixel_ratio(self.window_arc.scale_factor() as f32 * self.render_scale);
         self.scaled_world_texture = (self.render_scale < 1.0).then(|| {
             self.gpu.device().create_texture(&wgpu::TextureDescriptor {
                 label: Some("Scaled World Texture"),

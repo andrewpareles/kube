@@ -5,6 +5,10 @@ use crate::{
     create_gpu_texture::create_gpu_texture_from_mip_data,
     culling::{BoundingSphere, SHADOW_CASTER_BUCKET_COUNT, ShadowCascadeSquares, ShadowCasterBucketStarts, ViewEdges, largest_stretch, shadow_caster_ranges},
     detail_levels::{DetailLevel, bounding_radius_around_origin, build_simpler_detail_levels, detail_level_for_instance},
+    object_outline::{
+        FrameOutlineBindGroups, FrameOutlineSettings, OUTLINE_MASK_FORMAT, ObjectOutlinePipelines, ObjectOutlineTargetFormats, ObjectOutlineTextures,
+        create_frame_outline_bind_groups, create_object_outline_textures, draw_nearest_edges, draw_opaque_outline, draw_transparent_outline_pass,
+    },
     render_scene::*,
 };
 use anyhow::Result;
@@ -229,6 +233,7 @@ struct GpuRenderTargets {
     front_layer_textures: GpuLayerTextures, // always on top layer
     selection_mask_texture_view: wgpu::TextureView,
     selection_outline_bind_group: wgpu::BindGroup,
+    object_outline_textures: ObjectOutlineTextures,
     // The layers draw one after the other, so they take turns with one set of ambient occlusion textures.
     ambient_occlusion_view_depth_mip_texture_views: Vec<wgpu::TextureView>,
     ambient_occlusion_view_depth_downsample_bind_groups: Vec<wgpu::BindGroup>,
@@ -355,6 +360,9 @@ fn sort_instances_front_to_back(instance_indices: &mut [u32], scene_instances: &
 #[derive(Default)]
 struct InstanceListsOfKey {
     selected: Vec<u32>,
+    // Outlined instances, each with the outline number plus one that its copy for the outline mask carries in glow.
+    outlined: Vec<(u32, f32)>,
+    outlined_always_on_top: Vec<(u32, f32)>,
     glowing: Vec<u32>,
     opaque: Vec<u32>,
     transparent: Vec<u32>,
@@ -367,6 +375,9 @@ struct InstanceListsOfKey {
 struct InstancePlacement {
     is_in_view: bool,
     is_selected: bool,
+    outline_number_plus_one: Option<f32>,
+    // Only its outline shows, so it is left out of every other list.
+    is_fully_see_through: bool,
     glows: bool,
     is_always_on_top: bool,
     is_transparent: bool,
@@ -376,7 +387,16 @@ struct InstancePlacement {
 
 impl InstanceListsOfKey {
     fn push(&mut self, instance_index: u32, placement: &InstancePlacement) {
-        if placement.is_in_view {
+        if placement.is_in_view
+            && let Some(outline_number_plus_one) = placement.outline_number_plus_one
+        {
+            let outlined_instances = match placement.is_always_on_top {
+                true => &mut self.outlined_always_on_top,
+                false => &mut self.outlined,
+            };
+            outlined_instances.push((instance_index, outline_number_plus_one));
+        }
+        if placement.is_in_view && !placement.is_fully_see_through {
             if placement.is_selected {
                 self.selected.push(instance_index);
             }
@@ -415,7 +435,9 @@ impl InstanceListsOfKey {
         .into_iter()
         .chain(&self.shadow_casters)
         .map(Vec::len)
-        .sum()
+        .sum::<usize>()
+            + self.outlined.len()
+            + self.outlined_always_on_top.len()
     }
 }
 
@@ -440,6 +462,8 @@ impl FrameInstanceWriter<'_> {
 // Where one key type's instance lists sit in the frame's instance buffer.
 struct InstanceRangesOfKey<K> {
     selected: HashMap<K, Range<u32>>,
+    outlined: HashMap<K, Range<u32>>,
+    outlined_always_on_top: HashMap<K, Range<u32>>,
     glowing: HashMap<K, Range<u32>>,
     opaque: HashMap<K, Range<u32>>,
     transparent: HashMap<K, Range<u32>>,
@@ -452,6 +476,8 @@ impl<K: Copy + Eq + Hash> InstanceRangesOfKey<K> {
     fn write(instance_lists_of_key: &HashMap<K, InstanceListsOfKey>, scene_instances: &[RenderInstance], writer: &mut FrameInstanceWriter) -> Self {
         let mut instance_ranges = Self {
             selected: HashMap::new(),
+            outlined: HashMap::new(),
+            outlined_always_on_top: HashMap::new(),
             glowing: HashMap::new(),
             opaque: HashMap::new(),
             transparent: HashMap::new(),
@@ -472,6 +498,22 @@ impl<K: Copy + Eq + Hash> InstanceRangesOfKey<K> {
                 if !instance_indices.is_empty() {
                     let instances = instance_indices.iter().map(|&instance_index| &scene_instances[instance_index as usize].content);
                     range_of_key.insert(*key, writer.write(instances));
+                }
+            }
+            let outlined_lists = [
+                (&instance_lists.outlined, &mut instance_ranges.outlined),
+                (&instance_lists.outlined_always_on_top, &mut instance_ranges.outlined_always_on_top),
+            ];
+            for (outlined_instances, range_of_key) in outlined_lists {
+                if !outlined_instances.is_empty() {
+                    let instances: Vec<InstanceContent> = outlined_instances
+                        .iter()
+                        .map(|&(instance_index, outline_number_plus_one)| InstanceContent {
+                            glow: outline_number_plus_one,
+                            ..scene_instances[instance_index as usize].content
+                        })
+                        .collect();
+                    range_of_key.insert(*key, writer.write(&instances));
                 }
             }
             if instance_lists.shadow_casters.iter().any(|bucket| !bucket.is_empty()) {
@@ -839,6 +881,7 @@ fn create_layer_textures(
     GpuRenderTargets {
         selection_mask_texture_view,
         selection_outline_bind_group,
+        object_outline_textures: create_object_outline_textures(device, config.width, config.height, DEPTH_FORMAT),
         width: config.width,
         height: config.height,
         base_layer_textures,
@@ -1003,6 +1046,13 @@ pub struct Renderer {
     label_selection_mask_render_pipeline: wgpu::RenderPipeline,
     label_image_selection_mask_render_pipeline: wgpu::RenderPipeline,
     selection_outline_pipeline: wgpu::RenderPipeline,
+    outline_mask_render_pipeline: [wgpu::RenderPipeline; 2],
+    skinned_outline_mask_render_pipeline: [wgpu::RenderPipeline; 2],
+    label_outline_mask_render_pipeline: wgpu::RenderPipeline,
+    label_image_outline_mask_render_pipeline: wgpu::RenderPipeline,
+    object_outline_pipelines: ObjectOutlinePipelines,
+    // How many render target pixels one screen pixel spans, so outline thickness stays the same on high density screens.
+    device_pixel_ratio: f32,
     glow_render_pipeline: [wgpu::RenderPipeline; 2],         // scene.wgsl: glowing instances into bloom level 0
     skinned_glow_render_pipeline: [wgpu::RenderPipeline; 2], // scene.wgsl: glowing skinned instances into bloom level 0
     label_glow_render_pipeline: wgpu::RenderPipeline,        // scene.wgsl: glowing label text into bloom level 0
@@ -2251,6 +2301,60 @@ impl Renderer {
         let [_, label_selection_mask_render_pipeline] = create_selection_mask_pipeline("vs_main_static", "fs_label_selection_mask", vertex_buffer_layout());
         let [_, label_image_selection_mask_render_pipeline] =
             create_selection_mask_pipeline("vs_main_static", "fs_label_image_selection_mask", vertex_buffer_layout());
+        // The outline mask holds the nearest outlined object at each pixel, so it tests its own depth, not the scene's.
+        let create_outline_mask_pipeline = |vertex_entry_point: &str, fragment_entry_point: &str, vertex_layout: wgpu::VertexBufferLayout<'_>| {
+            create_material_render_pipelines(wgpu::RenderPipelineDescriptor {
+                label: Some("Outline Mask Render Pipeline"),
+                layout: Some(&render_pipeline_layout),
+                vertex: wgpu::VertexState {
+                    module: &scene_shader,
+                    entry_point: Some(vertex_entry_point),
+                    buffers: &[vertex_layout, instance_buffer_layout()],
+                    compilation_options: Default::default(),
+                },
+                fragment: Some(wgpu::FragmentState {
+                    module: &scene_shader,
+                    entry_point: Some(fragment_entry_point),
+                    targets: &[Some(wgpu::ColorTargetState {
+                        format: OUTLINE_MASK_FORMAT,
+                        blend: None,
+                        write_mask: wgpu::ColorWrites::ALL,
+                    })],
+                    compilation_options: Default::default(),
+                }),
+                primitive: wgpu::PrimitiveState {
+                    cull_mode: Some(wgpu::Face::Back),
+                    ..Default::default()
+                },
+                depth_stencil: Some(wgpu::DepthStencilState {
+                    format: DEPTH_FORMAT,
+                    depth_write_enabled: true,
+                    depth_compare: DEPTH_COMPARE_FUNCTION,
+                    stencil: wgpu::StencilState::default(),
+                    bias: wgpu::DepthBiasState::default(),
+                }),
+                multisample: Default::default(),
+                multiview: None,
+                cache: None,
+            })
+        };
+        let outline_mask_render_pipeline = create_outline_mask_pipeline("vs_main_static", "fs_outline_mask", vertex_buffer_layout());
+        let skinned_outline_mask_render_pipeline = create_outline_mask_pipeline("vs_main_skinned", "fs_outline_mask", skinned_vertex_buffer_layout());
+        let [_, label_outline_mask_render_pipeline] = create_outline_mask_pipeline("vs_main_static", "fs_label_outline_mask", vertex_buffer_layout());
+        let [_, label_image_outline_mask_render_pipeline] =
+            create_outline_mask_pipeline("vs_main_static", "fs_label_image_outline_mask", vertex_buffer_layout());
+        let object_outline_pipelines = ObjectOutlinePipelines::new(
+            &device,
+            &ObjectOutlineTargetFormats {
+                color_format: format,
+                depth_format: DEPTH_FORMAT,
+                depth_compare: DEPTH_COMPARE_FUNCTION,
+                opaque_multisample_count: OPAQUE_MULTISAMPLE_COUNT,
+                oit_accum_format: OIT_ACCUM_FORMAT,
+                oit_weight_format: OIT_WEIGHT_FORMAT,
+                oit_blending: OIT_BLENDING,
+            },
+        );
         let selection_outline_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("Selection Outline Shader"),
             source: wgpu::ShaderSource::Wgsl(include_str!("selection_outline.wgsl").into()),
@@ -2660,6 +2764,12 @@ impl Renderer {
             label_selection_mask_render_pipeline,
             label_image_selection_mask_render_pipeline,
             selection_outline_pipeline,
+            outline_mask_render_pipeline,
+            skinned_outline_mask_render_pipeline,
+            label_outline_mask_render_pipeline,
+            label_image_outline_mask_render_pipeline,
+            object_outline_pipelines,
+            device_pixel_ratio: 1.0,
             glow_render_pipeline,
             skinned_glow_render_pipeline,
             label_glow_render_pipeline,
@@ -2740,6 +2850,10 @@ impl Renderer {
             &self.glow_scene_depth_bind_group_layout,
         );
         self.rebuild_lighting_bind_group(self.lighting_bind_group_skybox_data_id.flatten());
+    }
+
+    pub fn set_device_pixel_ratio(&mut self, device_pixel_ratio: f32) {
+        self.device_pixel_ratio = device_pixel_ratio;
     }
 
     // The lighting bind group holds the ambient occlusion texture, sized to the render targets, and the skybox texture
@@ -3374,6 +3488,19 @@ impl Renderer {
             label_geometry_buffer_of_cache_key: &'a HashMap<u64, GpuGeometryBuffer>,
             label_font_atlas_bind_group: Option<&'a wgpu::BindGroup>,
             label_image_draw_inputs: LabelImageDrawInputs<'a>,
+            // None when nothing this frame has an outline.
+            outline_draw_inputs: Option<OutlineDrawInputs<'a>>,
+        }
+
+        // What the outline passes need. See object_outline.rs.
+        struct OutlineDrawInputs<'a> {
+            pipelines: &'a ObjectOutlinePipelines,
+            textures: &'a ObjectOutlineTextures,
+            frame_outline_bind_groups: &'a FrameOutlineBindGroups,
+            mask_static_render_pipeline: &'a [wgpu::RenderPipeline; 2],
+            mask_skinned_render_pipeline: &'a [wgpu::RenderPipeline; 2],
+            label_mask_render_pipeline: &'a wgpu::RenderPipeline,
+            label_image_mask_render_pipeline: &'a wgpu::RenderPipeline,
         }
 
         // What a pass needs to draw LabelImages. Passes that never draw them, like glow, leave it out.
@@ -3440,6 +3567,7 @@ impl Renderer {
             label_pass_label: &'static str,
             opaque_pass_instance_buffers: &'a PassInstanceBuffers<'a>,
             transparent_pass_instance_buffers: &'a PassInstanceBuffers<'a>,
+            outlined_pass_instance_buffers: &'a PassInstanceBuffers<'a>,
         }
 
         // Each label brings its own tessellated text, so labels are drawn one at a time rather than instanced.
@@ -4281,6 +4409,70 @@ impl Renderer {
                 layer_pass_targets.ambient_occlusion_blur_vertical_bind_group,
             );
 
+            // Outlines: the layer's outlined objects go into the outline mask, then object_outline.rs finds every pixel's
+            // nearest edge and writes the solid part of the outlines into the layer's depth. This runs after ambient
+            // occlusion, so outlines do not darken what is around them.
+            let outline_draw_inputs = layer_shared_draw_inputs
+                .outline_draw_inputs
+                .as_ref()
+                .filter(|_| !pass_instance_buffers_are_empty(layer_pass_plan.outlined_pass_instance_buffers));
+            if let Some(outline_draw_inputs) = outline_draw_inputs {
+                let mut pass = begin_single_color_pass(
+                    encoder,
+                    "Outline Mask Pass",
+                    &outline_draw_inputs.textures.mask_texture_view,
+                    None,
+                    wgpu::LoadOp::Clear(wgpu::Color::TRANSPARENT),
+                    Some(&outline_draw_inputs.textures.mask_depth_texture_view),
+                    Some(wgpu::LoadOp::Clear(DEPTH_CLEAR_VALUE)),
+                );
+                set_pass_viewport(&mut pass, clamped_viewport);
+                draw_pass_instances(
+                    &mut pass,
+                    layer_shared_draw_inputs.camera_bind_group,
+                    layer_shared_draw_inputs.lighting_bind_group,
+                    outline_draw_inputs.mask_static_render_pipeline,
+                    None,
+                    outline_draw_inputs.mask_skinned_render_pipeline,
+                    None,
+                    layer_shared_draw_inputs.brick_buffer,
+                    layer_shared_draw_inputs.ball_buffer,
+                    layer_shared_draw_inputs.cylinder_buffer,
+                    layer_shared_draw_inputs.mesh_geometry_buffers,
+                    layer_shared_draw_inputs.skinned_mesh_joint_matrix_buffers,
+                    layer_shared_draw_inputs.fallback_joint_matrix_buffer,
+                    layer_shared_draw_inputs.material_bind_group_of_key,
+                    layer_shared_draw_inputs.default_material_texture_key,
+                    layer_pass_plan.outlined_pass_instance_buffers,
+                );
+                draw_pass_labels(
+                    &mut pass,
+                    layer_shared_draw_inputs.camera_bind_group,
+                    layer_shared_draw_inputs.lighting_bind_group,
+                    layer_shared_draw_inputs.fallback_joint_matrix_buffer,
+                    outline_draw_inputs.label_mask_render_pipeline,
+                    None,
+                    layer_shared_draw_inputs.label_geometry_buffer_of_cache_key,
+                    layer_shared_draw_inputs.label_font_atlas_bind_group,
+                    Some(&LabelImageDrawInputs {
+                        render_pipeline: outline_draw_inputs.label_image_mask_render_pipeline,
+                        depth_render_pipeline: None,
+                        quad_buffer: layer_shared_draw_inputs.label_image_draw_inputs.quad_buffer,
+                        bind_group_of_data_id: layer_shared_draw_inputs.label_image_draw_inputs.bind_group_of_data_id,
+                    }),
+                    layer_pass_plan.outlined_pass_instance_buffers,
+                );
+                drop(pass);
+                draw_nearest_edges(
+                    encoder,
+                    outline_draw_inputs.pipelines,
+                    outline_draw_inputs.textures,
+                    outline_draw_inputs.frame_outline_bind_groups,
+                    clamped_viewport,
+                    layer_pass_targets.depth_view,
+                );
+            }
+
             // The world and then the sky draw in one multisampled pass, which resolves as it ends. Nothing reads the
             // multisampled color or depth after that, so neither is ever written out.
             let mut opaque_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
@@ -4306,6 +4498,9 @@ impl Renderer {
                 occlusion_query_set: None,
             });
             set_pass_viewport(&mut opaque_pass, clamped_viewport);
+            if let Some(outline_draw_inputs) = outline_draw_inputs {
+                draw_opaque_outline(&mut opaque_pass, outline_draw_inputs.pipelines, outline_draw_inputs.frame_outline_bind_groups);
+            }
             draw_pass_instances(
                 &mut opaque_pass,
                 layer_shared_draw_inputs.camera_bind_group,
@@ -4384,6 +4579,17 @@ impl Renderer {
                 layer_shared_draw_inputs.default_material_texture_key,
                 layer_pass_plan.transparent_pass_instance_buffers,
             );
+            if let Some(outline_draw_inputs) = outline_draw_inputs {
+                draw_transparent_outline_pass(
+                    encoder,
+                    outline_draw_inputs.pipelines,
+                    outline_draw_inputs.frame_outline_bind_groups,
+                    clamped_viewport,
+                    layer_pass_targets.oit_accum_view,
+                    layer_pass_targets.oit_weight_view,
+                    layer_pass_targets.depth_view,
+                );
+            }
         }
 
         // ------------------------ No more helpers, actual render_scene code ------------------------
@@ -4427,9 +4633,11 @@ impl Renderer {
         // How many pixels tall one unit looks from one unit away, which every ball and static mesh uses to pick its detail level.
         let pixels_per_unit_at_unit_distance =
             0.5 * viewport.map_or(self.render_targets.height, |viewport| viewport.height) as f32 * camera_view_proj.row(1).truncate().length();
+        let mut frame_outline_settings = FrameOutlineSettings::new(self.device_pixel_ratio);
         for (instance_index, draw) in scene.instances.iter().enumerate() {
             let instance = &draw.content;
-            if instance.color[3] == 0.0 {
+            let is_fully_see_through = instance.color[3] == 0.0;
+            if is_fully_see_through && draw.outline.is_none() {
                 continue;
             }
             let material_texture_data_ids = draw.material;
@@ -4437,23 +4645,29 @@ impl Renderer {
             material_texture_keys_used_by_frame.insert(material_texture_data_ids);
             let is_always_on_top = draw.is_always_on_top;
             // None stands for a skinned mesh, which is never culled, since its skeleton can pose its vertices anywhere.
-            let placement_for_geometry = |geometry_bounding_radius: Option<f32>| {
+            let mut placement_for_geometry = |geometry_bounding_radius: Option<f32>| {
                 let model = instance_model_for_view(instance, camera_view_proj);
                 let bounding_sphere = BoundingSphere {
                     center: model.w_axis.truncate(),
                     radius: geometry_bounding_radius.map_or(f32::INFINITY, |radius| radius * largest_stretch(model)),
                 };
                 let is_in_view = view_edges.contains(bounding_sphere);
-                let shadow_caster_bucket = match is_always_on_top {
+                let shadow_caster_bucket = match is_always_on_top || is_fully_see_through {
                     true => None,
                     false => shadow_cascade_squares.shadow_caster_bucket(bounding_sphere),
                 };
+                let is_transparent = should_render_in_transparent_pass(instance.color[3], material_texture_data_ids);
                 (is_in_view || shadow_caster_bucket.is_some()).then(|| InstancePlacement {
                     is_in_view,
                     is_selected: is_in_view && scene.selected_object_ids.contains(&draw.object_id),
+                    outline_number_plus_one: match (is_in_view, &draw.outline) {
+                        (true, Some(outline)) => Some(frame_outline_settings.add(outline, is_transparent)),
+                        _ => None,
+                    },
+                    is_fully_see_through,
                     glows: instance.glow > 0.0 && !is_always_on_top,
                     is_always_on_top,
-                    is_transparent: should_render_in_transparent_pass(instance.color[3], material_texture_data_ids),
+                    is_transparent,
                     has_opaque_blend_pixels: instance.color[3] == 1.0 && material_texture_data_ids.alpha_mode == MATERIAL_ALPHA_MODE_BLEND,
                     shadow_caster_bucket,
                 })
@@ -4531,6 +4745,8 @@ impl Renderer {
         let mut glowing_label_draws: Vec<LabelDraw> = Vec::new();
         let mut label_draws: Vec<LabelDraw> = Vec::new();
         let mut label_draws_always_on_top: Vec<LabelDraw> = Vec::new();
+        let mut outlined_label_draws: Vec<LabelDraw> = Vec::new();
+        let mut outlined_label_draws_always_on_top: Vec<LabelDraw> = Vec::new();
         let no_label_draws: Vec<LabelDraw> = Vec::new();
         let mut label_image_texture_data_ids_used_by_frame: HashSet<DataId> = HashSet::new();
         for label in &scene.labels {
@@ -4583,6 +4799,26 @@ impl Renderer {
                 distance_to_camera_squared: camera_position.distance_squared(bounding_sphere.center),
             };
             label_instance_contents.extend_from_slice(instances);
+            // The outline mask draws its own copy of the label, carrying the outline number plus one in glow.
+            if let Some(outline) = &label.outline {
+                let is_label_transparent = instances[instances.len() - 1].color[3] < 1.0;
+                let outline_number_plus_one = frame_outline_settings.add(outline, is_label_transparent);
+                let outlined_label_draw = LabelDraw {
+                    first_instance: label_instance_contents.len() as u32,
+                    ..label_draw.clone()
+                };
+                label_instance_contents.extend(instances.iter().map(|instance| InstanceContent {
+                    glow: outline_number_plus_one,
+                    ..*instance
+                }));
+                match label.is_always_on_top {
+                    true => outlined_label_draws_always_on_top.push(outlined_label_draw),
+                    false => outlined_label_draws.push(outlined_label_draw),
+                }
+            }
+            if instances.iter().all(|instance| instance.color[3] == 0.0) {
+                continue;
+            }
             if scene.selected_object_ids.contains(&label.object_id) {
                 selected_label_draws.push(label_draw.clone());
             }
@@ -4670,6 +4906,24 @@ impl Renderer {
             skinned_mesh_instance_range_of_key: &skinned_mesh_instance_ranges.selected,
             label_draws: &selected_label_draws,
         };
+        let outlined_pass_instance_buffers = PassInstanceBuffers {
+            instance_buffer: &instance_buffer,
+            brick_instance_range_of_key: &brick_instance_ranges.outlined,
+            ball_instance_range_of_key: &ball_instance_ranges.outlined,
+            cylinder_instance_range_of_key: &cylinder_instance_ranges.outlined,
+            mesh_instance_range_of_key: &mesh_instance_ranges.outlined,
+            skinned_mesh_instance_range_of_key: &skinned_mesh_instance_ranges.outlined,
+            label_draws: &outlined_label_draws,
+        };
+        let outlined_pass_instance_buffers_always_on_top = PassInstanceBuffers {
+            instance_buffer: &instance_buffer,
+            brick_instance_range_of_key: &brick_instance_ranges.outlined_always_on_top,
+            ball_instance_range_of_key: &ball_instance_ranges.outlined_always_on_top,
+            cylinder_instance_range_of_key: &cylinder_instance_ranges.outlined_always_on_top,
+            mesh_instance_range_of_key: &mesh_instance_ranges.outlined_always_on_top,
+            skinned_mesh_instance_range_of_key: &skinned_mesh_instance_ranges.outlined_always_on_top,
+            label_draws: &outlined_label_draws_always_on_top,
+        };
         let glowing_pass_instance_buffers = PassInstanceBuffers {
             instance_buffer: &instance_buffer,
             brick_instance_range_of_key: &brick_instance_ranges.glowing,
@@ -4742,6 +4996,16 @@ impl Renderer {
             }
         }
 
+        let frame_outline_bind_groups = (!frame_outline_settings.is_empty()).then(|| {
+            create_frame_outline_bind_groups(
+                &self.device,
+                &self.queue,
+                &self.object_outline_pipelines,
+                &self.render_targets.object_outline_textures,
+                &frame_outline_settings,
+            )
+        });
+
         // --------------------------------- Start drawing ---------------------------------
         let render_targets = &self.render_targets;
         let clamped_viewport = viewport.map(|viewport| {
@@ -4781,6 +5045,15 @@ impl Renderer {
                 quad_buffer: &self.label_image_buffer,
                 bind_group_of_data_id: &self.label_image_bind_group_of_data_id,
             },
+            outline_draw_inputs: frame_outline_bind_groups.as_ref().map(|frame_outline_bind_groups| OutlineDrawInputs {
+                pipelines: &self.object_outline_pipelines,
+                textures: &render_targets.object_outline_textures,
+                frame_outline_bind_groups,
+                mask_static_render_pipeline: &self.outline_mask_render_pipeline,
+                mask_skinned_render_pipeline: &self.skinned_outline_mask_render_pipeline,
+                label_mask_render_pipeline: &self.label_outline_mask_render_pipeline,
+                label_image_mask_render_pipeline: &self.label_image_outline_mask_render_pipeline,
+            }),
         };
         let layer_pass_pipelines = LayerPassPipelines {
             opaque_static_render_pipeline: &self.render_pipeline_opaque,
@@ -4877,6 +5150,7 @@ impl Renderer {
             label_pass_label: "Label Pass",
             opaque_pass_instance_buffers: &opaque_pass_instance_buffers,
             transparent_pass_instance_buffers: &transparent_pass_instance_buffers,
+            outlined_pass_instance_buffers: &outlined_pass_instance_buffers,
         };
         let layer_pass_plan_front = LayerPassPlan {
             opaque_color_load: wgpu::LoadOp::Clear(wgpu::Color {
@@ -4896,6 +5170,7 @@ impl Renderer {
             label_pass_label: "Always-On-Top Label Pass",
             opaque_pass_instance_buffers: &opaque_pass_instance_buffers_always_on_top,
             transparent_pass_instance_buffers: &transparent_pass_instance_buffers_always_on_top,
+            outlined_pass_instance_buffers: &outlined_pass_instance_buffers_always_on_top,
         };
 
         // This updates each sun shadow cascade before shaded passes sample them.
@@ -5040,7 +5315,8 @@ impl Renderer {
         // The layer is usually empty, and every pass clears its targets on begin, so skipping it entirely saves
         // four full-resolution passes (MSAA clear+resolve, depth replay, OIT, fullscreen composite) with no visual change.
         let is_front_layer_empty = pass_instance_buffers_are_empty(&opaque_pass_instance_buffers_always_on_top)
-            && pass_instance_buffers_are_empty(&transparent_pass_instance_buffers_always_on_top);
+            && pass_instance_buffers_are_empty(&transparent_pass_instance_buffers_always_on_top)
+            && pass_instance_buffers_are_empty(&outlined_pass_instance_buffers_always_on_top);
         if !is_front_layer_empty {
             draw_layer_with_oit(
                 &mut render_frame.encoder,

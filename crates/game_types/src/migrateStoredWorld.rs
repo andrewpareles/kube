@@ -39,6 +39,7 @@ pub fn updateToVersion(storedWorldJson: &mut Value, targetVersion: u64, storedWo
             90 => stepToVersion90(storedWorldJson)?,
             91 => stepToVersion91(storedWorldJson)?,
             92 => stepToVersion92(storedWorldJson)?,
+            93 => stepToVersion93(storedWorldJson)?,
             _ => {}
         }
     }
@@ -666,7 +667,9 @@ fn stepToVersion86(storedWorldJson: &mut Value) -> anyhow::Result<()> {
                 continue;
             };
             if let Some(isAnchored) = physicsToggles3D.remove("isAnchored") {
-                let isAnchored = isAnchored.as_bool().ok_or_else(|| anyhow::anyhow!("stepToVersion86: isAnchored is not a bool"))?;
+                let isAnchored = isAnchored
+                    .as_bool()
+                    .ok_or_else(|| anyhow::anyhow!("stepToVersion86: isAnchored is not a bool"))?;
                 physicsToggles3D.insert("isPushable".to_string(), Value::from(!isAnchored));
             }
         }
@@ -798,7 +801,10 @@ fn scriptWithPushableInsteadOfAnchored(code: &str) -> String {
     while index < bytes.len() {
         if let Some(end) = skipStringOrComment(bytes, index) {
             // `'isAnchored' in object` asks whether the object has the field.
-            let isFieldNameBeforeIn = code[end..].trim_start().strip_prefix("in").is_some_and(|rest| !rest.bytes().next().is_some_and(isIdentifierByte));
+            let isFieldNameBeforeIn = code[end..]
+                .trim_start()
+                .strip_prefix("in")
+                .is_some_and(|rest| !rest.bytes().next().is_some_and(isIdentifierByte));
             if end - index == "'isAnchored'".len() && &code[index + 1..end - 1] == "isAnchored" && isFieldNameBeforeIn {
                 output.push_str(&code[copiedUntil..index + 1]);
                 output.push_str("isPushable");
@@ -818,7 +824,8 @@ fn scriptWithPushableInsteadOfAnchored(code: &str) -> String {
             let isDefinition = code[..index].trim_end().ends_with("function") || afterArguments.starts_with('{') || afterArguments.starts_with("=>");
             if bytes.get(openParen) == Some(&b'(') && !isDefinition {
                 let firstArgumentEnd = expressionEnd(bytes, openParen + 1, b",");
-                if bytes.get(firstArgumentEnd) == Some(&b',') && !code[firstArgumentEnd + 1..expressionEnd(bytes, firstArgumentEnd + 1, b",")].trim().is_empty() {
+                if bytes.get(firstArgumentEnd) == Some(&b',') && !code[firstArgumentEnd + 1..expressionEnd(bytes, firstArgumentEnd + 1, b",")].trim().is_empty()
+                {
                     let secondArgumentEnd = expressionEnd(bytes, firstArgumentEnd + 1, b",");
                     output.push_str(&code[copiedUntil..index]);
                     output.push_str("setObjectPushable");
@@ -1265,5 +1272,24 @@ fn stepToVersion91(storedWorldJson: &mut Value) -> anyhow::Result<()> {
 // The script API package is kube-ts-api now. Its old name, voidscript-js, can be in a script's imports or its JSX pragma.
 fn stepToVersion92(storedWorldJson: &mut Value) -> anyhow::Result<()> {
     renameInEveryScript(storedWorldJson, "voidscript-js", "kube-ts-api");
+    Ok(())
+}
+
+// Objects saved before outlines existed have no outline.
+fn stepToVersion93(storedWorldJson: &mut Value) -> anyhow::Result<()> {
+    let Some(objectOfId) = storedWorldJson.get_mut("objectOfId").and_then(|objects| objects.as_object_mut()) else {
+        return Ok(());
+    };
+    for (_, object) in objectOfId.iter_mut() {
+        let Some(info) = object.get_mut("info").and_then(|info| info.as_object_mut()) else {
+            continue;
+        };
+        for (_, objectInfo) in info.iter_mut() {
+            let Some(visualSettings) = objectInfo.get_mut("visualSettings").and_then(|visualSettings| visualSettings.as_object_mut()) else {
+                continue;
+            };
+            visualSettings.entry("outline").or_insert(Value::Null);
+        }
+    }
     Ok(())
 }

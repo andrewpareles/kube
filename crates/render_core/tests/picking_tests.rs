@@ -25,6 +25,7 @@ fn instance(object_id: usize, geometry: RenderGeometry, model: Mat4) -> RenderIn
         },
         material: MaterialTextureDataIds::default(),
         is_always_on_top: false,
+        outline: None,
     }
 }
 fn scene(instances: Vec<RenderInstance>) -> RenderScene {
@@ -211,6 +212,7 @@ fn labels_follow_billboard_and_constant_size_transforms() {
             draws_background: false,
         },
         is_always_on_top: false,
+        outline: None,
     });
     let point = view().project_point3(position);
     assert_eq!(pick_scene_object(&scene, &HashMap::new(), view(), point.x, point.y), Some(10));

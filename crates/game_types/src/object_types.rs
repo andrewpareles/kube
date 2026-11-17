@@ -1,5 +1,11 @@
 pub use crate::data_types::{MeshData, MeshVertexInternal, SkinningInfoPerVertex};
 
+use crate::object_types::{
+    ball::BallInfoTrackedFields, brick::BrickInfoTrackedFields, cylinder::CylinderInfoTrackedFields, label::LabelInfoTrackedFields,
+    label_image::LabelImageInfoTrackedFields, mesh::MeshInfoTrackedFields, pivot::PivotInfoTrackedFields, player::PlayerInfoTrackedFields,
+    property_animator::PropertyAnimatorInfoTrackedFields, rigidGroup::RigidGroupInfoTrackedFields, sk_animator::SkAnimatorInfo,
+    sk_attachment::SkAttachmentInfoTrackedFields, sound_player::SoundPlayerInfoTrackedFields, tween::TweenInfoTrackedFields,
+};
 pub use crate::object_types::{
     ball::{BallInfo, BallMaterialSettings},
     brick::{BrickInfo, BrickMaterialSettings},
@@ -17,7 +23,9 @@ pub use crate::object_types::{
     property_keyframe::PropertyKeyframeInfo,
     rigidGroup::RigidGroupInfo,
     script::{ObjectLocation, ScriptInfo},
-    shared::{CameraLocation, Location3D, Movement3D, ObjectId, ObjectIdPointer, Orientation3D, PhysicsInfo3D, PhysicsToggles3D, VisualSettings},
+    shared::{
+        CameraLocation, Location3D, Movement3D, ObjectId, ObjectIdPointer, Orientation3D, OutlineSettings, PhysicsInfo3D, PhysicsToggles3D, VisualSettings,
+    },
     sk_animation::SkAnimationInfo,
     sk_attachment::SkAttachmentInfo,
     sk_joint::SkJointInfo,
@@ -31,12 +39,6 @@ pub use crate::object_types::{
 use crate::{
     object_types::sk_animator::SkAnimatorInfoTrackedFields,
     physics_primitive_types::{BallPrimitiveSettings, BrickPrimitiveSettings, CylinderPrimitiveSettings},
-};
-use crate::object_types::{
-    ball::BallInfoTrackedFields, brick::BrickInfoTrackedFields, cylinder::CylinderInfoTrackedFields, label::LabelInfoTrackedFields,
-    label_image::LabelImageInfoTrackedFields, mesh::MeshInfoTrackedFields, pivot::PivotInfoTrackedFields, player::PlayerInfoTrackedFields,
-    property_animator::PropertyAnimatorInfoTrackedFields, rigidGroup::RigidGroupInfoTrackedFields, sk_animator::SkAnimatorInfo,
-    sk_attachment::SkAttachmentInfoTrackedFields, sound_player::SoundPlayerInfoTrackedFields, tween::TweenInfoTrackedFields,
 };
 use serde::{Deserialize, Serialize};
 pub mod ball;
