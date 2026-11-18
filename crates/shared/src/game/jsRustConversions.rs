@@ -16,13 +16,18 @@ use game_types::{
     },
     physics_primitive_types::{BallPrimitiveSettings, BrickPrimitiveSettings, CylinderPrimitiveSettings, PrimitiveSettings},
 };
+#[cfg(not(target_arch = "wasm32"))]
 use crate::conversions::float_conversions::ToF64;
 use crate::game::physics::{SetOrForce, SetPhysicsInfo3D, SetPhysicsToggles3D};
 use crate::game::world::World;
 use crate::protocol::messages::{ObjectModifyFlags, someIffTrue};
+// Every js<NAME> below builds a v8 value, and v8 only exists where the desktop client runs the JS engine. wasm32 leaves
+// those out and keeps the rust<NAME> and json<NAME> side, which is what the browser's own engine will feed later.
+#[cfg(not(target_arch = "wasm32"))]
 use deno_core::v8;
 use glam::{Quat, Vec3};
 use serde_json::{Map, Number, Value}; // inner working types, different from v8::Value
+#[cfg(not(target_arch = "wasm32"))]
 use v8::{Local, PinScope};
 
 // ---------------- Note ----------------
@@ -95,6 +100,7 @@ fn jsonAlongPath(path: &[String], value: &Value) -> Value {
 
 // These helpers build fresh return values while the caller may still borrow the world.
 // Define own properties instead of assigning through prototypes, which could run user setters.
+#[cfg(not(target_arch = "wasm32"))]
 fn jsSetField<'s, 'i, F, V>(obj: Local<v8::Object>, key: &str, f: F, scope: &mut PinScope<'s, 'i>) -> anyhow::Result<()>
 where
     F: FnOnce(&mut PinScope<'s, 'i>) -> anyhow::Result<V>,
@@ -118,6 +124,7 @@ fn readJSON<'a>(object: &'a Map<String, Value>, key: &str, ctx: &'static str) ->
     object.get(key).ok_or_else(|| anyhow::anyhow!("{ctx}: missing field {key}"))
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsDataId<'s>(id: DataId, scope: &mut PinScope<'s, '_>) -> Local<'s, v8::Number> {
     jsNumber(id, scope)
 }
@@ -126,10 +133,12 @@ pub fn jsObjectId(id: ObjectId) -> i64 {
     id as i64
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsOptionalObjectId<'s>(id: Option<ObjectId>, scope: &mut PinScope<'s, '_>) -> Local<'s, v8::Value> {
     jsNumberOrNull(id, scope)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsOptionalDataId<'s>(id: Option<DataId>, scope: &mut PinScope<'s, '_>) -> Local<'s, v8::Value> {
     jsNumberOrNull(id, scope)
 }
@@ -228,6 +237,7 @@ fn rustOptioni64(jsvalue: &Value) -> anyhow::Result<Option<i64>> {
 
 // ---------------- V8 Helpers ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsString<'s>(s: &str, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::String>> {
     v8::String::new(scope, s).ok_or_else(|| anyhow::anyhow!("Failed to create String. The program may be out of memory."))
 }
@@ -239,26 +249,32 @@ pub fn jsonNumber(value: f32) -> anyhow::Result<Value> {
     Ok(Value::Number(number))
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsNumber<'s, N: ToF64>(n: N, scope: &mut PinScope<'s, '_>) -> Local<'s, v8::Number> {
     v8::Number::new(scope, n.to_f64())
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsDegrees<'s>(radians: f32, scope: &mut PinScope<'s, '_>) -> Local<'s, v8::Number> {
     jsNumber(radians.to_degrees(), scope)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsBoolean<'s>(b: bool, scope: &mut PinScope<'s, '_>) -> Local<'s, v8::Boolean> {
     v8::Boolean::new(scope, b)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsEmptyObject<'s>(scope: &mut PinScope<'s, '_>) -> Local<'s, v8::Object> {
     v8::Object::new(scope)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsNull<'s>(scope: &mut PinScope<'s, '_>) -> Local<'s, v8::Primitive> {
     v8::null(scope)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsNumberOrNull<'s, N: ToF64>(n: Option<N>, scope: &mut PinScope<'s, '_>) -> Local<'s, v8::Value> {
     match n {
         Some(value) => jsNumber(value, scope).into(),
@@ -266,6 +282,7 @@ fn jsNumberOrNull<'s, N: ToF64>(n: Option<N>, scope: &mut PinScope<'s, '_>) -> L
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsStringArray<'s>(items: &[String], scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Array>> {
     let elements = items
         .iter()
@@ -281,6 +298,7 @@ fn rustStringArray(jsvalue: &Value, ctx: &'static str) -> anyhow::Result<Vec<Str
 
 // ---------------- Vec3 ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 pub fn jsVec3<'s>(v: Vec3, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let obj = jsEmptyObject(scope);
     jsSetField(obj, "x", |s| Ok(jsNumber(v.x, s)), scope)?;
@@ -322,6 +340,7 @@ fn rustUpdateVec3<'v, 'p>(vec: &mut Vec3, valueWithPath: ValueWithPath<'v, 'p>) 
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsVec3DegreesFromRadians<'s>(v: Vec3, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let obj = jsEmptyObject(scope);
     jsSetField(obj, "x", |s| Ok(jsDegrees(v.x, s)), scope)?;
@@ -367,6 +386,7 @@ fn rustUpdateVec3RadiansFromDegrees<'v, 'p>(vec: &mut Vec3, valueWithPath: Value
 
 // ---------------- Color3 ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsColor3<'s>(color3: &Color3, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let obj = jsEmptyObject(scope);
     jsSetField(obj, "r", |s| Ok(jsNumber(color3.r, s)), scope)?;
@@ -410,6 +430,7 @@ fn rustUpdateColor3<'v, 'p>(color3: &mut Color3, valueWithPath: ValueWithPath<'v
 
 // ---------------- ObjectLocation ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsObjectLocation<'s>(object_location: ObjectLocation, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Value>> {
     match object_location {
         ObjectLocation::Server => Ok(jsString("Server", scope)?.into()),
@@ -428,6 +449,7 @@ fn rustObjectLocation(jsvalue: &Value, ctx: &'static str) -> anyhow::Result<Obje
 
 // ---------------- ClockState ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsClockState<'s>(clock_state: ClockState, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let obj = jsEmptyObject(scope);
     match clock_state {
@@ -534,6 +556,7 @@ fn rustUpdateClockState<'v, 'p>(clock_state: &mut ClockState, valueWithPath: Val
 
 // ---------------- WeightTransition ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsInterpolationStyle<'s>(interpolationStyle: InterpolationStyle, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Value>> {
     Ok(jsString(interpolationStyle.asStr(), scope)?.into())
 }
@@ -543,6 +566,7 @@ fn rustInterpolationStyle(jsvalue: &Value, ctx: &'static str) -> anyhow::Result<
     InterpolationStyle::fromString(&interpolationStyle).ok_or_else(|| anyhow::anyhow!("{ctx}: Step|Linear|EaseInOut|EaseIn|EaseOut"))
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsWeightTransition<'s>(weight_transition: &WeightTransition, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let obj = jsEmptyObject(scope);
     jsSetField(obj, "startedAtMs", |s| Ok(jsNumber(weight_transition.startedAtMs, s)), scope)?;
@@ -554,6 +578,7 @@ fn jsWeightTransition<'s>(weight_transition: &WeightTransition, scope: &mut PinS
     Ok(obj)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsOptionalWeightTransition<'s>(weight_transition: &Option<WeightTransition>, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Value>> {
     match weight_transition {
         Some(weight_transition) => Ok(jsWeightTransition(weight_transition, scope)?.into()),
@@ -594,6 +619,7 @@ fn rustUpdateOptionalWeightTransition<'v, 'p>(
 
 // ---------------- AlphaMode ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsAlphaMode<'s>(alpha_mode: AlphaMode, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Value>> {
     match alpha_mode {
         AlphaMode::Opaque => Ok(jsString("Opaque", scope)?.into()),
@@ -660,6 +686,7 @@ fn rustUpdateAlphaMode<'v, 'p>(alpha_mode: &mut AlphaMode, valueWithPath: ValueW
 
 // ---------------- BallMaterialSettings ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsBallMaterialSettings<'s>(ballMaterialSettings: &BallMaterialSettings, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let object = jsEmptyObject(scope);
     jsSetField(
@@ -675,6 +702,7 @@ fn jsBallMaterialSettings<'s>(ballMaterialSettings: &BallMaterialSettings, scope
     Ok(object)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsOptionalBallMaterialSettings<'s>(
     ballMaterialSettings: &Option<BallMaterialSettings>,
     scope: &mut PinScope<'s, '_>,
@@ -755,6 +783,7 @@ fn rustUpdateOptionalBallMaterialSettings<'v, 'p>(
 
 // ---------------- CylinderMaterialSettings ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsCylinderMaterialSettings<'s>(cylinderMaterialSettings: &CylinderMaterialSettings, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let object = jsEmptyObject(scope);
     jsSetField(
@@ -770,6 +799,7 @@ fn jsCylinderMaterialSettings<'s>(cylinderMaterialSettings: &CylinderMaterialSet
     Ok(object)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsOptionalCylinderMaterialSettings<'s>(
     cylinderMaterialSettings: &Option<CylinderMaterialSettings>,
     scope: &mut PinScope<'s, '_>,
@@ -853,6 +883,7 @@ fn rustUpdateOptionalCylinderMaterialSettings<'v, 'p>(
 
 // ---------------- BrickMaterialSettings ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsBrickMaterialSettings<'s>(brickMaterialSettings: &BrickMaterialSettings, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let object = jsEmptyObject(scope);
     jsSetField(
@@ -868,6 +899,7 @@ fn jsBrickMaterialSettings<'s>(brickMaterialSettings: &BrickMaterialSettings, sc
     Ok(object)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsOptionalBrickMaterialSettings<'s>(
     brickMaterialSettings: &Option<BrickMaterialSettings>,
     scope: &mut PinScope<'s, '_>,
@@ -948,6 +980,7 @@ fn rustUpdateOptionalBrickMaterialSettings<'v, 'p>(
 
 // ---------------- MeshMaterialSettings ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsMeshMaterialSettings<'s>(meshMaterialSettings: &MeshMaterialSettings, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let object = jsEmptyObject(scope);
     jsSetField(
@@ -959,6 +992,7 @@ fn jsMeshMaterialSettings<'s>(meshMaterialSettings: &MeshMaterialSettings, scope
     Ok(object)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsOptionalMeshMaterialSettings<'s>(
     meshMaterialSettings: &Option<MeshMaterialSettings>,
     scope: &mut PinScope<'s, '_>,
@@ -1027,6 +1061,7 @@ fn rustUpdateOptionalMeshMaterialSettings<'v, 'p>(
 
 // ---------------- MaterialInfo ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsSpreadMaterialInfo<'s>(obj: Local<v8::Object>, material: &MaterialInfo, scope: &mut PinScope<'s, '_>) -> anyhow::Result<()> {
     jsSetField(obj, "albedoTextureDataId", |s| Ok(jsOptionalDataId(material.albedoTextureDataId, s)), scope)?;
     jsSetField(obj, "metallicTextureDataId", |s| Ok(jsOptionalDataId(material.metallicTextureDataId, s)), scope)?;
@@ -1085,6 +1120,7 @@ fn rustUpdateMaterialInfoField<'v, 'p>(material_info: &mut MaterialInfo, field: 
 
 // ---------------- WorldLightingInfo ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsSpreadWorldLightingInfo<'s>(obj: Local<v8::Object>, world_lighting: &WorldLightingInfo, scope: &mut PinScope<'s, '_>) -> anyhow::Result<()> {
     jsSetField(obj, "sunOrientation", |s| Ok(jsOrientation3D(world_lighting.sunOrientation, s)?), scope)?;
     jsSetField(obj, "sunColor", |s| Ok(jsColor3(&world_lighting.sunColor, s)?), scope)?;
@@ -1200,6 +1236,7 @@ fn rustUpdateWorldLightingInfoField<'v, 'p>(
 
 // ---------------- Rotation ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsRotation<'s>(q: Quat, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     jsVec3(quat_to_euler_degrees(q), scope)
 }
@@ -1218,10 +1255,12 @@ fn rustUpdateRotation<'v, 'p>(quat: &mut Quat, rotation_degrees: &mut Vec3, valu
 
 // ---------------- Location3D ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsLocation3D<'s>(location3D: &Location3D, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     jsLocation3DWithRotationDegrees(location3D.position, quat_to_euler_degrees(location3D.quaternion), scope)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsLocation3DWithRotationDegrees<'s>(position: Vec3, rotation_degrees: Vec3, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let obj = jsEmptyObject(scope);
     jsSetField(obj, "position", |s| Ok(jsVec3(position, s)?), scope)?;
@@ -1289,6 +1328,7 @@ fn rustUpdateLocation3DWithRotationDegrees<'v, 'p>(
 
 // ---------------- SkAnimation ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsSpreadSkAnimationInfo<'s>(obj: Local<v8::Object>, sk_animation: &SkAnimationInfo, scope: &mut PinScope<'s, '_>) -> anyhow::Result<()> {
     jsSetField(obj, "duration", |s| Ok(jsNumber(sk_animation.duration, s)), scope)?;
     jsSetField(obj, "interpolationStyle", |s| jsInterpolationStyle(sk_animation.interpolationStyle, s), scope)?;
@@ -1318,6 +1358,7 @@ fn rustPropertyAnimationInfo(jsvalue: &Value) -> anyhow::Result<PropertyAnimatio
 
 // ---------------- Movement3D ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsMovement3D<'s>(movement3D: &Movement3D, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let obj = jsEmptyObject(scope);
     jsSetField(obj, "velocity", |s| Ok(jsVec3(movement3D.velocity, s)?), scope)?;
@@ -1364,6 +1405,7 @@ fn rustUpdateMovement3D<'v, 'p>(movement: &mut Movement3D, valueWithPath: ValueW
 
 // ---------------- Orientation3D ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsOrientation3D<'s>(orientation3D: Orientation3D, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let obj = jsEmptyObject(scope);
     // JS uses positive-up phi, while Rust's internal Orientation3D math uses positive-down phi.
@@ -1421,6 +1463,7 @@ impl PhysicsToggles3DFlags {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsSpreadPhysicsToggles3D<'s>(obj: Local<v8::Object>, world: &World, objectId: ObjectId, scope: &mut PinScope<'s, '_>) -> anyhow::Result<()> {
     match world.getObjectPhysicsToggles3D(objectId) {
         Some(physicsToggles3D) => {
@@ -1485,6 +1528,7 @@ fn rustUpdatePhysicsToggles3D<'v, 'p>(world: &mut World, objectId: ObjectId, val
 
 // ---------------- VisualToggles3D ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsSpreadVisualSettings<'s>(obj: Local<v8::Object>, visualSettings: &VisualSettings, scope: &mut PinScope<'s, '_>) -> anyhow::Result<()> {
     jsSetField(obj, "opacity", |s| Ok(jsNumber(visualSettings.opacity, s)), scope)?;
     jsSetField(obj, "color", |s| Ok(jsColor3(&visualSettings.color, s)?), scope)?;
@@ -1493,6 +1537,7 @@ fn jsSpreadVisualSettings<'s>(obj: Local<v8::Object>, visualSettings: &VisualSet
     Ok(())
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsOptionalColor3<'s>(color3: &Option<Color3>, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Value>> {
     match color3 {
         Some(color3) => Ok(jsColor3(color3, scope)?.into()),
@@ -1525,6 +1570,7 @@ fn rustOptionf32(jsvalue: &Value) -> anyhow::Result<Option<f32>> {
     Ok(Some(rustf32(jsvalue)?))
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn billboardModeName(billboardMode: BillboardMode) -> &'static str {
     match billboardMode {
         BillboardMode::None => "none",
@@ -1540,6 +1586,7 @@ fn rustBillboardMode(jsvalue: &Value) -> anyhow::Result<BillboardMode> {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn labelHorizontalAlignName(horizontalAlign: LabelHorizontalAlign) -> &'static str {
     match horizontalAlign {
         LabelHorizontalAlign::Left => "left",
@@ -1596,6 +1643,7 @@ impl PhysicsInfo3DFlags {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsSpreadPhysicsInfo3D<'s>(obj: Local<v8::Object>, world: &World, objectId: ObjectId, scope: &mut PinScope<'s, '_>) -> anyhow::Result<()> {
     match (world.getObjectPhysicsInfo3D(objectId), world.getRotationDegrees(objectId)) {
         (Some(physicsInfo3D), Some(rotation_degrees)) => {
@@ -1612,6 +1660,7 @@ fn jsSpreadPhysicsInfo3D<'s>(obj: Local<v8::Object>, world: &World, objectId: Ob
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn jsSpreadPrimitiveSettings<'s>(obj: Local<v8::Object>, world: &World, objectId: ObjectId, scope: &mut PinScope<'s, '_>) -> anyhow::Result<()> {
     match world.physics.getPrimitiveSettings(objectId) {
         Some(PrimitiveSettings::Ball(ball)) => {
@@ -1698,6 +1747,7 @@ fn rustUpdatePhysicsInfo3D<'v, 'p>(
 
 // ---------------- Rust -> JS ----------------
 
+#[cfg(not(target_arch = "wasm32"))]
 pub fn jsLiveObjectOfRustLiveObject<'s>(world: &World, object_id: ObjectId, scope: &mut PinScope<'s, '_>) -> anyhow::Result<Local<'s, v8::Object>> {
     let object = world.getObject(object_id)?;
     let js_obj = jsEmptyObject(scope);
