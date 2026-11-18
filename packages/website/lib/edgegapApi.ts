@@ -3,6 +3,7 @@ import { deleteTrackedServer, promoteStartingServerToRunning } from "@/lib/serve
 import { findEdgegapWebhookRequestId } from "@/lib/edgegapWebhookPayload";
 
 export const EDGEGAP_GAME_PORT_NAME = "gameport";
+export const EDGEGAP_WEBTRANSPORT_PORT_NAME = "webtransport";
 export const EDGEGAP_GAME_ID_ENV_KEY = "GAME_ID";
 export const EDGEGAP_GAMEWORLD_VERSION_NUM_ENV_KEY = "GAMEWORLD_VERSION_NUM";
 export const EDGEGAP_GAME_ID_TAG_PREFIX = "g=";
@@ -77,16 +78,25 @@ export const getSecretEnvVars = (server: keyof typeof secretEnvKeysOfServer) =>
     is_hidden: true,
   }));
 
-export const getEdgegapInternalPort = () => {
-  const envValue = getRequiredEnvVar("EDGEGAP_INTERNAL_PORT");
-  const edgegapInternalPort = Number.parseInt(envValue, 10);
-  if (Number.isNaN(edgegapInternalPort)) {
-    throw new Error(
-      `EDGEGAP_INTERNAL_PORT must be an integer, got ${envValue}`,
-    );
+const parseIntEnvVar = (envKey: string) => {
+  const envValue = getRequiredEnvVar(envKey);
+  const parsedValue = Number.parseInt(envValue, 10);
+  if (Number.isNaN(parsedValue)) {
+    throw new Error(`${envKey} must be an integer, got ${envValue}`);
   }
-  return edgegapInternalPort;
+  return parsedValue;
 };
+
+export const getEdgegapInternalPort = () =>
+  parseIntEnvVar("EDGEGAP_INTERNAL_PORT");
+
+export const getEdgegapWebtransportInternalPort = () =>
+  parseIntEnvVar("WEBTRANSPORT_INTERNAL_PORT");
+
+// A page dials the browser endpoint by name, so each deployment needs a name of its own under the suffix its
+// certificate covers.
+export const getWebtransportHostname = (requestId: string) =>
+  `${requestId}.${getRequiredEnvVar("WEBTRANSPORT_HOST_SUFFIX")}`;
 
 export const getEdgegapAuthorizationHeader = () => {
   return `token ${getRequiredEnvVar("EDGEGAP_API_TOKEN")}`;
@@ -124,15 +134,18 @@ export const getEdgegapDeploymentTags = ({
 
 const parseEdgegapUdpPort = ({
   ports,
+  portName,
+  edgegapInternalPort,
 }: {
   ports: EdgegapPortsByName | null;
+  portName: string;
+  edgegapInternalPort: number;
 }) => {
-  const namedPort = ports?.[EDGEGAP_GAME_PORT_NAME];
+  const namedPort = ports?.[portName];
   if (namedPort?.external && namedPort.protocol.toUpperCase().includes("UDP")) {
     return namedPort.external;
   }
 
-  const edgegapInternalPort = getEdgegapInternalPort();
   for (const portInfo of Object.values(ports ?? {})) {
     if (!portInfo.external) {
       continue;
@@ -188,12 +201,17 @@ export const getEdgegapDeploymentStatus = async ({
   return (await response.json()) as EdgegapDeploymentStatus;
 };
 
-// Pull the address data we need for the desktop client from the current Edgegap status payload.
+// Pull the address data we need from the current Edgegap status payload: the desktop client's QUIC port, and the
+// browser's HTTP/3 port, which is published separately because one UDP port cannot serve both.
 export const readEdgegapConnectionInfo = (
   deploymentStatus: EdgegapDeploymentStatus,
 ) => {
   const publicIp = deploymentStatus.public_ip?.trim() ?? null;
-  const port = parseEdgegapUdpPort({ ports: deploymentStatus.ports });
+  const port = parseEdgegapUdpPort({
+    ports: deploymentStatus.ports,
+    portName: EDGEGAP_GAME_PORT_NAME,
+    edgegapInternalPort: getEdgegapInternalPort(),
+  });
   if (!deploymentStatus.running || !publicIp || port === null) {
     return null;
   }
@@ -202,6 +220,31 @@ export const readEdgegapConnectionInfo = (
     requestId: deploymentStatus.request_id,
     publicIp,
     port,
+    webtransportPort: parseEdgegapUdpPort({
+      ports: deploymentStatus.ports,
+      portName: EDGEGAP_WEBTRANSPORT_PORT_NAME,
+      edgegapInternalPort: getEdgegapWebtransportInternalPort(),
+    }),
+  };
+};
+
+// What a browser needs to join: the name its certificate covers, on the HTTP/3 port Edgegap published for it, and the
+// certificate's hash when no authority signed it.
+export const readEdgegapWebtransportInfo = ({
+  requestId,
+  webtransportPort,
+}: {
+  requestId: string;
+  webtransportPort: number | null;
+}) => {
+  if (webtransportPort === null) {
+    return null;
+  }
+  return {
+    host: getWebtransportHostname(requestId),
+    port: webtransportPort,
+    certificate_sha256_base64:
+      process.env.WEBTRANSPORT_CERTIFICATE_SHA256_BASE64 || null,
   };
 };
 

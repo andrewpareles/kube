@@ -6,6 +6,7 @@ import {
   getEdgegapDeploymentStatus,
   isTerminalEdgegapStatus,
   readEdgegapConnectionInfo,
+  readEdgegapWebtransportInfo,
 } from "@/lib/edgegapApi";
 import {
   deleteTrackedServer,
@@ -144,5 +145,9 @@ export async function GET(request: Request, context: RouteContext) {
   return NextResponse.json({
     public_ip: connectionInfo.publicIp,
     port: connectionInfo.port,
+    webtransport: readEdgegapWebtransportInfo({
+      requestId,
+      webtransportPort: connectionInfo.webtransportPort,
+    }),
   });
 }

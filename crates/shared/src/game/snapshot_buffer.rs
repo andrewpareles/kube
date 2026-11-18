@@ -1,14 +1,14 @@
-use game_types::{
-    consts::{CLIENT_INTERPOLATION_WINDOW_MS, CLIENT_TOTAL_SNAPSHOT_BUFFER_MS, SERVER_SIM_AND_SEND_SECS},
-    object_types::ObjectId,
-};
-use shared::{
+use crate::{
     game::{interpolate_physics::get_interpolated_pose, timeline::Timeline, world::World},
     helpers::sorted_vec_deque::SortedVecDeque,
     protocol::messages::{
         ForeignCharacterDelta, ForeignPlayerDelta, MessageNum, NetworkedCoords, NetworkedPhysicsInfo3D, ObjectAddDelta, ObjectDelta, ObjectModifyDelta,
         ServerSnapshotMessage,
     },
+};
+use game_types::{
+    consts::{CLIENT_INTERPOLATION_WINDOW_MS, CLIENT_TOTAL_SNAPSHOT_BUFFER_MS, SERVER_SIM_AND_SEND_SECS},
+    object_types::ObjectId,
 };
 use std::collections::HashMap;
 

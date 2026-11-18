@@ -3,7 +3,6 @@
 use super::input_snapshot::{PlayInputState, getCameraPosition, getCameraTarget, getClampedCamera};
 use super::mesh_camera_shapes::MeshCameraShapes;
 use super::render_snapshot::FullWorldRenderSnapshot;
-use super::snapshot_buffer::{SnapshotChanges, SnapshotInterpolationBuffer};
 use super::sound_playback_manager::SoundPlaybackManager;
 use super::thread_priority::raise_current_thread_priority;
 use super::time_estimator::TimeEstimatorReader;
@@ -11,7 +10,7 @@ use deno_core::JsRuntime;
 use game_types::{
     consts::{CAMERA_SIZE, CLIENT_MAX_NUM_PHYSICS_STEPS_PER_TICK, CLIENT_SIM_AND_SEND_SECS, MIN_CAMERA_ZOOM},
     data_types::{DataId, MeshData},
-    object_types::{ObjectBeingAdded, ObjectId, ObjectInfoTrackedFields, Orientation3D},
+    object_types::{ObjectId, Orientation3D},
 };
 use glam::Vec3;
 use quinn::Connection;
@@ -24,7 +23,8 @@ use shared::game::jsRuntime::{
     JsRuntimeInitialization, JsRuntimeMouseRay, JsRuntimePlayerPings, ScriptManager, callJsFn, callRegisteredGuiHandler, initializeJsAndRunInitialScripts,
     initializeJsRuntime, runJsCallbacks, runPendingJS,
 };
-use shared::game::physics::SetPhysicsToggles3D;
+use shared::game::snapshot_applier::SnapshotApplier;
+use shared::game::snapshot_buffer::{SnapshotChanges, SnapshotInterpolationBuffer};
 use shared::game::world::{JsCallbackInputs, World};
 use shared::protocol::messages::{
     ClientFunctionCallMessage, ClientInputMessage, ClientMessageUDP, ForeignCharacterDelta, ForeignPlayerDelta, InputNum, MessageNum, NetworkedPhysicsInfo3D,
@@ -32,7 +32,7 @@ use shared::protocol::messages::{
 };
 use shared::protocol::quic_send_receive_helpers::sendDatagramMessage;
 use std::cell::RefCell;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::rc::Rc;
 use std::sync::Arc;
 use std::time::Duration;
@@ -183,7 +183,7 @@ pub struct PlayLoopRunner {
     latest_applied_message_num: MessageNum,                           // the newest snapshot taken in. Inputs send it so the server knows which poses include it
 
     snapshot_interpolation_buffer: SnapshotInterpolationBuffer,
-    recently_removed_object_ids: HashSet<ObjectId>, // so we don't spuriously add an object that was removed due to weird network conditions
+    snapshot_applier: SnapshotApplier,
     awaiting_scripts: HashMap<ObjectId, AwaitingScriptState>, // wait for script snapshot (UDP) AND script raw code (TCP)
 
     time_estimator_reader: TimeEstimatorReader,
@@ -269,7 +269,7 @@ impl PlayLoopRunner {
             time_estimator_reader,
 
             snapshot_interpolation_buffer: SnapshotInterpolationBuffer::new(),
-            recently_removed_object_ids: HashSet::new(),
+            snapshot_applier: SnapshotApplier::default(),
             awaiting_scripts: HashMap::new(),
 
             world,
@@ -457,158 +457,36 @@ impl PlayLoopRunner {
     }
 
     // -------------------------- Applying object deltas --------------------------
-    // These methods apply received deltas to World. The browser counterpart is StoredWorldRenderable::apply_object_deltas.
+    // The changes themselves are applied by shared::game::snapshot_applier, which a browser page uses too. These
+    // wrappers add what only this client has: the scripts it is waiting on.
 
     fn update_world_using_parent_due_changes(&mut self, valid_parent_changes: Vec<(ObjectId, ObjectId)>) {
-        let world = &mut self.world;
-        for (object_id, desired_parent_id) in valid_parent_changes {
-            if !world.hasObject(object_id) {
-                continue;
-            }
-            let res = world.setParent(object_id, desired_parent_id);
-            if let Err(error) = res {
-                log::error!(
-                    "update_world_using_parent_changes: Unexpected error setting parent {object_id} -> {desired_parent_id}: {}",
-                    error
-                );
-                continue;
-            }
-        }
+        self.snapshot_applier.apply_parent_changes(&mut self.world, valid_parent_changes);
     }
 
     fn update_world_using_due_adds(&mut self, valid_adds: Vec<(ObjectId, ObjectAddDelta)>) {
-        let world = &mut self.world;
-        let recently_removed_buffer = &self.recently_removed_object_ids;
-
-        let mut scripts_added = Vec::new();
-        world.refreshAnimationKeyframesOnceAfter(|world| {
-            for (objectId, object_add_delta) in valid_adds {
-                if recently_removed_buffer.contains(&objectId) {
-                    continue;
-                }
-                if world.hasObject(objectId) {
-                    log::debug!("Skipping snapshot add for existing object id: {}", objectId); // an add sent again before its ACK arrived
-                    continue;
-                }
-                // keep track of scripts we added for later
-                match &object_add_delta.objectBeingAdded {
-                    ObjectBeingAdded::Script(_) => scripts_added.push(objectId),
-                    _ => {}
-                }
-                world.addObjectWithIdFromDelta(objectId, object_add_delta);
-            }
-        });
-
-        for object_id in scripts_added {
+        for object_id in self.snapshot_applier.apply_adds(&mut self.world, valid_adds) {
             self.on_get_udp_script_added(object_id);
         }
     }
 
     fn update_world_using_due_modifies(&mut self, modifies: Vec<(ObjectId, ObjectModifyDelta)>) {
-        for (object_id, updateInfo) in modifies {
-            if !self.world.hasObject(object_id) {
-                continue;
-            }
-
-            let ObjectModifyDelta {
-                modifiedObjectInfo: changeInfo,
-                modifiedPrimitiveSettings: changePrimitiveSettings,
-                modifiedPhysicsToggles3D: changePhysicsToggles,
-                modifiedPhysicsInfo3D: changePhysicsInfo3D,
-                modifiedName: changeName,
-                ..
-            } = updateInfo;
-
-            // update physics toggles
-            if let Some(physicsToggles3D) = changePhysicsToggles {
-                self.world.setPhysicsToggles3D(
-                    object_id,
-                    SetPhysicsToggles3D {
-                        isWalkthrough: Some(physicsToggles3D.isWalkthrough),
-                        isPushable: Some(physicsToggles3D.isPushable),
-                        density: Some(physicsToggles3D.density),
-                    },
-                    false,
-                );
-            }
-
-            // update primitive info
-            if let Some(primitive_settings) = changePrimitiveSettings {
-                if let Err(error) = self.world.setPrimitiveSettings(object_id, primitive_settings, false) {
-                    log::warn!("Error setting primitive info on client: {}", error);
-                }
-            }
-
-            // update physics info 3d
-            if let Some(networked_physics_info_3d) = changePhysicsInfo3D {
-                let res = self.world.setNetworkedPhysicsInfo3D(object_id, networked_physics_info_3d);
-                if let Err(error) = res {
-                    log::warn!("Error applying due snapshot physics on client: {}", error);
-                }
-            }
-
-            // update name
-            if let Some(name) = changeName {
-                let _ = self.world.setObjectName(object_id, name);
-            }
-
-            // update object info - get mutable object so we can change it for name and object_info
-            // this fn only gets called on client, so we don't need to mark anything modified/added/removed after changing it here s
-            let Ok(obj_mut) = self.world.getObjectMut(object_id) else {
-                log::error!("update_world_using_modifies: object not found in world");
-                continue;
-            };
-            if let Some(info) = changeInfo {
-                let old_tracked_fields = ObjectInfoTrackedFields::from_object_info(&obj_mut.info);
-                obj_mut.info = info;
-                let new_tracked_fields = ObjectInfoTrackedFields::from_object_info(&obj_mut.info);
-                self.world.afterObjectInfoChange(object_id, old_tracked_fields, new_tracked_fields);
-            }
-        }
+        self.snapshot_applier.apply_modifies(&mut self.world, modifies);
     }
 
     fn update_world_using_interpolated_poses(&mut self, interpolated_poses: Vec<(ObjectId, NetworkedPhysicsInfo3D)>) {
-        for (object_id, interpolated_pose) in interpolated_poses {
-            if !self.world.hasObject(object_id) {
-                continue;
-            }
-            if let Err(error) = self.world.setNetworkedPhysicsInfo3D(object_id, interpolated_pose) {
-                log::warn!("Error applying an interpolated pose on client: {}", error);
-            }
-        }
+        self.snapshot_applier.apply_interpolated_poses(&mut self.world, interpolated_poses);
     }
 
     fn update_world_using_due_foreign_players(&mut self, foreign_players: Vec<(ObjectId, ForeignPlayerDelta)>) {
-        for (player_object_id, foreign_player_delta) in foreign_players {
-            if !self.world.hasObject(player_object_id) {
-                continue;
-            }
-            self.world.setPlayerCameraOrientation(player_object_id, foreign_player_delta.cameraOrientation);
-            self.world.setPlayerMetadata(player_object_id, foreign_player_delta.playerMetadata);
-        }
+        self.snapshot_applier.apply_foreign_players(&mut self.world, foreign_players);
     }
 
     fn update_world_using_due_removes(&mut self, removes: Vec<ObjectId>) {
-        let world = &mut self.world;
-        for objectId in removes {
-            self.recently_removed_object_ids.insert(objectId);
-            self.awaiting_scripts.remove(&objectId);
-
-            if !world.hasObject(objectId) {
-                // once the server removes an object this client already deleted, there's nothing left to keep deleted
-                if !world.serverObjectIdsDeletedOnClient.remove(&objectId) {
-                    log::debug!("Skipping snapshot remove for missing object id: {}", objectId); // a remove sent again before its ACK arrived
-                }
-                continue;
-            }
-            let res = world.removeObject(objectId);
-            // removeObject remembers it as removed on this client, but the server removed it for real
-            world.serverObjectIdsDeletedOnClient.remove(&objectId);
-            if let Err(error) = res {
-                log::warn!("update_world_using_removes: Error removing object on client: {}", error);
-                continue;
-            }
+        for &object_id in removes.iter() {
+            self.awaiting_scripts.remove(&object_id);
         }
+        self.snapshot_applier.apply_removes(&mut self.world, removes);
     }
 
     // -------------------------- Sending input and stepping the client --------------------------

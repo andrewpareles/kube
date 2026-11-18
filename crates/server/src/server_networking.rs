@@ -1670,8 +1670,8 @@ impl Server {
             let message = match awaitDatagramMessage::<ClientMessageUDP>(&player_connection).await {
                 Ok(message) => message,
                 Err(e) => {
-                    if let Some(connection_error) = e.downcast_ref::<quinn::ConnectionError>() {
-                        return log::info!("Player disconnected: {}, {}", player_object_id, connection_error);
+                    if player_connection.is_closed() {
+                        return log::info!("Player disconnected: {}, {}", player_object_id, e);
                     }
                     log::error!("Error reading datagram: {}", e);
                     continue;
