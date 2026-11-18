@@ -687,6 +687,13 @@
       "when": 1793419677000,
       "tag": "0098_revoke_browser_table_rights",
       "breakpoints": true
+    },
+    {
+      "idx": 99,
+      "version": "7",
+      "when": 1795001865000,
+      "tag": "0099_running_server_webtransport_port",
+      "breakpoints": true
     }
   ]
 }
