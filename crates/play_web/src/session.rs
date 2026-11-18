@@ -1,7 +1,8 @@
+use crate::net::ServerConnection;
 use crate::simulation::{HeldMovementKeys, turnedCameraOrientation, walkingVelocity};
 use game_types::{
     consts::{CLIENT_MAX_NUM_PHYSICS_STEPS_PER_TICK, CLIENT_SIM_AND_SEND_SECS, DEFAULT_CAMERA_ZOOM},
-    object_types::{ObjectBeingAdded, ObjectId, ObjectIdPointer, ObjectInfo, Orientation3D, PlayerInfo},
+    object_types::{ObjectId, ObjectKind, Orientation3D},
 };
 use glam::Vec3;
 use render_core::{
@@ -13,8 +14,16 @@ use render_core::{
     renderer::{RenderFrame, Renderer},
 };
 use shared::game::{
+    client_world_delay::ClientWorldDelay,
     physics::SetPhysicsInfo3D,
+    snapshot_applier::SnapshotApplier,
+    snapshot_buffer::{SnapshotChanges, SnapshotInterpolationBuffer},
+    time_estimator::TimeEstimator,
     world::{World, WorldControlMode},
+};
+use shared::protocol::messages::{
+    ClientAckMessage, ClientInputMessage, ClientMessageUDP, ClientPingMessage, ForeignCharacterDelta, ForeignPlayerDelta, InputNum, MessageNum, ObjectDelta,
+    ServerMessageUDP, ServerSnapshotMessage,
 };
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
@@ -27,23 +36,37 @@ const NO_WEBGPU_ERROR: &str = "This browser did not give the page WebGPU. Turn o
 // acceleration of 160, so walking here feels the same as it will once that script runs in the browser.
 const WALKING_SPEED: f32 = 7.0;
 const WALKING_ACCELERATION: f32 = 160.0;
+// TODO: AI-PICKED-VALUE: One ping a second is what the desktop client sends, and it is enough to follow the ping changing.
+const PING_INTERVAL_MS: f64 = 1000.0;
 
 // -------------------------- One player's session --------------------------
 
-// BrowserPlaySession is the whole of a browser game: one world, one local player, one canvas. The page calls
-// render_frame once per animation frame and tells it which keys are held.
+// BrowserPlaySession is the whole of a browser game: one world the server runs, one local player, one canvas. The page
+// calls render_frame once per animation frame and tells it which keys are held.
 #[wasm_bindgen]
 pub struct BrowserPlaySession {
     world: World,
+    connection: ServerConnection,
     player_object_id: ObjectId,
-    // The object the camera follows once the world's Character belongs to the local player.
-    head_object_id: Option<ObjectId>,
     camera_orientation: Orientation3D,
     held_keys: HeldMovementKeys,
+    // The server's clock on this page's clock, kept from the pongs the server answers.
+    time_estimator: TimeEstimator,
+    // The snapshots the server sent that are not due yet, and the changes they carry.
+    snapshot_interpolation_buffer: SnapshotInterpolationBuffer,
+    snapshot_applier: SnapshotApplier,
+    client_world_delay: ClientWorldDelay,
+    // The newest snapshot whose changes to this player's own object were applied, which the next input reports.
+    latest_applied_message_num: MessageNum,
+    prev_input_num: InputNum,
     // The last simulation boundary that physics reached, so a slow frame catches up and never fast-forwards.
     prev_live_client_sim_ms: f64,
+    prev_live_client_wall_ms: f64,
+    prev_ping_sent_ms: f64,
+    rtt_ms: f32,
     num_physics_steps_taken: u64,
     last_frame_ms: f32,
+    ended_reason: Option<String>,
     surface: BrowserSurface,
     camera_matrix_buffer: wgpu::Buffer,
     camera_bind_group: wgpu::BindGroup,
@@ -51,54 +74,72 @@ pub struct BrowserPlaySession {
 
 #[wasm_bindgen]
 impl BrowserPlaySession {
-    pub async fn new(canvas: HtmlCanvasElement, world_json: &str) -> Result<Self, JsValue> {
-        let mut world = World::fromStoredWorldString(world_json, WorldControlMode::Editor, None).map_err(to_js_error)?;
-        let player_object_id = world.addObject(
-            "Player".to_string(),
-            ObjectBeingAdded::Player(PlayerInfo {
-                username: "Player".to_string(),
-                userid: None,
-                preferredColor: None,
-                equippedItemId: None,
-                headObjectId: None,
-                characterObjectId: None,
-            }),
-            world.getRootObjectId(),
-        );
-        world.worldControlMode = WorldControlMode::Player(player_object_id);
-        let head_object_id = giveWorldsCharacterToLocalPlayer(&mut world, player_object_id);
-        let camera_orientation = world.fallback_camera_location.orientation;
-
+    // Joins a game and starts drawing it. The page passes the address the game's play session gave it, the token that
+    // lets it in, and the server certificate's hash when the certificate has no authority behind it.
+    pub async fn connect(canvas: HtmlCanvasElement, server_url: &str, play_auth: &str, certificate_hash: Option<Vec<u8>>) -> Result<Self, JsValue> {
+        let (connection, initial_world) = ServerConnection::join(server_url, play_auth, certificate_hash)
+            .await
+            .map_err(|error| JsValue::from_str(&error))?;
+        let world = World::fromStoredWorldString(
+            &initial_world.stored_world_string,
+            WorldControlMode::Player(initial_world.player_object_id),
+            None,
+        )
+        .map_err(to_js_error)?;
         let surface = BrowserSurface::new(canvas).await?;
         let (camera_matrix_buffer, camera_bind_group) = surface
             .renderer
             .create_camera_matrix_buffer_pair(Vec3::Z, Vec3::ZERO, 1.0, DEFAULT_CAMERA_FOV_DEGREES);
 
+        let live_client_wall_ms = get_live_client_wall_ms();
         Ok(Self {
             world,
-            player_object_id,
-            head_object_id,
-            camera_orientation,
+            connection,
+            player_object_id: initial_world.player_object_id,
+            camera_orientation: Orientation3D::Z(),
             held_keys: HeldMovementKeys {
                 is_forward: false,
                 is_backward: false,
                 is_left: false,
                 is_right: false,
             },
+            time_estimator: TimeEstimator::new(initial_world.live_server_wall_ms, live_client_wall_ms),
+            snapshot_interpolation_buffer: SnapshotInterpolationBuffer::new(),
+            snapshot_applier: SnapshotApplier::default(),
+            client_world_delay: ClientWorldDelay::new(),
+            latest_applied_message_num: 0,
+            prev_input_num: 0,
             prev_live_client_sim_ms: 0.0,
+            prev_live_client_wall_ms: live_client_wall_ms,
+            prev_ping_sent_ms: live_client_wall_ms,
+            rtt_ms: 0.0,
             num_physics_steps_taken: 0,
             last_frame_ms: 0.0,
+            ended_reason: None,
             surface,
             camera_matrix_buffer,
             camera_bind_group,
         })
     }
 
-    // Draws one frame and runs the simulation steps that came due since the last one.
+    // Draws one frame, applies what the server sent, and runs the simulation steps that came due since the last one.
     pub fn render_frame(&mut self, now_ms: f64) -> Result<(), JsValue> {
         // The first frame starts the timeline instead of catching up from zero.
         if self.prev_live_client_sim_ms == 0.0 {
             self.prev_live_client_sim_ms = now_ms;
+        }
+
+        self.apply_server_messages(now_ms);
+        if let Some(ended_reason) = self.ended_reason.take() {
+            return Err(JsValue::from_str(&ended_reason));
+        }
+
+        let ms_since_prev_update = (now_ms - self.prev_live_client_wall_ms) as f32;
+        self.client_world_delay.update(self.rtt_ms, ms_since_prev_update);
+        self.prev_live_client_wall_ms = now_ms;
+        if now_ms - self.prev_ping_sent_ms >= PING_INTERVAL_MS {
+            self.prev_ping_sent_ms = now_ms;
+            self.connection.send(ClientMessageUDP::Ping(ClientPingMessage { t0_client_send_ms: now_ms }));
         }
 
         // The same accumulator the desktop client uses: a slow frame runs the steps it missed, up to a cap, so a long
@@ -107,22 +148,17 @@ impl BrowserPlaySession {
         let num_steps = World::get_num_physics_steps_to_take(self.prev_live_client_sim_ms, now_ms, step_ms, CLIENT_MAX_NUM_PHYSICS_STEPS_PER_TICK);
         let first_step_sim_ms = now_ms - num_steps.saturating_sub(1) as f64 * step_ms as f64;
         for step_index in 0..num_steps {
-            let sim_ms = first_step_sim_ms + step_index as f64 * step_ms as f64;
-            self.walkCharacterStep();
-            self.world
-                .step_physics(1, CLIENT_SIM_AND_SEND_SECS, sim_ms, Some(sim_ms))
-                .map_err(to_js_error)?;
+            let live_client_sim_ms = first_step_sim_ms + step_index as f64 * step_ms as f64;
+            self.stepOnce(live_client_sim_ms);
             self.num_physics_steps_taken += 1;
         }
         if num_steps > 0 {
             self.prev_live_client_sim_ms = now_ms;
+            self.sendInput(self.prev_live_client_sim_ms);
         }
 
         self.draw(self.prev_live_client_sim_ms)?;
-        let frame_end_ms = web_sys::window()
-            .and_then(|window| window.performance())
-            .map_or(now_ms, |performance| performance.now());
-        self.last_frame_ms = (frame_end_ms - now_ms) as f32;
+        self.last_frame_ms = (get_live_client_wall_ms() - now_ms) as f32;
         Ok(())
     }
 
@@ -151,6 +187,10 @@ impl BrowserPlaySession {
         self.num_physics_steps_taken.min(u32::MAX as u64) as u32
     }
 
+    pub fn ping_ms(&self) -> f32 {
+        self.rtt_ms
+    }
+
     // Where the local player's body is, which the page shows so it is clear the keys reached the world.
     pub fn character_position(&self) -> Vec<f32> {
         let Some(body_object_id) = self.world.getPlayerCharacterObject(self.player_object_id) else {
@@ -161,9 +201,98 @@ impl BrowserPlaySession {
         };
         physics_info_3d.location.position.to_array().to_vec()
     }
+
+    // How many other players this page can draw, which proves the server's players reached it.
+    pub fn num_other_players(&self) -> u32 {
+        self.world._kindOfObjectId.get_keys(&ObjectKind::Player).map_or(0, |player_object_ids| {
+            player_object_ids
+                .iter()
+                .filter(|&&player_object_id| player_object_id != self.player_object_id)
+                .count() as u32
+        })
+    }
 }
 
 impl BrowserPlaySession {
+    // Everything the server sent since the last frame: snapshots to place on the delayed timeline, pongs to keep the
+    // clock estimate, and the reason the game ended when it does.
+    fn apply_server_messages(&mut self, now_ms: f64) {
+        for message in self.connection.take_incoming() {
+            match message {
+                ServerMessageUDP::Snapshot(mut snapshot) => {
+                    // The ack goes out the moment a snapshot arrives, before the play loop takes it in, so the server's
+                    // resend timer never waits on a slow frame.
+                    self.connection.send(ClientMessageUDP::Ack(ClientAckMessage {
+                        message_num: snapshot.message_num,
+                    }));
+                    self.apply_snapshot(snapshot);
+                }
+                ServerMessageUDP::Pong(pong) => {
+                    self.rtt_ms = (now_ms - pong.t0_client_send_ms) as f32;
+                    self.time_estimator.process_pong(now_ms, pong.t0_client_send_ms, pong.t1_server_recv_ms);
+                }
+                ServerMessageUDP::PlayerPings(_) => {}
+            }
+        }
+        if let Some(ended_reason) = self.connection.take_ended_reason() {
+            self.ended_reason = Some(ended_reason);
+        }
+    }
+
+    // This player's own objects are applied immediately, ahead of the buffer, so the next input's pose includes them.
+    fn apply_snapshot(&mut self, mut snapshot: ServerSnapshotMessage) {
+        self.snapshot_applier
+            .apply_modifies(&mut self.world, snapshot.deltaOfObjectId2.drain().collect());
+        self.latest_applied_message_num = self.latest_applied_message_num.max(snapshot.message_num);
+
+        // Ignore resent adds for objects this page already has, so it never buffers a second copy of the world.
+        snapshot.deltaOfObjectId.retain(|object_id, delta| {
+            let was_already_sent = match delta {
+                ObjectDelta::Add(_) => self.world.hasObject(*object_id),
+                _ => false,
+            };
+            !was_already_sent
+        });
+        if snapshot.deltaOfObjectId.is_empty() {
+            return;
+        }
+        self.snapshot_interpolation_buffer.process_new_snapshot(snapshot);
+    }
+
+    // One simulation step: the world at the delayed time the server's changes are shown at, then this player's walking.
+    fn stepOnce(&mut self, live_client_sim_ms: f64) {
+        let dely_client_sim_ms = live_client_sim_ms - self.client_world_delay.current_delay_ms() as f64;
+        let est_dely_server_sim_ms = self.time_estimator.get_est_server_ms(dely_client_sim_ms);
+
+        let SnapshotChanges { modifies, removes } = self.snapshot_interpolation_buffer.pop_due_snapshots(est_dely_server_sim_ms);
+        self.snapshot_applier.apply_modifies(&mut self.world, modifies);
+        self.snapshot_applier.apply_removes(&mut self.world, removes);
+        self.snapshot_interpolation_buffer.forget_old_timeline_entries(est_dely_server_sim_ms);
+        let interpolated_poses = self.snapshot_interpolation_buffer.get_interpolated_poses(est_dely_server_sim_ms);
+        self.snapshot_applier.apply_interpolated_poses(&mut self.world, interpolated_poses);
+        let due_foreign_players = self.snapshot_interpolation_buffer.get_due_foreign_players(est_dely_server_sim_ms);
+        self.snapshot_applier.apply_foreign_players(&mut self.world, due_foreign_players);
+
+        // Applying an add can make its children's adds valid, so a whole character lands in one step instead of one level
+        // per step. A page runs no scripts, so the scripts an add brings are dropped here.
+        loop {
+            let (due_adds, due_parent_changes) = self.snapshot_interpolation_buffer.pop_due_valid_parent_deltas(&self.world);
+            if due_adds.is_empty() && due_parent_changes.is_empty() {
+                break;
+            }
+            self.snapshot_applier.apply_adds(&mut self.world, due_adds);
+            self.snapshot_applier.apply_parent_changes(&mut self.world, due_parent_changes);
+        }
+
+        self.walkCharacterStep();
+        if let Err(error) = self
+            .world
+            .step_physics(1, CLIENT_SIM_AND_SEND_SECS, est_dely_server_sim_ms, Some(live_client_sim_ms))
+        {
+            log::warn!("Could not step the browser's physics: {error}");
+        }
+    }
+
     // The character accelerates toward the walking velocity and keeps whatever the physics gives it vertically, so the
     // same keys walk it the same way the shipped character controller will once scripts run in the browser.
     fn walkCharacterStep(&mut self) {
@@ -187,6 +316,33 @@ impl BrowserPlaySession {
         );
     }
 
+    // What this page was doing at this tick, which the server takes as this player's pose and passes to everyone else.
+    fn sendInput(&mut self, live_client_sim_ms: f64) {
+        self.world.setPlayerCameraOrientation(self.player_object_id, self.camera_orientation);
+        let est_live_server_sim_ms = self.time_estimator.get_est_server_ms(live_client_sim_ms);
+        let foreign_player_delta = ForeignPlayerDelta {
+            cameraOrientation: self.camera_orientation,
+            playerMetadata: self.world.getPlayerMetadata(self.player_object_id).map(str::to_string),
+            est_live_server_sim_ms,
+        };
+        let foreign_character_delta = self.world.getPlayerCharacterObject(self.player_object_id).and_then(|character_object_id| {
+            let physics_info_3d = self.world.getObjectPhysicsInfo3D(character_object_id)?;
+            Some(ForeignCharacterDelta {
+                physicsInfo3D: physics_info_3d,
+                est_live_server_sim_ms,
+                teleportCount: self.world.getTeleportCount(character_object_id),
+            })
+        });
+
+        self.prev_input_num += 1;
+        self.connection.send(ClientMessageUDP::Input(ClientInputMessage {
+            input_num: self.prev_input_num,
+            latest_applied_message_num: self.latest_applied_message_num,
+            foreign_player_delta,
+            foreign_character_delta,
+        }));
+    }
+
     // Poses the world at the simulation boundary that physics reached and sends it to the graphics card.
     fn draw(&mut self, sim_ms: f64) -> Result<(), JsValue> {
         let snapshot = self.world.getRenderSnapshot();
@@ -200,7 +356,8 @@ impl BrowserPlaySession {
         let scene = build_render_scene(&render_object_of_id, &mesh_data_of_id, Some(&skeleton_pose_of_id));
 
         let followed_position = self
-            .head_object_id
+            .world
+            .getPlayerHeadObjectId(self.player_object_id)
             .and_then(|head_object_id| computeRenderObjectTransform(&render_object_of_id, &skeleton_pose_of_id, head_object_id))
             .map(|transform| transform.w_axis.truncate());
         let fallback_camera_location = self.world.fallback_camera_location;
@@ -238,33 +395,11 @@ impl BrowserPlaySession {
     }
 }
 
-// Phase 1 stands in for the game's spawn script. That script gives every player a copy of the world's Character; here
-// the one Character in the world becomes this player's body, so a world with a Character can be walked before any
-// script exists. A world without one still simulates, it just has nobody to walk.
-fn giveWorldsCharacterToLocalPlayer(world: &mut World, player_object_id: ObjectId) -> Option<ObjectId> {
-    let character_object_id = *world.getObjectIdsByName("Character").first()?;
-    let body_object_id = world
-        .getDirectChildrenIds(character_object_id)
-        .ok()?
-        .iter()
-        .copied()
-        .find(|child_id| world.getObject(*child_id).is_ok_and(|child| child.name == "Body"))?;
-    let head_object_id = world
-        .getDirectChildrenIds(body_object_id)
-        .ok()
-        .and_then(|child_ids| {
-            child_ids
-                .iter()
-                .copied()
-                .find(|child_id| world.getObject(*child_id).is_ok_and(|child| child.name == "Head"))
-        })
-        .unwrap_or(body_object_id);
-    let ObjectInfo::Player(player) = &mut world.getObjectMut(player_object_id).ok()?.info else {
-        return None;
-    };
-    player.characterObjectId = Some(ObjectIdPointer(body_object_id));
-    player.headObjectId = Some(ObjectIdPointer(head_object_id));
-    Some(head_object_id)
+// The page's clock, in milliseconds since it loaded. Every timestamp in the protocol is a millisecond count.
+fn get_live_client_wall_ms() -> f64 {
+    web_sys::window()
+        .and_then(|window| window.performance())
+        .map_or(0.0, |performance| performance.now())
 }
 
 fn to_js_error(error: impl std::fmt::Display) -> JsValue {

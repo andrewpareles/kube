@@ -29,6 +29,7 @@ These are the secrets we store in Infisical, and where they're used.
 - `QUIC_SERVER_KEY_DER_BASE64`: game server and editor
 - `WEBTRANSPORT_CERT_CHAIN_PEM_BASE64` (the wildcard certificate's chain, as PEM in base64): game server, for the HTTP/3 endpoint a browser joins through
 - `WEBTRANSPORT_PRIVATE_KEY_PEM_BASE64` (that certificate's key as a PKCS#8 PEM in base64): game server
+- `WEBTRANSPORT_CERTIFICATE_SHA256_BASE64` (the SHA-256 of that certificate's DER form): website, which sends it to the page so the browser can accept a server certificate no authority signed
 
 The website passes the game server and editor theirs as hidden env vars when it starts them on Edgegap. `secretEnvKeysOfServer` in `packages/website/lib/edgegapApi.ts` lists what each one gets, under the same names.
 

@@ -94,11 +94,16 @@ impl PlayerConnection {
 
 // What the netcode needs from a connection's datagrams: the biggest message that fits, how far away the player is,
 // and one message each way.
+// Only ever used as a bound on a concrete connection, never as a trait object.
+#[allow(async_fn_in_trait)]
 pub trait DatagramConnection {
     fn send_datagram_bytes(&self, bytes: Bytes) -> Result<()>;
     async fn recv_datagram_bytes(&self) -> Result<Bytes>;
     fn max_datagram_size(&self) -> Option<usize>;
     fn rtt(&self) -> Duration;
+    // Whether the connection has ended, so a read that fails because the player left is told apart from one that failed
+    // for another reason.
+    fn is_closed(&self) -> bool;
 }
 
 impl DatagramConnection for Connection {
@@ -117,6 +122,10 @@ impl DatagramConnection for Connection {
 
     fn rtt(&self) -> Duration {
         Connection::rtt(self)
+    }
+
+    fn is_closed(&self) -> bool {
+        self.close_reason().is_some()
     }
 }
 
@@ -137,6 +146,11 @@ impl DatagramConnection for WebTransportConnection {
 
     fn rtt(&self) -> Duration {
         WebTransportConnection::rtt(self)
+    }
+
+    fn is_closed(&self) -> bool {
+        // WebTransport runs its HTTP/3 session over a QUIC connection of its own.
+        self.quic_connection().close_reason().is_some()
     }
 }
 
@@ -166,6 +180,13 @@ impl DatagramConnection for PlayerConnection {
         match self {
             Self::Quic(connection) => connection.rtt(),
             Self::WebTransport(connection) => connection.rtt(),
+        }
+    }
+
+    fn is_closed(&self) -> bool {
+        match self {
+            Self::Quic(connection) => connection.is_closed(),
+            Self::WebTransport(connection) => connection.is_closed(),
         }
     }
 }

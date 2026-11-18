@@ -9,7 +9,6 @@ pub mod play;
 pub mod play_renderer;
 pub mod render_snapshot;
 pub mod script_input_tracker;
-pub mod snapshot_buffer;
 pub mod sound_playback_manager;
 pub mod thread_priority;
 pub mod time_estimator;

@@ -5436,11 +5436,16 @@ name = "play_web"
 version = "0.1.137"
 dependencies = [
  "anyhow",
+ "bincode",
  "game_types",
  "glam 0.33.2",
+ "js-sys",
+ "log",
  "render_core",
+ "serde",
  "serde_json",
  "shared",
+ "tokio",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-sys",

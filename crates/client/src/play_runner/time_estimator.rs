@@ -1,15 +1,12 @@
+// The play thread reads this client's clock and the estimate moves it onto the server's, so the reading is handed to
+// `shared`'s estimator rather than kept here.
+
 use shared::conversions::time_conversions::{get_accurate_elapsed_time, get_accurate_elapsed_time_at};
-use std::collections::VecDeque;
+use shared::game::time_estimator::TimeEstimator;
+use std::time::Instant;
 use tokio::sync::watch;
 
 // ---------------------- TimeEstimator ----------------------
-
-const NUM_TIME_SAMPLES: usize = 21;
-
-#[derive(Debug)]
-pub struct TimeSample {
-    estimated_offset_ms: f64,
-}
 
 #[derive(Clone, Copy, Debug)]
 pub struct TimeEstimate {
@@ -18,60 +15,46 @@ pub struct TimeEstimate {
 
 #[derive(Debug)]
 pub struct TimeEstimatorWriter {
-    local_start_time: std::time::Instant, // client frame of reference
-    samples: VecDeque<TimeSample>,        // previously computed offsets
+    local_start_time: Instant, // client frame of reference
+    estimator: TimeEstimator,
 
     time_estimate_tx: watch::Sender<TimeEstimate>, // send the latest value when it changes
 }
 
 impl TimeEstimatorWriter {
-    pub fn new(local_start_time: std::time::Instant, initial_live_server_wall_ms: f64, time_estimate_tx: watch::Sender<TimeEstimate>) -> Self {
-        let estimated_offset_ms = initial_live_server_wall_ms - get_accurate_elapsed_time(local_start_time);
-        let writer = Self {
-            local_start_time: local_start_time,
-            samples: VecDeque::new(),
+    pub fn new(local_start_time: Instant, initial_live_server_wall_ms: f64, time_estimate_tx: watch::Sender<TimeEstimate>) -> Self {
+        let mut writer = Self {
+            local_start_time,
+            estimator: TimeEstimator::new(initial_live_server_wall_ms, get_accurate_elapsed_time(local_start_time)),
             time_estimate_tx,
         };
-        let _ = writer.time_estimate_tx.send(TimeEstimate { estimated_offset_ms });
+        writer.publish_estimate();
         writer
     }
 
     pub fn process_pong(&mut self, t0: f64, t1: f64) {
         let live_client_wall_ms = get_accurate_elapsed_time(self.local_start_time);
-        let rtt_ms = live_client_wall_ms - t0;
-        let ping_ms = rtt_ms * 0.5;
-        let estimated_offset_ms = t1 - (t0 + ping_ms);
-        self.samples.push_back(TimeSample { estimated_offset_ms });
-        if self.samples.len() > NUM_TIME_SAMPLES {
-            self.samples.pop_front();
-        }
-        let time_estimate = TimeEstimate {
-            estimated_offset_ms: Self::median_from_samples(&self.samples, |sample| sample.estimated_offset_ms),
-        };
-        let _ = self.time_estimate_tx.send(time_estimate);
+        self.estimator.process_pong(live_client_wall_ms, t0, t1);
+        self.publish_estimate();
     }
 
-    // private - median in O(n)
-    fn median_from_samples<F>(samples: &VecDeque<TimeSample>, mut get_value: F) -> f64
-    where
-        F: FnMut(&TimeSample) -> f64,
-    {
-        let mut values: Vec<f64> = samples.iter().map(|sample| get_value(sample)).collect();
-        let mid = values.len() / 2;
-        let (_, median, _) = values.select_nth_unstable_by(mid, |a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
-        *median
+    fn publish_estimate(&mut self) {
+        let time_estimate = TimeEstimate {
+            estimated_offset_ms: self.estimator.estimated_offset_ms(),
+        };
+        let _ = self.time_estimate_tx.send(time_estimate);
     }
 }
 
 // reader
 #[derive(Clone)]
 pub struct TimeEstimatorReader {
-    local_start_time: std::time::Instant,
+    local_start_time: Instant,
     time_estimate_rx: watch::Receiver<TimeEstimate>,
 }
 
 impl TimeEstimatorReader {
-    pub fn new(local_start_time: std::time::Instant, time_estimate_rx: watch::Receiver<TimeEstimate>) -> Self {
+    pub fn new(local_start_time: Instant, time_estimate_rx: watch::Receiver<TimeEstimate>) -> Self {
         Self {
             local_start_time,
             time_estimate_rx,
@@ -89,7 +72,7 @@ impl TimeEstimatorReader {
 }
 
 pub fn createTimeEstimator(initial_world_live_server_wall_ms: f64) -> (TimeEstimatorWriter, TimeEstimatorReader) {
-    let local_start_time = std::time::Instant::now();
+    let local_start_time = Instant::now();
     let (tx, rx) = watch::channel(TimeEstimate {
         estimated_offset_ms: f64::NEG_INFINITY,
     });

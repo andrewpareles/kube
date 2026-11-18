@@ -14,7 +14,10 @@ pub mod jsRustConversions;
 mod js_cpu_watchdog;
 pub use game_types::migrateStoredWorld;
 pub mod physics;
+pub mod snapshot_applier;
+pub mod snapshot_buffer;
 pub mod timeline;
+pub mod time_estimator;
 #[cfg(not(target_arch = "wasm32"))]
 pub mod transpileJsScript;
 pub mod uploaded_data;
