@@ -16,6 +16,7 @@ use crate::game::world::WorldControlMode;
 use crate::helpers::multi_thread_hashmap::MultiThreadHashMap;
 use crate::player_profile::{PlayerProfile, get_player_profile};
 use crate::protocol::messages::{ClientFunctionCallMessage, ClientFunctionResultMessage, ClientMessageTCP, ServerFnCallMessage, ServerFunctionResultMessage};
+use crate::protocol::player_connection::PlayerConnection;
 use crate::protocol::quic_send_receive_helpers::{MAX_TCP_MESSAGE_BYTES, awaitTcpMessageMaxBytes, getPingMs, sendTcpMessage, sendTcpRequest};
 use deno_core::{Extension, OpState, op2, v8};
 use deno_error::JsErrorBox;
@@ -334,10 +335,10 @@ fn __getPlayerCameraDirection__(state: &mut OpState, #[number] player_object_id:
 fn __getPlayerPing__(state: &mut OpState, #[number] player_object_id: i64) -> Result<Option<i64>, JsErrorBox> {
     assertBoth(state, "__getPlayerPing__")?;
     let player_object_id = objectIdFromI64(player_object_id);
-    let ping_ms = match state.try_borrow::<Arc<MultiThreadHashMap<ObjectId, Connection>>>() {
+    let ping_ms = match state.try_borrow::<Arc<MultiThreadHashMap<ObjectId, PlayerConnection>>>() {
         Some(connection_of_player_object_id_arc) => connection_of_player_object_id_arc
             .get(&player_object_id)
-            .map(|connection| getPingMs(&connection)),
+            .map(|connection| getPingMs(connection.as_ref())),
         None => get_player_ping_ms_from_opstate(state, player_object_id).map_err(jsError)?,
     };
     Ok(ping_ms.map(i64::from))
@@ -1460,7 +1461,7 @@ async fn __callJsClientFnFromServer__(
 
     let connection_of_player_object_id_arc = state
         .borrow()
-        .try_borrow::<Arc<MultiThreadHashMap<ObjectId, Connection>>>()
+        .try_borrow::<Arc<MultiThreadHashMap<ObjectId, PlayerConnection>>>()
         .ok_or_else(|| jsError("Client function caller is not configured"))?
         .clone();
 

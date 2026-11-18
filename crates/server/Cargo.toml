@@ -14,6 +14,7 @@ env_logger = "0.11"
 anyhow = "1.0"
 base64 = "0.22"
 quinn = "0.11"
+wtransport = { version = "0.7.2", features = ["quinn"] }
 rcgen = "0.13"
 rustls = "0.23"
 tokio = { version = "1.43", features = ["macros", "rt-multi-thread", "time", "io-util", "signal"] }

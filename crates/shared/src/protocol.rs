@@ -5,3 +5,6 @@ pub mod quic_cert;
 // helpers that read and write QUIC streams stay native.
 #[cfg(not(target_arch = "wasm32"))]
 pub mod quic_send_receive_helpers;
+// The connection the game's netcode talks through, whichever transport carries it.
+#[cfg(not(target_arch = "wasm32"))]
+pub mod player_connection;

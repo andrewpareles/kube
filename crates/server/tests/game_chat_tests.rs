@@ -15,6 +15,7 @@ use shared::protocol::{
         ClientGameChatMessage, ClientMessageTCP, GAME_CHAT_HISTORY_LIMIT, GAME_CHAT_MAX_MESSAGE_CHARS, GameChatEntry, GameChatMessage, ServerGameChatMessage,
         ServerGameChatResultMessage,
     },
+    player_connection::PlayerConnection,
     quic_cert::QUIC_CERT_SERVER_NAME,
     quic_send_receive_helpers::{MAX_TCP_MESSAGE_BYTES, awaitTcpMessageMaxBytes, sendTcpMessage, sendTcpRequest},
 };
@@ -232,7 +233,7 @@ async fn connect_game_chat(
     let connecting = client_endpoint.connect(server_endpoint.local_addr().unwrap(), QUIC_CERT_SERVER_NAME).unwrap();
     let (client, server) = tokio::try_join!(connecting, async { server_endpoint.accept().await.unwrap().await }).unwrap();
     let (request_tx, _request_rx) = mpsc::unbounded_channel();
-    start_receiving_client_messages_tcp_in_bg(server, game_chat_arc, 1, userid, username.to_string(), request_tx);
+    start_receiving_client_messages_tcp_in_bg(PlayerConnection::Quic(server), game_chat_arc, 1, userid, username.to_string(), request_tx);
     let (mut send_stream, recv_stream) = client.open_bi().await.unwrap();
     sendTcpMessage(&mut send_stream, &ClientMessageTCP::SubscribeToGameChat).await.unwrap();
     send_stream.finish().unwrap();

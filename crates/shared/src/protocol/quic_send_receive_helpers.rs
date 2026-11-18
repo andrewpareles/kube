@@ -1,10 +1,11 @@
 use bincode::Options;
 use bytes::Bytes;
-use quinn::{Connection, RecvStream, SendStream};
+use quinn::Connection;
 use serde::{Serialize, de::DeserializeOwned};
-use tokio::io::AsyncReadExt;
+use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt};
 
 use crate::protocol::bincode_config::get_bincode_config;
+use crate::protocol::player_connection::DatagramConnection;
 
 // ---------------------- TCP ----------------------
 
@@ -23,7 +24,9 @@ where
     awaitTcpMessageMaxBytes(&mut recv_stream, MAX_TCP_MESSAGE_BYTES).await
 }
 
-pub async fn sendTcpMessage<T>(send_stream: &mut SendStream, message: &T) -> anyhow::Result<()>
+// The streams it writes to are quinn's on the desktop client and WebTransport's in a browser, so it takes any stream
+// tokio can write.
+pub async fn sendTcpMessage<T>(send_stream: &mut (impl AsyncWrite + Unpin), message: &T) -> anyhow::Result<()>
 where
     T: Serialize,
 {
@@ -39,14 +42,14 @@ where
     Ok(())
 }
 
-pub async fn awaitTcpMessage<T>(recv_stream: &mut RecvStream) -> anyhow::Result<T>
+pub async fn awaitTcpMessage<T>(recv_stream: &mut (impl AsyncRead + Unpin)) -> anyhow::Result<T>
 where
     T: DeserializeOwned,
 {
     awaitTcpMessageMaxBytes(recv_stream, 1024).await
 }
 
-pub async fn awaitTcpMessageMaxBytes<T>(recv_stream: &mut RecvStream, max_bytes: u32) -> anyhow::Result<T>
+pub async fn awaitTcpMessageMaxBytes<T>(recv_stream: &mut (impl AsyncRead + Unpin), max_bytes: u32) -> anyhow::Result<T>
 where
     T: DeserializeOwned,
 {
@@ -68,21 +71,19 @@ where
 
 // ---------------------- UDP ----------------------
 
-pub fn sendDatagramMessage<T>(connection: &Connection, message: &T) -> anyhow::Result<()>
+pub fn sendDatagramMessage<T>(connection: &impl DatagramConnection, message: &T) -> anyhow::Result<()>
 where
     T: Serialize,
 {
     let bincode_config = get_bincode_config();
-    let bytes = Bytes::from(bincode_config.serialize(message)?);
-    connection.send_datagram(bytes)?;
-    Ok(())
+    connection.send_datagram_bytes(Bytes::from(bincode_config.serialize(message)?))
 }
 
-pub async fn awaitDatagramMessage<T>(connection: &Connection) -> anyhow::Result<T>
+pub async fn awaitDatagramMessage<T>(connection: &impl DatagramConnection) -> anyhow::Result<T>
 where
     T: DeserializeOwned,
 {
-    let bytes = connection.read_datagram().await?;
+    let bytes = connection.recv_datagram_bytes().await?;
     let bincode_config = get_bincode_config();
     let message = bincode_config.deserialize::<T>(&bytes)?;
     Ok(message)
@@ -91,6 +92,6 @@ where
 // ---------------------- Ping ----------------------
 
 // A player's round trip to the server, as measured on their connection. The connection measures it from its first packets, so it's known by the time a player joins.
-pub fn getPingMs(connection: &Connection) -> u16 {
+pub fn getPingMs(connection: &impl DatagramConnection) -> u16 {
     u16::try_from(connection.rtt().as_millis()).unwrap_or(u16::MAX)
 }

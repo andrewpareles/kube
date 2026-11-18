@@ -1,12 +1,11 @@
 #![allow(non_snake_case)]
 
 use crate::playtest_auth::PlaytestServerStatus;
-use crate::server_networking::{Server, ServerForeignCharacterDTO, ServerForeignPlayerDTO, ServerMode};
+use crate::server_networking::{Server, ServerForeignCharacterDTO, ServerForeignPlayerDTO, ServerMode, WebTransportServerConfig};
 use game_types::{
     consts::{SERVER_MAX_NUM_PHYSICS_STEPS_PER_TICK, SERVER_PLAYER_PINGS_INTERVAL_MS, SERVER_SIM_AND_SEND_SECS},
     object_types::{ObjectId, ObjectInfo, ObjectKind},
 };
-use quinn::Connection;
 use shared::game::{
     jsRuntime::{
         JsConsoleLogCallback, JsRuntimeInitialization, initializeJsAndRunInitialScripts, initializeJsRuntime, pollServerFnCall, runPendingJS,
@@ -17,6 +16,7 @@ use shared::game::{
 use shared::{
     helpers::multi_thread_hashmap::MultiThreadHashMap,
     protocol::messages::{MessageNum, NetworkedCoords, NetworkedPhysicsInfo3D, ServerFnCallMessage},
+    protocol::player_connection::PlayerConnection,
 };
 use std::{
     collections::HashMap,
@@ -37,6 +37,7 @@ pub fn start_running_server_in_bg(
     server_start_time: Instant,
     server_port: u16,
     server_mode: ServerMode,
+    webtransport: Option<WebTransportServerConfig>,
     console_log_callback: Option<JsConsoleLogCallback>,
 ) -> Option<Arc<RwLock<World>>> {
     let (js_callback_inputs_tx, js_callback_inputs_rx) = mpsc::unbounded_channel();
@@ -81,6 +82,7 @@ pub fn start_running_server_in_bg(
                     server_js_fn_request_tx,
                     kill_server_cancel_token.clone(),
                     server_port,
+                    webtransport,
                 )
                 .await
             {
@@ -126,7 +128,7 @@ pub fn start_running_server_in_bg(
 async fn run_server_on_current_thread_forever(
     worldArc: Arc<RwLock<World>>,
     serverArc: Arc<Server>,
-    connection_of_player_object_id_arc: Arc<MultiThreadHashMap<ObjectId, Connection>>,
+    connection_of_player_object_id_arc: Arc<MultiThreadHashMap<ObjectId, PlayerConnection>>,
     mut foreign_character_dto_rx: mpsc::UnboundedReceiver<(ServerForeignCharacterDTO, MessageNum)>, // with the input's latest_applied_message_num
     mut foreign_player_dto_rx: mpsc::UnboundedReceiver<ServerForeignPlayerDTO>,
     mut server_js_fn_request_rx: mpsc::UnboundedReceiver<(ObjectId, ServerFnCallMessage, oneshot::Sender<anyhow::Result<String>>)>,
@@ -194,7 +196,11 @@ async fn run_server_on_current_thread_forever(
                     prev_physics_step_live_server_sim_ms,
                     live_server_sim_ms,
                     SERVER_SIM_AND_SEND_SECS * 1000.0,
-                    if did_prev_tick_overrun_budget { 1 } else { SERVER_MAX_NUM_PHYSICS_STEPS_PER_TICK },
+                    if did_prev_tick_overrun_budget {
+                        1
+                    } else {
+                        SERVER_MAX_NUM_PHYSICS_STEPS_PER_TICK
+                    },
                 );
                 if num_steps == 0 {
                     continue;
