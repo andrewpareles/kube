@@ -21,6 +21,31 @@ import {
 
 export const runtime = "nodejs";
 
+type EdgegapWebtransportInfo = ReturnType<typeof readEdgegapWebtransportInfo>;
+
+// A page needs the browser's address, and a site that cannot name one says why instead of answering with a port the
+// browser could not verify.
+const readWebtransportOfPort = ({
+  requestId,
+  webtransportPort,
+}: {
+  requestId: string;
+  webtransportPort: number | null;
+}): { webtransport: EdgegapWebtransportInfo } | { error: string } => {
+  try {
+    return {
+      webtransport: readEdgegapWebtransportInfo({ requestId, webtransportPort }),
+    };
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error
+          ? error.message
+          : "This site cannot name the game's server.",
+    };
+  }
+};
+
 type RouteContext = {
   params: Promise<{
     requestId: string;
@@ -69,6 +94,7 @@ export async function GET(request: Request, context: RouteContext) {
     .select({
       publicIp: runningServers.publicIp,
       port: runningServers.externalPort,
+      webtransportPort: runningServers.webtransportPort,
     })
     .from(runningServers)
     .where(eq(runningServers.requestId, requestId))
@@ -93,9 +119,21 @@ export async function GET(request: Request, context: RouteContext) {
       );
     }
 
+    const runningWebtransport = readWebtransportOfPort({
+      requestId,
+      webtransportPort: runningServer.webtransportPort,
+    });
+    if ("error" in runningWebtransport) {
+      return NextResponse.json(
+        { error: runningWebtransport.error },
+        { status: 500 },
+      );
+    }
+
     return NextResponse.json({
       public_ip: runningServer.publicIp,
       port: runningServer.port,
+      webtransport: runningWebtransport.webtransport,
     });
   }
 
@@ -140,14 +178,23 @@ export async function GET(request: Request, context: RouteContext) {
     requestId,
     publicIp: connectionInfo.publicIp,
     externalPort: connectionInfo.port,
+    webtransportPort: connectionInfo.webtransportPort,
   });
+
+  const startingWebtransport = readWebtransportOfPort({
+    requestId,
+    webtransportPort: connectionInfo.webtransportPort,
+  });
+  if ("error" in startingWebtransport) {
+    return NextResponse.json(
+      { error: startingWebtransport.error },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json({
     public_ip: connectionInfo.publicIp,
     port: connectionInfo.port,
-    webtransport: readEdgegapWebtransportInfo({
-      requestId,
-      webtransportPort: connectionInfo.webtransportPort,
-    }),
+    webtransport: startingWebtransport.webtransport,
   });
 }

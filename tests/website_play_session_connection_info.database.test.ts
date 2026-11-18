@@ -47,9 +47,10 @@ test('a player gets the address of a server that starts running while they ask f
             const response = await GET(new Request(`http://localhost/api/play-sessions/${requestId}/connection-info`, { headers: { authorization: `Bearer ${playAuth}` } }), { params: Promise.resolve({ requestId }) })
             return { status: response.status, body: await response.json() }
         }
-        // Moves the server and its seats from starting to running inside a transaction, like the ready webhook does.
-        const promote = async (promotion: typeof sql, requestId: string) => {
-            await promotion`insert into running_servers (request_id, game_id, gameworld_version_num, max_players, public_ip, external_port) select request_id, game_id, gameworld_version_num, max_players, '203.0.113.7', 7777 from starting_servers where request_id = ${requestId}`
+        // Moves the server and its seats from starting to running inside a transaction, like the ready webhook does, with the
+        // browser port Edgegap published for it when there is one.
+        const promote = async (promotion: typeof sql, requestId: string, webtransportPort: number | null = null) => {
+            await promotion`insert into running_servers (request_id, game_id, gameworld_version_num, max_players, public_ip, external_port, webtransport_port) select request_id, game_id, gameworld_version_num, max_players, '203.0.113.7', 7777, ${webtransportPort} from starting_servers where request_id = ${requestId}`
             await promotion`insert into running_player_sessions (profile_id, request_id) select profile_id, request_id from starting_player_sessions where request_id = ${requestId}`
             await promotion`delete from starting_servers where request_id = ${requestId}`
         }
@@ -69,12 +70,36 @@ test('a player gets the address of a server that starts running while they ask f
 
         await t.test('the server starts running while the route waits to read the starting seat', async () => {
             const player = await addPlayerOnStartingServer()
-            assert.deepEqual(await promoteWhileRouteWaitsOn('starting_player_sessions', player), { status: 200, body: { public_ip: '203.0.113.7', port: 7777 } })
+            assert.deepEqual(await promoteWhileRouteWaitsOn('starting_player_sessions', player), { status: 200, body: { public_ip: '203.0.113.7', port: 7777, webtransport: null } })
         })
 
         await t.test('the server starts running while the route waits to read the running servers', async () => {
             const player = await addPlayerOnStartingServer()
-            assert.deepEqual(await promoteWhileRouteWaitsOn('running_servers', player), { status: 200, body: { public_ip: '203.0.113.7', port: 7777 } })
+            assert.deepEqual(await promoteWhileRouteWaitsOn('running_servers', player), { status: 200, body: { public_ip: '203.0.113.7', port: 7777, webtransport: null } })
+        })
+
+        // A running server keeps the browser port Edgegap published, so a page that arrives after it started still joins.
+        await t.test('a server that is already running gives out its browser address', async () => {
+            process.env.WEBTRANSPORT_HOST_SUFFIX = 'play.kube.games'
+            const player = await addPlayerOnStartingServer()
+            await sql.begin(promotion => promote(promotion, player.requestId, 7778))
+            assert.deepEqual(await askForAddress(player), {
+                status: 200,
+                body: {
+                    public_ip: '203.0.113.7',
+                    port: 7777,
+                    webtransport: { host: `${player.requestId}.play.kube.games`, port: 7778, certificate_sha256_base64: null },
+                },
+            })
+            delete process.env.WEBTRANSPORT_HOST_SUFFIX
+        })
+
+        // A site with no suffix cannot name a server under the certificate's wildcard, and the page shows this sentence.
+        await t.test('a site that cannot name a server says why', async () => {
+            const player = await addPlayerOnStartingServer()
+            await sql.begin(promotion => promote(promotion, player.requestId, 7778))
+            delete process.env.WEBTRANSPORT_HOST_SUFFIX
+            assert.deepEqual(await askForAddress(player), { status: 500, body: { error: 'This site has no WEBTRANSPORT_HOST_SUFFIX, so it cannot name the servers a browser joins.' } })
         })
 
         await t.test('a server that stopped while starting is gone', async () => {

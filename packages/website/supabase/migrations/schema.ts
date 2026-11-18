@@ -225,6 +225,8 @@ export const runningServers = pgTable("running_servers", {
 	maxPlayers: integer("max_players").notNull(),
 	publicIp: text("public_ip").notNull(),
 	externalPort: integer("external_port").notNull(),
+	// The HTTP/3 port a browser joins on. A deployment that never published one leaves it null.
+	webtransportPort: integer("webtransport_port"),
 }, (table) => [
 	foreignKey({
 		columns: [table.gameId],

@@ -21,10 +21,12 @@ export const promoteStartingServerToRunning = async ({
   requestId,
   publicIp,
   externalPort,
+  webtransportPort,
 }: {
   requestId: string;
   publicIp: string;
   externalPort: number;
+  webtransportPort: number | null;
 }) => {
   return db.transaction(async (tx) => {
     const [startingServer] = await tx
@@ -70,12 +72,14 @@ export const promoteStartingServerToRunning = async ({
         maxPlayers: startingServer.maxPlayers,
         publicIp,
         externalPort,
+        webtransportPort,
       })
       .onConflictDoUpdate({
         target: runningServers.requestId,
         set: {
           publicIp,
           externalPort,
+          webtransportPort,
         },
       });
 

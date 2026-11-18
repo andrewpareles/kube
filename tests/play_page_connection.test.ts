@@ -33,14 +33,16 @@ test('the play scene dials the game server over webtransport once the site repor
 // instead of dialing an address that does not exist yet.
 test('connection info reports the browser address only once the deployment publishes it', () => {
     assert.match(connectionInfoRouteSource, /if \(!connectionInfo\) \{\s*return NextResponse\.json\(\{\}, \{ status: 202 \}\)/)
-    assert.match(connectionInfoRouteSource, /webtransport: readEdgegapWebtransportInfo\(\{/)
-    assert.ok(connectionInfoRouteSource.lastIndexOf('webtransport: readEdgegapWebtransportInfo({') > connectionInfoRouteSource.indexOf('promoteStartingServerToRunning('))
+    assert.match(connectionInfoRouteSource, /webtransport: readEdgegapWebtransportInfo\(\{ requestId, webtransportPort \}\)/)
+    assert.ok(connectionInfoRouteSource.indexOf('webtransportPort: runningServer.webtransportPort') > 0)
+    assert.ok(connectionInfoRouteSource.indexOf('{ status: 202 }') < connectionInfoRouteSource.indexOf('promoteStartingServerToRunning('))
 })
 
 // Edgegap publishes the browser port under its own name, and the page needs the deployment's address for it.
 test('the browser port is read by name from the deployment and addressed under its own zone', () => {
     assert.match(edgegapApiSource, /EDGEGAP_WEBTRANSPORT_PORT_NAME = "webtransport"/)
     assert.match(edgegapApiSource, /parseEdgegapUdpPort\(\{\s*ports: deploymentStatus\.ports,\s*portName: EDGEGAP_WEBTRANSPORT_PORT_NAME,\s*edgegapInternalPort: getEdgegapWebtransportInternalPort\(\),/)
-    assert.match(edgegapApiSource, /`\$\{requestId\}\.\$\{getRequiredEnvVar\("WEBTRANSPORT_HOST_SUFFIX"\)\}`/)
+    assert.match(edgegapApiSource, /`\$\{requestId\}\.\$\{hostSuffix\}`/)
+    assert.match(edgegapApiSource, /process\.env\.WEBTRANSPORT_HOST_SUFFIX\?\.trim\(\)/)
     assert.match(edgegapApiSource, /certificate_sha256_base64:/)
 })

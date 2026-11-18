@@ -94,9 +94,17 @@ export const getEdgegapWebtransportInternalPort = () =>
   parseIntEnvVar("WEBTRANSPORT_INTERNAL_PORT");
 
 // A page dials the browser endpoint by name, so each deployment needs a name of its own under the suffix its
-// certificate covers.
-export const getWebtransportHostname = (requestId: string) =>
-  `${requestId}.${getRequiredEnvVar("WEBTRANSPORT_HOST_SUFFIX")}`;
+// certificate covers. Without the suffix the site cannot name a server at all, and says so instead of handing the
+// browser an address whose certificate it cannot verify.
+export const getWebtransportHostname = (requestId: string) => {
+  const hostSuffix = process.env.WEBTRANSPORT_HOST_SUFFIX?.trim();
+  if (!hostSuffix) {
+    throw new Error(
+      "This site has no WEBTRANSPORT_HOST_SUFFIX, so it cannot name the servers a browser joins.",
+    );
+  }
+  return `${requestId}.${hostSuffix}`;
+};
 
 export const getEdgegapAuthorizationHeader = () => {
   return `token ${getRequiredEnvVar("EDGEGAP_API_TOKEN")}`;
@@ -305,6 +313,7 @@ export const handleEdgegapWebhookPost = async ({
         requestId,
         publicIp: connectionInfo.publicIp,
         externalPort: connectionInfo.port,
+        webtransportPort: connectionInfo.webtransportPort,
       });
     }
     if (!deploymentStatus.error && !isTerminalEdgegapStatus(deploymentStatus.current_status)) {
