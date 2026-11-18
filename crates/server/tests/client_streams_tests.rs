@@ -9,6 +9,7 @@ use shared::protocol::{
         ClientGameChatMessage, ClientMessageTCP, GameChatEntry, ServerFnCallMessage, ServerFunctionResultMessage, ServerGameChatMessage,
         ServerGameChatResultMessage,
     },
+    player_connection::{PlayerConnection, PlayerSendStream},
     quic_cert::QUIC_CERT_SERVER_NAME,
     quic_send_receive_helpers::{MAX_TCP_MESSAGE_BYTES, awaitTcpMessageMaxBytes, sendTcpMessage, sendTcpRequest},
 };
@@ -39,7 +40,7 @@ impl ConnectionTest {
         let (client, server) = tokio::try_join!(connecting, async { server_endpoint.accept().await.unwrap().await }).unwrap();
         let (request_tx, request_rx) = mpsc::unbounded_channel();
         start_receiving_client_messages_tcp_in_bg(
-            server.clone(),
+            PlayerConnection::Quic(server.clone()),
             Arc::new(Mutex::new(ServerGameChat::new(None))),
             PLAYER_OBJECT_ID,
             Some(USERID),
@@ -234,7 +235,7 @@ async fn stopping_an_idle_subscription_ends_its_sender() {
         let test = ConnectionTest::new().await;
         let (send_stream, _recv_stream) = test.server.open_bi().await.unwrap();
         let game_chat = Mutex::new(ServerGameChat::new(None));
-        let sending = send_game_chat_messages(&game_chat, send_stream);
+        let sending = send_game_chat_messages(&game_chat, PlayerSendStream::Quic(send_stream));
         let stop_subscription = async {
             let (_send_stream, mut recv_stream) = test.client.accept_bi().await.unwrap();
             let ServerGameChatMessage::History(_) = awaitTcpMessageMaxBytes(&mut recv_stream, MAX_TCP_MESSAGE_BYTES).await.unwrap() else {

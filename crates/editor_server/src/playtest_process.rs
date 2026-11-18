@@ -338,6 +338,7 @@ impl Playtest {
             Instant::now(),
             server_port,
             ServerMode::Playtest(auth_arc.clone()),
+            None, // a playtest runs on somebody's machine, which has no browser certificate to serve
             Some(get_console_log_callback(PlaytestLogSource::Server)),
         )
         .context("The playtest server could not start.")?;

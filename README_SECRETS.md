@@ -27,6 +27,8 @@ These are the secrets we store in Infisical, and where they're used.
 - `AWS_BEARER_TOKEN_BEDROCK` (a Bedrock API key): editor
 - `AZURE_OPENAI_API_KEY` (a key for the `useglass-foundry` Azure resource, whose `gpt-image-2.5-sunburst` deployment draws the AI thumbnails): editor
 - `QUIC_SERVER_KEY_DER_BASE64`: game server and editor
+- `WEBTRANSPORT_CERT_CHAIN_PEM_BASE64` (the wildcard certificate's chain, as PEM in base64): game server, for the HTTP/3 endpoint a browser joins through
+- `WEBTRANSPORT_PRIVATE_KEY_PEM_BASE64` (that certificate's key as a PKCS#8 PEM in base64): game server
 
 The website passes the game server and editor theirs as hidden env vars when it starts them on Edgegap. `secretEnvKeysOfServer` in `packages/website/lib/edgegapApi.ts` lists what each one gets, under the same names.
 

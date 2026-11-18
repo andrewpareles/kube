@@ -25,6 +25,10 @@ pub static GAMEWORLD_VERSION_NUM: LazyLock<i64> = LazyLock::new(|| read_non_empt
 pub static ARBITRIUM_REQUEST_ID: LazyLock<String> = LazyLock::new(|| read_non_empty_env_var("ARBITRIUM_REQUEST_ID"));
 pub static POSTHOG_KEY: LazyLock<String> = LazyLock::new(|| read_non_empty_env_var("POSTHOG_KEY"));
 pub static QUIC_SERVER_KEY_DER_BASE64: LazyLock<String> = LazyLock::new(|| read_non_empty_env_var("QUIC_SERVER_KEY_DER_BASE64"));
+// The browser endpoint's own certificate chain and key, as PEM, and the port it listens on.
+pub static WEBTRANSPORT_INTERNAL_PORT: LazyLock<u16> = LazyLock::new(|| std::env::var("WEBTRANSPORT_INTERNAL_PORT").unwrap().parse::<u16>().unwrap());
+pub static WEBTRANSPORT_CERT_CHAIN_PEM_BASE64: LazyLock<String> = LazyLock::new(|| read_non_empty_env_var("WEBTRANSPORT_CERT_CHAIN_PEM_BASE64"));
+pub static WEBTRANSPORT_PRIVATE_KEY_PEM_BASE64: LazyLock<String> = LazyLock::new(|| read_non_empty_env_var("WEBTRANSPORT_PRIVATE_KEY_PEM_BASE64"));
 
 // Hosted editor service connections are configured by its deployment.
 pub static ARBITRIUM_DELETE_URL: LazyLock<String> = LazyLock::new(|| read_non_empty_env_var("ARBITRIUM_DELETE_URL"));

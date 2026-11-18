@@ -8,7 +8,7 @@ use std::{
 use crate::database::{ValidatedPlayAuth, end_player_session, get_play_auth_hash_of_profile_id_batch, insert_game_chats, validate_play_auth};
 use crate::playtest_auth::{PlaytestAuth, PlaytestServerStatus};
 use crate::posthog::capture_posthog_event;
-use anyhow::{Result, ensure};
+use anyhow::{Result, bail, ensure};
 use base64::{Engine, engine::general_purpose::STANDARD as BASE64_STANDARD};
 use bincode::Options;
 use game_types::{
@@ -20,8 +20,8 @@ use game_types::{
     object_types::{LocalGroupInfo, ObjectBeingAdded, ObjectId, ObjectInfo, ObjectKind, Orientation3D, PhysicsInfo3D, PlayerInfo, player::UserId},
 };
 use profanity::censor;
-use quinn::{Connection, Endpoint, SendStream, ServerConfig};
-use rustls::pki_types::{CertificateDer, PrivateKeyDer};
+use quinn::{Endpoint, ServerConfig};
+use rustls::pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject};
 use shared::protocol::{
     bincode_config::get_bincode_config,
     messages::{
@@ -34,12 +34,14 @@ use shared::protocol::{
 };
 use shared::{
     conversions::time_conversions::{get_accurate_elapsed_time, get_accurate_elapsed_time_at},
-    env::env_vars::{GAME_ID, QUIC_SERVER_KEY_DER_BASE64},
+    env::env_vars::{GAME_ID, QUIC_SERVER_KEY_DER_BASE64, WEBTRANSPORT_CERT_CHAIN_PEM_BASE64, WEBTRANSPORT_INTERNAL_PORT, WEBTRANSPORT_PRIVATE_KEY_PEM_BASE64},
     game::world::{JsCallbackInputs, World, WorldDirtyObjectFlags},
     helpers::{
         hashmap_heap::HashMapHeap, hashmap_queue::HashMapQueue, hashmap_with_reverse::HashMapWithReverse, iterator_round_robin::IteratorRoundRobin,
         multi_thread_hashmap::MultiThreadHashMap,
     },
+    player_profile::PlayerProfile,
+    protocol::player_connection::{DatagramConnection, PlayerConnection, PlayerSendStream},
     protocol::{
         messages::{
             ForeignCharacterDelta, ForeignPlayerDelta, InputNum, MessageNum, NetworkedCoords, ObjectAddDelta, ObjectDelta, ObjectModifyDelta,
@@ -49,15 +51,17 @@ use shared::{
             MAX_TCP_MESSAGE_BYTES, awaitDatagramMessage, awaitTcpMessage, awaitTcpMessageMaxBytes, getPingMs, sendDatagramMessage, sendTcpMessage,
         },
     },
-    player_profile::PlayerProfile,
 };
 use tokio::sync::{Mutex, RwLock, Semaphore, broadcast, mpsc, oneshot};
 use tokio_util::{sync::CancellationToken, task::TaskTracker};
+use wtransport::Identity;
+use wtransport::tls::{Certificate, CertificateChain, PrivateKey};
 
 // ----------------- Constants -----------------
 
 pub const GAME_CHAT_SUBMISSION_INTERVAL: Duration = Duration::from_millis(500); // TODO: AI-PICKED-VALUE: Process at most two messages per second from each connection, using stream backpressure.
 pub const SERVER_FN_CALL_INTERVAL: Duration = Duration::from_nanos(1_000_000_000 / 120); // TODO: AI-PICKED-VALUE: Start at most 120 'use server' calls a second from each connection, twice the tick rate.
+pub const WEBTRANSPORT_PATH: &str = "/play";
 
 const REVALIDATE_USERS_POLL_SECS: u64 = 10; // kick players with a changed play_auth
 
@@ -109,6 +113,45 @@ impl SizeCheckResult {
     }
 }
 
+// ----------------- The browser endpoint -----------------
+
+// What a browser needs to reach this server: the certificate this deployment was given, and the port it publishes.
+// A page checks the certificate against the name it dialled, and refuses the self-signed one the desktop client pins.
+pub struct WebTransportServerConfig {
+    pub identity: Identity,
+    pub port: u16,
+}
+
+impl WebTransportServerConfig {
+    // The certificate chain and its key arrive as PEM in base64, the same way the desktop key does, so one image serves
+    // a local run and a deployment without reading either from disk.
+    pub fn fromEnv() -> Result<Self> {
+        let certificate_chain_pem = BASE64_STANDARD.decode(WEBTRANSPORT_CERT_CHAIN_PEM_BASE64.as_str())?;
+        let private_key_pem = BASE64_STANDARD.decode(WEBTRANSPORT_PRIVATE_KEY_PEM_BASE64.as_str())?;
+        let certificates = CertificateDer::pem_slice_iter(&certificate_chain_pem)
+            .map(|certificate_der| Ok(Certificate::from_der(certificate_der?.to_vec())?))
+            .collect::<Result<Vec<_>>>()?;
+        let PrivateKeyDer::Pkcs8(private_key_der) = PrivateKeyDer::from_pem_slice(&private_key_pem)? else {
+            bail!("WEBTRANSPORT_PRIVATE_KEY_PEM_BASE64 must hold a PKCS#8 private key, which begins with BEGIN PRIVATE KEY");
+        };
+        Ok(Self {
+            identity: Identity::new(
+                CertificateChain::new(certificates),
+                PrivateKey::from_der_pkcs8(private_key_der.secret_pkcs8_der().to_vec()),
+            ),
+            port: *WEBTRANSPORT_INTERNAL_PORT,
+        })
+    }
+
+    fn buildServerConfig(self) -> Result<wtransport::ServerConfig> {
+        Ok(wtransport::ServerConfig::builder()
+            .with_bind_address(SocketAddr::from(([0, 0, 0, 0], self.port)))
+            .with_identity(self.identity)
+            .max_idle_timeout(Some(Duration::from_secs(SERVER_MAX_IDLE_TIMEOUT_SECS)))?
+            .build())
+    }
+}
+
 // ----------------- Server (public) -----------------
 
 // tx/rx'd to main game loop
@@ -147,7 +190,7 @@ enum SnapshotSendState {
 
 struct UserConnectionInfo {
     // connection stuff
-    connection: Connection, // QUIC connection
+    connection: PlayerConnection,
 
     // controlled by server
     snapshot_send_state: SnapshotSendState,
@@ -206,7 +249,7 @@ pub struct Server {
     pub server_mode: ServerMode,
     auth_info_of_player_object_id: RwLock<HashMap<ObjectId, (String, String)>>, // (play_auth_hash, profile_id)
     userConnectionInfoOfPlayerObjectId: RwLock<HashMap<ObjectId, UserConnectionInfo>>,
-    connection_of_player_object_id_arc: Arc<MultiThreadHashMap<ObjectId, Connection>>,
+    connection_of_player_object_id_arc: Arc<MultiThreadHashMap<ObjectId, PlayerConnection>>,
     startTime: Instant,
     game_chat_arc: Arc<Mutex<ServerGameChat>>,
     player_cleanup_tasks_tracker: TaskTracker,
@@ -215,7 +258,7 @@ pub struct Server {
 impl Server {
     pub fn new(
         startTime: Instant,
-        connection_of_player_object_id_arc: Arc<MultiThreadHashMap<ObjectId, Connection>>,
+        connection_of_player_object_id_arc: Arc<MultiThreadHashMap<ObjectId, PlayerConnection>>,
         server_mode: ServerMode,
         player_cleanup_tasks_tracker: TaskTracker,
         js_callback_inputs_tx: Option<mpsc::UnboundedSender<JsCallbackInputs>>,
@@ -418,7 +461,7 @@ impl Server {
             };
         }
 
-        let script_raw_code_connections: Vec<Connection> = users_lock
+        let script_raw_code_connections: Vec<PlayerConnection> = users_lock
             .values()
             .map(|user_connection_info| user_connection_info.connection.clone())
             .collect();
@@ -454,7 +497,7 @@ impl Server {
                             log::warn!("Error sending script raw code to user: {}", error);
                             break;
                         }
-                        let _ = send_stream_script_raw_code.finish();
+                        let _ = send_stream_script_raw_code.finish().await;
                     }
                 };
                 // A player who doesn't take a script's code can't run the game, and their waiting sends would pile up every tick.
@@ -1073,6 +1116,7 @@ impl Server {
         server_js_fn_request_tx: mpsc::UnboundedSender<(ObjectId, ServerFnCallMessage, oneshot::Sender<anyhow::Result<String>>)>,
         kill_server_cancel_token: CancellationToken,
         server_port: u16,
+        webtransport: Option<WebTransportServerConfig>,
     ) -> anyhow::Result<()> {
         let bind_address: SocketAddr = format!("0.0.0.0:{server_port}").parse()?;
         log::info!("Game networking server listening on {}", bind_address);
@@ -1098,8 +1142,48 @@ impl Server {
         server_config.transport = Arc::new(transport);
 
         let endpoint = Endpoint::server(server_config, bind_address)?;
+
+        // A browser's connection arrives as an HTTP/3 session rather than as a raw QUIC connection, so it gets its own
+        // listener, bound here so a port that cannot open stops the server instead of one transport quietly missing.
+        let webtransport_endpoint = match webtransport {
+            None => None,
+            Some(webtransport) => {
+                let webtransport_endpoint = wtransport::Endpoint::server(webtransport.buildServerConfig()?)?;
+                log::info!(
+                    "Game browser endpoint listening on {} for {}",
+                    webtransport_endpoint.local_addr()?,
+                    WEBTRANSPORT_PATH
+                );
+                Some(webtransport_endpoint)
+            }
+        };
+
         if let ServerMode::Playtest(auth_arc) = &self.server_mode {
             auth_arc.set_status(PlaytestServerStatus::Running);
+        }
+
+        if let Some(webtransport_endpoint) = webtransport_endpoint {
+            let selfArc = self.clone();
+            let worldArc = worldArc.clone();
+            let foreign_character_dto_tx = foreign_character_dto_tx.clone();
+            let foreign_player_dto_tx = foreign_player_dto_tx.clone();
+            let server_js_fn_request_tx = server_js_fn_request_tx.clone();
+            let kill_server_cancel_token = kill_server_cancel_token.clone();
+            tokio::spawn(async move {
+                if let Err(e) = selfArc
+                    .acceptWebTransportConnectionsForever(
+                        webtransport_endpoint,
+                        worldArc,
+                        foreign_character_dto_tx,
+                        foreign_player_dto_tx,
+                        server_js_fn_request_tx,
+                        kill_server_cancel_token,
+                    )
+                    .await
+                {
+                    log::error!("Browser endpoint loop exited with error: {}", e);
+                }
+            });
         }
 
         if let ServerMode::Official = self.server_mode {
@@ -1144,462 +1228,547 @@ impl Server {
                 }
             };
 
-            // handle the new user connection in a new task so we can await
+            let selfArc = self.clone();
+            let worldArc = worldArc.clone();
+            let foreign_character_dto_tx = foreign_character_dto_tx.clone();
+            let foreign_player_dto_tx = foreign_player_dto_tx.clone();
+            let server_js_fn_request_tx = server_js_fn_request_tx.clone();
+            let kill_server_cancel_token = kill_server_cancel_token.clone();
+            tokio::spawn(async move {
+                // await the QUIC handshake or fail/stop
+                let player_connection = match incoming_handshake.await {
+                    Ok(connection) => PlayerConnection::Quic(connection),
+                    Err(e) => return log::error!("Incoming QUIC handshake ended before connection establishment: {}", e),
+                };
+                selfArc
+                    .joinPlayerConnection(
+                        player_connection,
+                        worldArc,
+                        foreign_character_dto_tx,
+                        foreign_player_dto_tx,
+                        server_js_fn_request_tx,
+                        kill_server_cancel_token,
+                    )
+                    .await;
+            });
+        }
+    }
+
+    // A browser reaches the game over HTTP/3 with WebTransport, on its own listening port with its own certificate.
+    // Every session then joins the game exactly as a QUIC connection does.
+    async fn acceptWebTransportConnectionsForever(
+        self: Arc<Self>,
+        endpoint: wtransport::Endpoint<wtransport::endpoint::endpoint_side::Server>,
+        worldArc: Arc<RwLock<World>>,
+        foreign_character_dto_tx: mpsc::UnboundedSender<(ServerForeignCharacterDTO, MessageNum)>,
+        foreign_player_dto_tx: mpsc::UnboundedSender<ServerForeignPlayerDTO>,
+        server_js_fn_request_tx: mpsc::UnboundedSender<(ObjectId, ServerFnCallMessage, oneshot::Sender<anyhow::Result<String>>)>,
+        kill_server_cancel_token: CancellationToken,
+    ) -> anyhow::Result<()> {
+        loop {
+            let kill_server_cancel_token = kill_server_cancel_token.clone();
+            let incoming_session = tokio::select! {
+                _ = kill_server_cancel_token.cancelled() => {
+                    log::info!("Kill signal received, shutting down browser accept loop");
+                    endpoint.close(0u32.into(), b"Server stopped.");
+                    endpoint.wait_idle().await;
+                    return Ok(());
+                }
+                incoming_session = endpoint.accept() => incoming_session,
+            };
+
             let selfArc = self.clone();
             let worldArc = worldArc.clone();
             let foreign_character_dto_tx = foreign_character_dto_tx.clone();
             let foreign_player_dto_tx = foreign_player_dto_tx.clone();
             let server_js_fn_request_tx = server_js_fn_request_tx.clone();
             tokio::spawn(async move {
-                // await handshake or fail/stop
-                let connection = match incoming_handshake.await {
-                    Ok(conn) => conn,
-                    Err(e) => return log::error!("Incoming QUIC handshake ended before connection establishment: {}", e),
+                let session_request = match incoming_session.await {
+                    Ok(session_request) => session_request,
+                    Err(e) => return log::error!("Incoming WebTransport handshake ended before a session: {}", e),
                 };
-                let remote_addr = connection.remote_address();
-                log::info!("Accepted QUIC connection from {}", remote_addr);
-
-                // await TCP or fail/stop
-                log::info!("Connection {}: waiting for initial bidirectional handshake stream", remote_addr);
-                let (mut handshake_send_stream, mut handshake_recv_stream) = match connection.accept_bi().await {
-                    Ok((send_stream, recv_stream)) => (send_stream, recv_stream),
-                    Err(e) => return Self::closeConnection(connection, &format!("The game had an issue accepting your connection. {}", e)),
-                };
-                log::info!("Connection {}: received initial handshake stream", remote_addr);
-
-                // wait for the client's hello message
-                log::info!("Connection {}: waiting for hello message", remote_addr);
-                let client_hello = match awaitTcpMessage::<ClientHandshakeTCP>(&mut handshake_recv_stream).await {
-                    Ok(ClientHandshakeTCP::Hello(client_hello)) => client_hello,
-                    Ok(_) => return Self::closeConnection(connection, &format!("The server expected a hello message, but got another message.")),
-                    Err(e) => return Self::closeConnection(connection, &format!("The server had an issue reading your message. {}", e)),
-                };
-                log::info!("Connection {}: received hello message", remote_addr);
-
-                // check for version mismatch - reject connection if the server protocol version does not match the client protocol version
-                let client_protocol_version = client_hello.client_server_protocol_version;
-                let server_protocol_version = CLIENT_SERVER_PROTOCOL_VERSION;
-                if client_protocol_version != server_protocol_version {
-                    // depending on whether client is newer (typical) or server is newer (shouldnt really happen), give different message
-                    let version_mismatch_message = if client_protocol_version > server_protocol_version {
-                        "Sorry, the server's code is outdated. Please try another server."
-                    } else {
-                        "Please restart to update your client."
-                    };
-
-                    let client_version = client_hello.client_app_version;
-                    let server_version = env!("CARGO_PKG_VERSION");
-
-                    return Self::closeConnection(
-                        connection,
-                        &format!("Version mismatch: your client is {client_version}, but the server is {server_version}. {version_mismatch_message}",),
+                if session_request.path() != WEBTRANSPORT_PATH {
+                    log::warn!(
+                        "Rejecting a WebTransport session for {} from {}",
+                        session_request.path(),
+                        session_request.remote_address()
                     );
+                    return session_request.not_found().await;
                 }
-
-                // Every desktop connection must carry a website-issued play token.
-                let (username, userid, profile, auth_info) = match &selfArc.server_mode {
-                    ServerMode::Playtest(auth_arc) => match auth_arc.claim(&client_hello.play_auth).await {
-                        Ok(player) => (player.username, player.user_id, player.profile, None),
-                        Err(error) => return Self::closeConnection(connection, &error.to_string()),
-                    },
-                    ServerMode::Official => match validate_play_auth(&client_hello.play_auth).await {
-                        Ok(Some(validated_play_auth)) => {
-                            let ValidatedPlayAuth {
-                                profile_id,
-                                user_id,
-                                username,
-                                profile,
-                                play_auth_hash,
-                            } = validated_play_auth;
-                            (username, Some(user_id), profile, Some((play_auth_hash, profile_id)))
-                        }
-                        Err(error) => {
-                            return Self::closeConnection(connection, &format!("Invalid play auth token; please launch from the website again. {error}"));
-                        }
-                        Ok(None) => return Self::closeConnection(connection, "Invalid play auth token; please launch from the website again."),
-                    },
+                let connection = match session_request.accept().await {
+                    Ok(connection) => connection,
+                    Err(e) => return log::error!("WebTransport session was not accepted: {}", e),
                 };
-                log::info!("Connection {}: validated userid={:?}", remote_addr, userid);
-
-                // This is so players joining at the same time don't both get processed together. Objects not sent out yet would reach this player twice,
-                // in their world and again from the next tick as new objects, so the join waits for a tick to send them.
-                // Held until the player is registered below, or a tick in between would send its changes to everyone but them.
-                // Checking for the account under the same lock means one account can't get in twice by joining twice at once.
-                let mut world_lock = loop {
-                    let world_lock = worldArc.write().await;
-                    // This always ends: every tick sends out everything added before it, and between ticks only a join adds an object, so each tick lets at least one waiting join in.
-                    if world_lock.addedObjectIds.is_empty() {
-                        break world_lock;
-                    }
-                    drop(world_lock);
-                    tokio::time::sleep(Duration::from_secs_f32(SERVER_SIM_AND_SEND_SECS)).await;
-                };
-
-                // if userid already exists, close connection
-                // A playtest lets that account's next player in as a guest instead, since one account can run several test players.
-                let is_account_in_game = userid.is_some()
-                    && world_lock._kindOfObjectId.get_keys(&ObjectKind::Player).is_some_and(|player_object_ids| {
-                        player_object_ids
-                            .iter()
-                            .any(|player_object_id| match world_lock.getObject(*player_object_id).map(|object| &object.info) {
-                                Ok(ObjectInfo::Player(player_info)) => player_info.userid == userid,
-                                _ => false,
-                            })
-                    });
-                let (username, userid, profile) = match (is_account_in_game, &selfArc.server_mode) {
-                    (false, _) => (username, userid, profile),
-                    (true, ServerMode::Playtest(_)) => ("Guest".to_string(), None, PlayerProfile::GUEST),
-                    (true, ServerMode::Official) => {
-                        log::warn!("Connection {}: rejecting duplicate in-game connection for userid {:?}", remote_addr, userid);
-                        return Self::closeConnection(connection, "You're already in this game!");
-                    }
-                };
-
-                // get the stored world string without the player in it - that caused a lot of very confusing behavior since addObject marks as dirty already
-                // they get the same stored world everyone else has. updating the player later sends them and everyone else the new player object.
-                log::info!("Connection {}: serializing initial world for userid {:?}", remote_addr, userid);
-                let stored_world_string = match world_lock.toStoredWorldString() {
-                    Ok(stored_world_string) => stored_world_string,
-                    Err(e) => {
-                        let err_str = format!("The game had an issue when gathering the world for you. {}", e);
-                        Self::closeConnection(connection, &err_str);
-                        return log::error!("{}", err_str);
-                    }
-                };
-                let initialTeleportCountOfObjectId = world_lock.teleportCountOfObjectId.clone();
-                let template_data_ids = world_lock.getTemplateDataIds();
-
-                // this is detected by addObject callback and sent next to everyone including the player themself
-                let root_object_id = world_lock.getRootObjectId();
-                let player_object_id = world_lock.addObject(
-                    username.clone(),
-                    ObjectBeingAdded::Player(PlayerInfo {
-                        username: username.clone(),
-                        userid,
-                        preferredColor: profile.preferredColor,
-                        equippedItemId: profile.equippedItemId,
-                        headObjectId: None,      // gets set later by script
-                        characterObjectId: None, // gets set later by script
-                    }),
-                    root_object_id,
-                );
-                log::info!(
-                    "Connection {}: inserted player object {:?} for userid {:?}",
-                    remote_addr,
-                    player_object_id,
-                    userid
-                );
-                if let Some((play_auth_hash, profile_id)) = auth_info {
-                    selfArc.insertAuthInfoOfPlayerObjectId(player_object_id, play_auth_hash, profile_id).await;
-                }
-
-                // Tell the chat the player joined. The cleanup task below tells it they left.
-                let mut game_chat_lock = selfArc.game_chat_arc.lock().await;
-                game_chat_lock.add_entry(GameChatEntry::PlayerJoined { username: username.clone() });
-                drop(game_chat_lock);
-
-                // add user connection metadata to this struct
-                let mut users_lock = selfArc.userConnectionInfoOfPlayerObjectId.write().await;
-                users_lock.insert(
-                    player_object_id,
-                    UserConnectionInfo {
-                        connection: connection.clone(), // this is fine to clone, connections are cheap
-                        snapshot_send_state: SnapshotSendState::WaitingForReady,
-                        dirty: DirtyDeltaFlags {
-                            dirty_adds: HashSet::new(),
-                            dirty_modifies: HashMapQueue::new(),
-                            dirty_foreign_characters: HashMapQueue::new(),
-                            dirty_foreign_players: HashMapQueue::new(),
-                            dirty_removes: HashSet::new(),
-                        },
-                        unacked: UnackedDeltaFlags {
-                            unacked_modifies: HashMapWithReverse::new(),
-                            unacked_adds: HashMapWithReverse::new(),
-                            unacked_removes: HashMapWithReverse::new(),
-                        },
-                        time_of_unacked_message_num: HashMapHeap::new(),
-                        poses_wait_for_message_num: 0,
-                    },
-                );
-                drop(users_lock);
-                drop(world_lock);
-                log::info!(
-                    "Connection {}: registered server-side connection metadata for player {}",
-                    remote_addr,
-                    player_object_id
-                );
-
-                // add to player_object_id -> connection map
-                selfArc.connection_of_player_object_id_arc.insert(player_object_id, connection.clone());
-                log::info!("Connection {}: inserted connection map entry for player {}", remote_addr, player_object_id);
-
-                // Record that they joined. Sent in the background so the join doesn't wait on PostHog.
-                if let ServerMode::Official = selfArc.server_mode
-                    && let Some(userid) = userid
-                {
-                    tokio::spawn(async move {
-                        let properties = serde_json::json!({ "game_id": *GAME_ID });
-                        if let Err(e) = capture_posthog_event("app-game-join", userid, properties).await {
-                            log::error!(
-                                "Connection {}: failed to send app-game-join to posthog (player {}): {}",
-                                remote_addr,
-                                player_object_id,
-                                e
-                            );
-                        }
-                    });
-                }
-
-                // add a task that cleans up after a connection is closed.
-                selfArc.player_cleanup_tasks_tracker.spawn({
-                    let connection = connection.clone();
-                    let worldArc = worldArc.clone();
-                    let selfArc = selfArc.clone();
-                    let username = username.clone();
-                    let remote_addr = remote_addr;
-                    let joined_at = Instant::now();
-                    async move {
-                        // await the connection to be closed to execute the code
-                        tokio::select! {
-                            _ = kill_server_cancel_token.cancelled() => {
-                                // if we shut down the server
-                                Self::closeConnection(connection, "The server was shut down.");
-                                log::info!("Connection {} player {}: kill signal received, running cleanup", remote_addr, player_object_id);
-                            }
-                            _ = connection.closed() => {
-                                // if the connection was simply closed by us somewhere else, or if the client disconnected
-                                log::info!("Connection {}: transport closed for player {}", remote_addr, player_object_id);
-                            }
-                        }
-
-                        // delete the connection metadata from users
-                        let removed_user_info = selfArc.userConnectionInfoOfPlayerObjectId.write().await.remove(&player_object_id);
-                        if removed_user_info.is_none() {
-                            log::error!(
-                                "Connection {}: user connection info not found in users metadata for player {}",
-                                remote_addr,
-                                player_object_id
-                            );
-                        };
-                        let auth_info = selfArc.removeAuthInfo(player_object_id).await;
-
-                        // remove the connection from the player_object_id -> connection map
-                        selfArc.connection_of_player_object_id_arc.remove(&player_object_id);
-                        log::info!("Connection {}: removed connection map entry for player {}", remote_addr, player_object_id);
-
-                        // remove the player object from world
-                        let mut world_lock = worldArc.write().await;
-                        let removed_player_object = world_lock.removeObject(player_object_id);
-                        drop(world_lock);
-                        match removed_player_object {
-                            Ok(()) => log::info!("Connection {}: removed player object {:?}", remote_addr, player_object_id),
-                            Err(e) => log::error!("Connection {}: failed to remove player object {:?}: {}", remote_addr, player_object_id, e),
-                        }
-                        let mut game_chat_lock = selfArc.game_chat_arc.lock().await;
-                        game_chat_lock.add_entry(GameChatEntry::PlayerLeft { username });
-                        drop(game_chat_lock);
-
-                        // Delete the player's reserved running session row in Supabase, unless they are already in another game (aka have a different play auth).
-                        let Some((play_auth_hash, profile_id)) = auth_info else {
-                            return;
-                        };
-                        if let Err(e) = end_player_session(profile_id.as_str(), play_auth_hash.as_str()).await {
-                            log::error!(
-                                "Connection {}: failed to delete running player session in supabase (player {}): {}",
-                                remote_addr,
-                                player_object_id,
-                                e
-                            );
-                        } else {
-                            log::info!(
-                                "Connection {}: deleted running player session in supabase for player {}",
-                                remote_addr,
-                                player_object_id
-                            );
-                        }
-
-                        // Record how long they played. Only official games get here, so playtests are never counted.
-                        let Some(userid) = userid else {
-                            return;
-                        };
-                        let properties = serde_json::json!({ "game_id": *GAME_ID, "duration_seconds": joined_at.elapsed().as_secs() });
-                        if let Err(e) = capture_posthog_event("app-game-leave", userid, properties).await {
-                            log::error!(
-                                "Connection {}: failed to send app-game-leave to posthog (player {}): {}",
-                                remote_addr,
-                                player_object_id,
-                                e
-                            );
-                        }
-                    }
-                });
-
-                // serialize + send entire world state to the client
-                log::info!("Connection {}: sending initial world to player {}", remote_addr, player_object_id);
-                let initial_world_message = ServerHandshakeTCP::InitialWorld(ServerInitialWorldMessage {
-                    stored_world_string,
-                    live_server_wall_ms: selfArc.get_live_server_wall_ms(),
-                    player_object_id,
-                    teleportCountOfObjectId: initialTeleportCountOfObjectId,
-                    template_data_ids,
-                });
-                match sendTcpMessage(&mut handshake_send_stream, &initial_world_message).await {
-                    Ok(()) => log::info!("Connection {}: initial world sent to player {}", remote_addr, player_object_id),
-                    Err(e) => return log::error!("Error writing initial world message: {}", e),
-                }
-                let _ = handshake_send_stream.finish();
-
-                // await the user to say they are ready to start receiving snapshots
-                log::info!("Connection {}: waiting for ReadyForUDPMessages from player {}", remote_addr, player_object_id);
-                let ack_message = match awaitTcpMessage::<ClientHandshakeTCP>(&mut handshake_recv_stream).await {
-                    Ok(ack_message) => ack_message,
-                    Err(e) => {
-                        return Self::closeConnection(
-                            connection,
-                            &format!("The server had an issue reading your message. Please try connecting again. {}", e),
-                        );
-                    }
-                };
-                let ClientHandshakeTCP::ReadyForUDPMessages = ack_message else {
-                    return Self::closeConnection(connection, "The server had an issue readying you up. Please try connecting again.");
-                };
-                drop(handshake_recv_stream);
-                log::info!("Connection {}: received ReadyForUDPMessages from player {}", remote_addr, player_object_id);
-                let mut users_lock = selfArc.userConnectionInfoOfPlayerObjectId.write().await;
-                let Some(user_connection_info) = users_lock.get_mut(&player_object_id) else {
-                    return Self::closeConnection(
-                        connection,
-                        "The server lost track of your connection while readying you up. Please try connecting again.",
-                    );
-                };
-                user_connection_info.snapshot_send_state = SnapshotSendState::Ready { next_message_num: 1 };
-                drop(users_lock);
-                log::info!("Connection {}: snapshot stream marked ready for player {}", remote_addr, player_object_id);
-
-                log::info!("Connection {}: handshake complete for player {}", remote_addr, player_object_id);
-
-                // start a task to listen to all server-function requests from the client
-                // Route chat and script streams by their first message without delaying gameplay input.
-                start_receiving_client_messages_tcp_in_bg(
-                    connection.clone(),
-                    selfArc.game_chat_arc.clone(),
-                    player_object_id,
-                    userid,
-                    username,
-                    server_js_fn_request_tx.clone(),
-                );
-
-                // now, enter loop that receives game input messages via UDP datagrams
-                let mut latest_input_num: InputNum = 0;
-                let mut player_pose_lag = PlayerPoseLag::new(selfArc.get_live_server_wall_ms());
-
-                loop {
-                    // wait for the next datagram from the user
-                    let message = match awaitDatagramMessage::<ClientMessageUDP>(&connection).await {
-                        Ok(message) => message,
-                        Err(e) => {
-                            if let Some(connection_error) = e.downcast_ref::<quinn::ConnectionError>() {
-                                return log::info!("Player disconnected: {}, {}", player_object_id, connection_error);
-                            }
-                            log::error!("Error reading datagram: {}", e);
-                            continue;
-                        }
-                    };
-
-                    // interpet / respond to the message
-                    match message {
-                        ClientMessageUDP::Input(input_msg) => {
-                            let ClientInputMessage {
-                                latest_applied_message_num,
-                                foreign_player_delta,
-                                foreign_character_delta,
-                                input_num,
-                            } = input_msg;
-
-                            if input_num <= latest_input_num {
-                                continue;
-                            } else {
-                                latest_input_num = input_num;
-                            }
-
-                            // when the player simulated this input. Its camera, metadata and pose all get this one time
-                            let est_live_server_sim_ms =
-                                player_pose_lag.shift_stamp(foreign_player_delta.est_live_server_sim_ms, selfArc.get_live_server_wall_ms());
-
-                            // send the player's camera and metadata to main game loop, whether or not it has a character
-                            let camera_orientation = foreign_player_delta.cameraOrientation;
-                            let _ = foreign_player_dto_tx.send(ServerForeignPlayerDTO {
-                                came_from_player_object_id: player_object_id,
-                                foreign_player_delta: ForeignPlayerDelta {
-                                    cameraOrientation: if camera_orientation.theta.is_finite() && camera_orientation.phi.is_finite() {
-                                        camera_orientation
-                                    } else {
-                                        Orientation3D::Z()
-                                    },
-                                    playerMetadata: foreign_player_delta.playerMetadata.filter(|json| is_valid_player_metadata(json)),
-                                    est_live_server_sim_ms,
-                                },
-                            });
-
-                            // send foreign character to main game loop
-                            // A pose must be as valid as a saved world's. A NaN would reach the other players, the pose history scripts read, and the world
-                            // every new player is sent, which no player can read with a NaN in it.
-                            if let Some(foreign_character_delta) = foreign_character_delta
-                                && foreign_character_delta.physicsInfo3D.validate().is_ok()
-                            {
-                                // the player only ever moves its own object. it doesnt even identify the object it controls
-                                let foreign_character_dto = ServerForeignCharacterDTO {
-                                    came_from_player_object_id: player_object_id,
-                                    est_live_server_sim_ms,
-
-                                    physicsInfo3D: foreign_character_delta.physicsInfo3D,
-                                    teleportCount: foreign_character_delta.teleportCount,
-                                };
-                                let _ = foreign_character_dto_tx.send((foreign_character_dto, latest_applied_message_num));
-                            }
-                            log::debug!("Received input from player {}", player_object_id);
-                        }
-                        // The player sends this the moment a snapshot arrives, so a slow play loop never holds it up.
-                        ClientMessageUDP::Ack(ClientAckMessage { message_num }) => {
-                            // get all needed locks
-                            let mut users_of_id_lock = selfArc.userConnectionInfoOfPlayerObjectId.write().await;
-                            let user = match users_of_id_lock.get_mut(&player_object_id) {
-                                Some(user) => user,
-                                None => return log::error!("Could not get user on user lock"),
-                            };
-
-                            // apply ACKs at the end if there was a success - simply remove from unacked
-                            user.unacked.unacked_adds.remove_all_with_value(message_num);
-                            user.unacked.unacked_removes.remove_all_with_value(message_num);
-                            user.unacked.unacked_modifies.remove_all_with_value(message_num);
-                            user.time_of_unacked_message_num.remove(&message_num);
-                            drop(users_of_id_lock);
-                        }
-                        ClientMessageUDP::Ping(ClientPingMessage { t0_client_send_ms }) => {
-                            // build pong message
-                            let response = ServerMessageUDP::Pong(ServerPongMessage {
-                                t0_client_send_ms,
-                                t1_server_recv_ms: selfArc.get_live_server_wall_ms(),
-                            });
-                            // respond with pong message
-                            match sendDatagramMessage(&connection, &response) {
-                                Ok(()) => (),
-                                Err(e) => {
-                                    log::error!("Error sending pong to user: {}", e);
-                                    continue;
-                                }
-                            }
-                            log::debug!("Responded to ping from player {}: {:?}", player_object_id, t0_client_send_ms);
-                        }
-                    };
-                }
+                selfArc
+                    .joinPlayerConnection(
+                        PlayerConnection::WebTransport(connection),
+                        worldArc,
+                        foreign_character_dto_tx,
+                        foreign_player_dto_tx,
+                        server_js_fn_request_tx,
+                        kill_server_cancel_token,
+                    )
+                    .await;
             });
         }
     }
 
-    fn closeConnection(connection: Connection, reason: &str) {
+    // One player's whole session on a connection, from the handshake to the last datagram. Both transports run this
+    // same code, so the game's netcode never learns which one carried the player.
+    async fn joinPlayerConnection(
+        self: Arc<Self>,
+        player_connection: PlayerConnection,
+        worldArc: Arc<RwLock<World>>,
+        foreign_character_dto_tx: mpsc::UnboundedSender<(ServerForeignCharacterDTO, MessageNum)>, // with the input's latest_applied_message_num
+        foreign_player_dto_tx: mpsc::UnboundedSender<ServerForeignPlayerDTO>,
+        server_js_fn_request_tx: mpsc::UnboundedSender<(ObjectId, ServerFnCallMessage, oneshot::Sender<anyhow::Result<String>>)>,
+        kill_server_cancel_token: CancellationToken,
+    ) {
+        let selfArc = self.clone();
+        let remote_addr = player_connection.remote_address();
+        log::info!("Accepted a game connection from {}", remote_addr);
+
+        // await TCP or fail/stop
+        log::info!("Connection {}: waiting for initial bidirectional handshake stream", remote_addr);
+        let (mut handshake_send_stream, mut handshake_recv_stream) = match player_connection.accept_bi().await {
+            Ok((send_stream, recv_stream)) => (send_stream, recv_stream),
+            Err(e) => return Self::closeConnection(player_connection, &format!("The game had an issue accepting your connection. {}", e)),
+        };
+        log::info!("Connection {}: received initial handshake stream", remote_addr);
+
+        // wait for the client's hello message
+        log::info!("Connection {}: waiting for hello message", remote_addr);
+        let client_hello = match awaitTcpMessage::<ClientHandshakeTCP>(&mut handshake_recv_stream).await {
+            Ok(ClientHandshakeTCP::Hello(client_hello)) => client_hello,
+            Ok(_) => return Self::closeConnection(player_connection, &format!("The server expected a hello message, but got another message.")),
+            Err(e) => return Self::closeConnection(player_connection, &format!("The server had an issue reading your message. {}", e)),
+        };
+        log::info!("Connection {}: received hello message", remote_addr);
+
+        // check for version mismatch - reject the connection if the server protocol version does not match the client protocol version
+        let client_protocol_version = client_hello.client_server_protocol_version;
+        let server_protocol_version = CLIENT_SERVER_PROTOCOL_VERSION;
+        if client_protocol_version != server_protocol_version {
+            // depending on whether client is newer (typical) or server is newer (shouldnt really happen), give different message
+            let version_mismatch_message = if client_protocol_version > server_protocol_version {
+                "Sorry, the server's code is outdated. Please try another server."
+            } else {
+                "Please restart to update your client."
+            };
+
+            let client_version = client_hello.client_app_version;
+            let server_version = env!("CARGO_PKG_VERSION");
+
+            return Self::closeConnection(
+                player_connection,
+                &format!("Version mismatch: your client is {client_version}, but the server is {server_version}. {version_mismatch_message}",),
+            );
+        }
+
+        // Every desktop connection must carry a website-issued play token.
+        let (username, userid, profile, auth_info) = match &selfArc.server_mode {
+            ServerMode::Playtest(auth_arc) => match auth_arc.claim(&client_hello.play_auth).await {
+                Ok(player) => (player.username, player.user_id, player.profile, None),
+                Err(error) => return Self::closeConnection(player_connection, &error.to_string()),
+            },
+            ServerMode::Official => match validate_play_auth(&client_hello.play_auth).await {
+                Ok(Some(validated_play_auth)) => {
+                    let ValidatedPlayAuth {
+                        profile_id,
+                        user_id,
+                        username,
+                        profile,
+                        play_auth_hash,
+                    } = validated_play_auth;
+                    (username, Some(user_id), profile, Some((play_auth_hash, profile_id)))
+                }
+                Err(error) => {
+                    return Self::closeConnection(
+                        player_connection,
+                        &format!("Invalid play auth token; please launch from the website again. {error}"),
+                    );
+                }
+                Ok(None) => return Self::closeConnection(player_connection, "Invalid play auth token; please launch from the website again."),
+            },
+        };
+        log::info!("Connection {}: validated userid={:?}", remote_addr, userid);
+
+        // This is so players joining at the same time don't both get processed together. Objects not sent out yet would reach this player twice,
+        // in their world and again from the next tick as new objects, so the join waits for a tick to send them.
+        // Held until the player is registered below, or a tick in between would send its changes to everyone but them.
+        // Checking for the account under the same lock means one account can't get in twice by joining twice at once.
+        let mut world_lock = loop {
+            let world_lock = worldArc.write().await;
+            // This always ends: every tick sends out everything added before it, and between ticks only a join adds an object, so each tick lets at least one waiting join in.
+            if world_lock.addedObjectIds.is_empty() {
+                break world_lock;
+            }
+            drop(world_lock);
+            tokio::time::sleep(Duration::from_secs_f32(SERVER_SIM_AND_SEND_SECS)).await;
+        };
+
+        // if userid already exists, close the connection
+        // A playtest lets that account's next player in as a guest instead, since one account can run several test players.
+        let is_account_in_game = userid.is_some()
+            && world_lock._kindOfObjectId.get_keys(&ObjectKind::Player).is_some_and(|player_object_ids| {
+                player_object_ids
+                    .iter()
+                    .any(|player_object_id| match world_lock.getObject(*player_object_id).map(|object| &object.info) {
+                        Ok(ObjectInfo::Player(player_info)) => player_info.userid == userid,
+                        _ => false,
+                    })
+            });
+        let (username, userid, profile) = match (is_account_in_game, &selfArc.server_mode) {
+            (false, _) => (username, userid, profile),
+            (true, ServerMode::Playtest(_)) => ("Guest".to_string(), None, PlayerProfile::GUEST),
+            (true, ServerMode::Official) => {
+                log::warn!("Connection {}: rejecting duplicate in-game connection for userid {:?}", remote_addr, userid);
+                return Self::closeConnection(player_connection, "You're already in this game!");
+            }
+        };
+
+        // get the stored world string without the player in it - that caused a lot of very confusing behavior since addObject marks as dirty already
+        // they get the same stored world everyone else has. updating the player later sends them and everyone else the new player object.
+        log::info!("Connection {}: serializing initial world for userid {:?}", remote_addr, userid);
+        let stored_world_string = match world_lock.toStoredWorldString() {
+            Ok(stored_world_string) => stored_world_string,
+            Err(e) => {
+                let err_str = format!("The game had an issue when gathering the world for you. {}", e);
+                Self::closeConnection(player_connection, &err_str);
+                return log::error!("{}", err_str);
+            }
+        };
+        let initialTeleportCountOfObjectId = world_lock.teleportCountOfObjectId.clone();
+        let template_data_ids = world_lock.getTemplateDataIds();
+
+        // this is detected by addObject callback and sent next to everyone including the player themself
+        let root_object_id = world_lock.getRootObjectId();
+        let player_object_id = world_lock.addObject(
+            username.clone(),
+            ObjectBeingAdded::Player(PlayerInfo {
+                username: username.clone(),
+                userid,
+                preferredColor: profile.preferredColor,
+                equippedItemId: profile.equippedItemId,
+                headObjectId: None,      // gets set later by script
+                characterObjectId: None, // gets set later by script
+            }),
+            root_object_id,
+        );
+        log::info!(
+            "Connection {}: inserted player object {:?} for userid {:?}",
+            remote_addr,
+            player_object_id,
+            userid
+        );
+        if let Some((play_auth_hash, profile_id)) = auth_info {
+            selfArc.insertAuthInfoOfPlayerObjectId(player_object_id, play_auth_hash, profile_id).await;
+        }
+
+        // Tell the chat the player joined. The cleanup task below tells it they left.
+        let mut game_chat_lock = selfArc.game_chat_arc.lock().await;
+        game_chat_lock.add_entry(GameChatEntry::PlayerJoined { username: username.clone() });
+        drop(game_chat_lock);
+
+        // add user connection metadata to this struct
+        let mut users_lock = selfArc.userConnectionInfoOfPlayerObjectId.write().await;
+        users_lock.insert(
+            player_object_id,
+            UserConnectionInfo {
+                connection: player_connection.clone(), // this is fine to clone, connections are cheap
+                snapshot_send_state: SnapshotSendState::WaitingForReady,
+                dirty: DirtyDeltaFlags {
+                    dirty_adds: HashSet::new(),
+                    dirty_modifies: HashMapQueue::new(),
+                    dirty_foreign_characters: HashMapQueue::new(),
+                    dirty_foreign_players: HashMapQueue::new(),
+                    dirty_removes: HashSet::new(),
+                },
+                unacked: UnackedDeltaFlags {
+                    unacked_modifies: HashMapWithReverse::new(),
+                    unacked_adds: HashMapWithReverse::new(),
+                    unacked_removes: HashMapWithReverse::new(),
+                },
+                time_of_unacked_message_num: HashMapHeap::new(),
+                poses_wait_for_message_num: 0,
+            },
+        );
+        drop(users_lock);
+        drop(world_lock);
+        log::info!(
+            "Connection {}: registered server-side connection metadata for player {}",
+            remote_addr,
+            player_object_id
+        );
+
+        // add to player_object_id -> connection map
+        selfArc.connection_of_player_object_id_arc.insert(player_object_id, player_connection.clone());
+        log::info!("Connection {}: inserted connection map entry for player {}", remote_addr, player_object_id);
+
+        // Record that they joined. Sent in the background so the join doesn't wait on PostHog.
+        if let ServerMode::Official = selfArc.server_mode
+            && let Some(userid) = userid
+        {
+            tokio::spawn(async move {
+                let properties = serde_json::json!({ "game_id": *GAME_ID });
+                if let Err(e) = capture_posthog_event("app-game-join", userid, properties).await {
+                    log::error!(
+                        "Connection {}: failed to send app-game-join to posthog (player {}): {}",
+                        remote_addr,
+                        player_object_id,
+                        e
+                    );
+                }
+            });
+        }
+
+        // add a task that cleans up after a connection is closed.
+        selfArc.player_cleanup_tasks_tracker.spawn({
+            let player_connection = player_connection.clone();
+            let worldArc = worldArc.clone();
+            let selfArc = selfArc.clone();
+            let username = username.clone();
+            let remote_addr = remote_addr;
+            let joined_at = Instant::now();
+            async move {
+                // await the connection to be closed to execute the code
+                tokio::select! {
+                    _ = kill_server_cancel_token.cancelled() => {
+                        // if we shut down the server
+                        Self::closeConnection(player_connection, "The server was shut down.");
+                        log::info!("Connection {} player {}: kill signal received, running cleanup", remote_addr, player_object_id);
+                    }
+                    _ = player_connection.closed() => {
+                        // if the connection was simply closed by us somewhere else, or if the client disconnected
+                        log::info!("Connection {}: transport closed for player {}", remote_addr, player_object_id);
+                    }
+                }
+
+                // delete the connection metadata from users
+                let removed_user_info = selfArc.userConnectionInfoOfPlayerObjectId.write().await.remove(&player_object_id);
+                if removed_user_info.is_none() {
+                    log::error!(
+                        "Connection {}: user connection info not found in users metadata for player {}",
+                        remote_addr,
+                        player_object_id
+                    );
+                };
+                let auth_info = selfArc.removeAuthInfo(player_object_id).await;
+
+                // remove the connection from the player_object_id -> connection map
+                selfArc.connection_of_player_object_id_arc.remove(&player_object_id);
+                log::info!("Connection {}: removed connection map entry for player {}", remote_addr, player_object_id);
+
+                // remove the player object from world
+                let mut world_lock = worldArc.write().await;
+                let removed_player_object = world_lock.removeObject(player_object_id);
+                drop(world_lock);
+                match removed_player_object {
+                    Ok(()) => log::info!("Connection {}: removed player object {:?}", remote_addr, player_object_id),
+                    Err(e) => log::error!("Connection {}: failed to remove player object {:?}: {}", remote_addr, player_object_id, e),
+                }
+                let mut game_chat_lock = selfArc.game_chat_arc.lock().await;
+                game_chat_lock.add_entry(GameChatEntry::PlayerLeft { username });
+                drop(game_chat_lock);
+
+                // Delete the player's reserved running session row in Supabase, unless they are already in another game (aka have a different play auth).
+                let Some((play_auth_hash, profile_id)) = auth_info else {
+                    return;
+                };
+                if let Err(e) = end_player_session(profile_id.as_str(), play_auth_hash.as_str()).await {
+                    log::error!(
+                        "Connection {}: failed to delete running player session in supabase (player {}): {}",
+                        remote_addr,
+                        player_object_id,
+                        e
+                    );
+                } else {
+                    log::info!(
+                        "Connection {}: deleted running player session in supabase for player {}",
+                        remote_addr,
+                        player_object_id
+                    );
+                }
+
+                // Record how long they played. Only official games get here, so playtests are never counted.
+                let Some(userid) = userid else {
+                    return;
+                };
+                let properties = serde_json::json!({ "game_id": *GAME_ID, "duration_seconds": joined_at.elapsed().as_secs() });
+                if let Err(e) = capture_posthog_event("app-game-leave", userid, properties).await {
+                    log::error!(
+                        "Connection {}: failed to send app-game-leave to posthog (player {}): {}",
+                        remote_addr,
+                        player_object_id,
+                        e
+                    );
+                }
+            }
+        });
+
+        // serialize + send entire world state to the client
+        log::info!("Connection {}: sending initial world to player {}", remote_addr, player_object_id);
+        let initial_world_message = ServerHandshakeTCP::InitialWorld(ServerInitialWorldMessage {
+            stored_world_string,
+            live_server_wall_ms: selfArc.get_live_server_wall_ms(),
+            player_object_id,
+            teleportCountOfObjectId: initialTeleportCountOfObjectId,
+            template_data_ids,
+        });
+        match sendTcpMessage(&mut handshake_send_stream, &initial_world_message).await {
+            Ok(()) => log::info!("Connection {}: initial world sent to player {}", remote_addr, player_object_id),
+            Err(e) => return log::error!("Error writing initial world message: {}", e),
+        }
+        let _ = handshake_send_stream.finish().await;
+
+        // await the user to say they are ready to start receiving snapshots
+        log::info!("Connection {}: waiting for ReadyForUDPMessages from player {}", remote_addr, player_object_id);
+        let ack_message = match awaitTcpMessage::<ClientHandshakeTCP>(&mut handshake_recv_stream).await {
+            Ok(ack_message) => ack_message,
+            Err(e) => {
+                return Self::closeConnection(
+                    player_connection,
+                    &format!("The server had an issue reading your message. Please try connecting again. {}", e),
+                );
+            }
+        };
+        let ClientHandshakeTCP::ReadyForUDPMessages = ack_message else {
+            return Self::closeConnection(player_connection, "The server had an issue readying you up. Please try connecting again.");
+        };
+        drop(handshake_recv_stream);
+        log::info!("Connection {}: received ReadyForUDPMessages from player {}", remote_addr, player_object_id);
+        let mut users_lock = selfArc.userConnectionInfoOfPlayerObjectId.write().await;
+        let Some(user_connection_info) = users_lock.get_mut(&player_object_id) else {
+            return Self::closeConnection(
+                player_connection,
+                "The server lost track of your connection while readying you up. Please try connecting again.",
+            );
+        };
+        user_connection_info.snapshot_send_state = SnapshotSendState::Ready { next_message_num: 1 };
+        drop(users_lock);
+        log::info!("Connection {}: snapshot stream marked ready for player {}", remote_addr, player_object_id);
+
+        log::info!("Connection {}: handshake complete for player {}", remote_addr, player_object_id);
+
+        // start a task to listen to all server-function requests from the client
+        // Route chat and script streams by their first message without delaying gameplay input.
+        start_receiving_client_messages_tcp_in_bg(
+            player_connection.clone(),
+            selfArc.game_chat_arc.clone(),
+            player_object_id,
+            userid,
+            username,
+            server_js_fn_request_tx.clone(),
+        );
+
+        // now, enter loop that receives game input messages via UDP datagrams
+        let mut latest_input_num: InputNum = 0;
+        let mut player_pose_lag = PlayerPoseLag::new(selfArc.get_live_server_wall_ms());
+
+        loop {
+            // wait for the next datagram from the user
+            let message = match awaitDatagramMessage::<ClientMessageUDP>(&player_connection).await {
+                Ok(message) => message,
+                Err(e) => {
+                    if let Some(connection_error) = e.downcast_ref::<quinn::ConnectionError>() {
+                        return log::info!("Player disconnected: {}, {}", player_object_id, connection_error);
+                    }
+                    log::error!("Error reading datagram: {}", e);
+                    continue;
+                }
+            };
+
+            // interpet / respond to the message
+            match message {
+                ClientMessageUDP::Input(input_msg) => {
+                    let ClientInputMessage {
+                        latest_applied_message_num,
+                        foreign_player_delta,
+                        foreign_character_delta,
+                        input_num,
+                    } = input_msg;
+
+                    if input_num <= latest_input_num {
+                        continue;
+                    } else {
+                        latest_input_num = input_num;
+                    }
+
+                    // when the player simulated this input. Its camera, metadata and pose all get this one time
+                    let est_live_server_sim_ms = player_pose_lag.shift_stamp(foreign_player_delta.est_live_server_sim_ms, selfArc.get_live_server_wall_ms());
+
+                    // send the player's camera and metadata to main game loop, whether or not it has a character
+                    let camera_orientation = foreign_player_delta.cameraOrientation;
+                    let _ = foreign_player_dto_tx.send(ServerForeignPlayerDTO {
+                        came_from_player_object_id: player_object_id,
+                        foreign_player_delta: ForeignPlayerDelta {
+                            cameraOrientation: if camera_orientation.theta.is_finite() && camera_orientation.phi.is_finite() {
+                                camera_orientation
+                            } else {
+                                Orientation3D::Z()
+                            },
+                            playerMetadata: foreign_player_delta.playerMetadata.filter(|json| is_valid_player_metadata(json)),
+                            est_live_server_sim_ms,
+                        },
+                    });
+
+                    // send foreign character to main game loop
+                    // A pose must be as valid as a saved world's. A NaN would reach the other players, the pose history scripts read, and the world
+                    // every new player is sent, which no player can read with a NaN in it.
+                    if let Some(foreign_character_delta) = foreign_character_delta
+                        && foreign_character_delta.physicsInfo3D.validate().is_ok()
+                    {
+                        // the player only ever moves its own object. it doesnt even identify the object it controls
+                        let foreign_character_dto = ServerForeignCharacterDTO {
+                            came_from_player_object_id: player_object_id,
+                            est_live_server_sim_ms,
+
+                            physicsInfo3D: foreign_character_delta.physicsInfo3D,
+                            teleportCount: foreign_character_delta.teleportCount,
+                        };
+                        let _ = foreign_character_dto_tx.send((foreign_character_dto, latest_applied_message_num));
+                    }
+                    log::debug!("Received input from player {}", player_object_id);
+                }
+                // The player sends this the moment a snapshot arrives, so a slow play loop never holds it up.
+                ClientMessageUDP::Ack(ClientAckMessage { message_num }) => {
+                    // get all needed locks
+                    let mut users_of_id_lock = selfArc.userConnectionInfoOfPlayerObjectId.write().await;
+                    let user = match users_of_id_lock.get_mut(&player_object_id) {
+                        Some(user) => user,
+                        None => return log::error!("Could not get user on user lock"),
+                    };
+
+                    // apply ACKs at the end if there was a success - simply remove from unacked
+                    user.unacked.unacked_adds.remove_all_with_value(message_num);
+                    user.unacked.unacked_removes.remove_all_with_value(message_num);
+                    user.unacked.unacked_modifies.remove_all_with_value(message_num);
+                    user.time_of_unacked_message_num.remove(&message_num);
+                    drop(users_of_id_lock);
+                }
+                ClientMessageUDP::Ping(ClientPingMessage { t0_client_send_ms }) => {
+                    // build pong message
+                    let response = ServerMessageUDP::Pong(ServerPongMessage {
+                        t0_client_send_ms,
+                        t1_server_recv_ms: selfArc.get_live_server_wall_ms(),
+                    });
+                    // respond with pong message
+                    match sendDatagramMessage(&player_connection, &response) {
+                        Ok(()) => (),
+                        Err(e) => {
+                            log::error!("Error sending pong to user: {}", e);
+                            continue;
+                        }
+                    }
+                    log::debug!("Responded to ping from player {}: {:?}", player_object_id, t0_client_send_ms);
+                }
+            };
+        }
+    }
+
+    fn closeConnection(connection: PlayerConnection, reason: &str) {
         log::warn!("Closing connection {}: {}", connection.remote_address(), reason);
-        connection.close(quinn::VarInt::from_u32(500), reason.as_bytes());
+        connection.close(reason);
     }
 }
 
@@ -1711,7 +1880,7 @@ pub async fn log_game_chat_messages_forever(game_chat: &Mutex<ServerGameChat>) {
 // Each connection reads and writes independently: a slow receiver never holds the room lock
 // or stalls other players. An error ends only this chat stream.
 // This subscription only sends history and broadcasts; submissions arrive as separate requests.
-pub async fn send_game_chat_messages(game_chat: &Mutex<ServerGameChat>, mut send_stream: SendStream) -> Result<()> {
+pub async fn send_game_chat_messages(game_chat: &Mutex<ServerGameChat>, mut send_stream: PlayerSendStream) -> Result<()> {
     let game_chat_lock = game_chat.lock().await;
     let (history, mut entry_rx) = game_chat_lock.subscribe();
     drop(game_chat_lock);
@@ -1738,7 +1907,7 @@ pub async fn send_game_chat_messages(game_chat: &Mutex<ServerGameChat>, mut send
 // Called after authentication. The first message selects the handler for each independent stream;
 // a stalled or failed stream cannot stop accepting other streams or close the connection.
 pub fn start_receiving_client_messages_tcp_in_bg(
-    connection: Connection,
+    connection: PlayerConnection,
     game_chat_arc: Arc<Mutex<ServerGameChat>>,
     player_object_id: ObjectId,
     userid: Option<UserId>,
@@ -1813,7 +1982,7 @@ pub fn start_receiving_client_messages_tcp_in_bg(
                                 sendTcpMessage(&mut send_stream, &ServerGameChatResultMessage { result }).await?;
                             }
                         }
-                        send_stream.finish()?;
+                        send_stream.finish().await?;
                         Ok::<(), anyhow::Error>(())
                     };
                     let result = tokio::select! {
@@ -1833,8 +2002,12 @@ pub fn start_receiving_client_messages_tcp_in_bg(
 fn loadQuicCertAndKey() -> Result<(Vec<CertificateDer<'static>>, PrivateKeyDer<'static>)> {
     let cert_chain = vec![CertificateDer::from(QUIC_SERVER_CERT_DER_BYTES)];
     let key_der_bytes = BASE64_STANDARD.decode(QUIC_SERVER_KEY_DER_BASE64.as_str())?;
-    let priv_key = PrivateKeyDer::try_from(key_der_bytes)
-        .map_err(|error| std::io::Error::new(std::io::ErrorKind::InvalidData, format!("parse QUIC_SERVER_KEY_DER_BASE64 private key der: {error}")))?;
+    let priv_key = PrivateKeyDer::try_from(key_der_bytes).map_err(|error| {
+        std::io::Error::new(
+            std::io::ErrorKind::InvalidData,
+            format!("parse QUIC_SERVER_KEY_DER_BASE64 private key der: {error}"),
+        )
+    })?;
     Ok((cert_chain, priv_key))
 }
 

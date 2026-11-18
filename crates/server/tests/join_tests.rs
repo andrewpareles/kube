@@ -73,6 +73,7 @@ async fn start_playtest_server(stored_world: &str) -> (u16, Arc<PlaytestAuth>, C
         server_port,
         ServerMode::Playtest(auth_arc.clone()),
         None,
+        None,
     )
     .unwrap();
     auth_arc.wait_until_running().await.unwrap();

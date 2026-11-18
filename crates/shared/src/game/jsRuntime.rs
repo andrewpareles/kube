@@ -4,6 +4,7 @@ use crate::game::jsRuntimeOps::{denoWebRequiredImportsExtension, ourCustomJsOpsE
 use crate::game::transpileJsScript::transpileRuntimeScriptSource;
 use crate::game::world::{JsCallbackInputs, World, WorldControlMode};
 use crate::helpers::multi_thread_hashmap::MultiThreadHashMap;
+use crate::protocol::player_connection::PlayerConnection;
 use deno_core::{
     Extension, ExtensionFileSource, JsRuntime, ModuleCodeString, ModuleLoadOptions, ModuleLoadReferrer, ModuleLoadResponse, ModuleLoader,
     ModuleResolveResponse, ModuleSource, ModuleSourceCode, ModuleSpecifier, ModuleType, OpState, PollEventLoopOptions, ResolutionKind, RuntimeOptions,
@@ -985,7 +986,7 @@ pub fn initializeV8() {
 pub enum JsRuntimeInitialization {
     NoNetworking,
     ServerFnConnection(Connection),
-    ClientFnConnections(Arc<MultiThreadHashMap<ObjectId, Connection>>),
+    ClientFnConnections(Arc<MultiThreadHashMap<ObjectId, PlayerConnection>>),
 }
 
 include!(concat!(env!("OUT_DIR"), "/code_of_deno_js_file.rs"));

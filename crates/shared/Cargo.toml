@@ -47,6 +47,8 @@ flate2 = "1"
 # libktx compresses textures through a C++ build of KTX-Software, which only native builds run.
 ktx2-rw = "0.2.4"
 quinn = "0.11"
+# The browser reaches the game over HTTP/3 with WebTransport, which quinn alone cannot serve.
+wtransport = { version = "0.7.2", features = ["quinn"] }
 reqwest = { version = "0.13.1", features = ["blocking", "json", "stream", "gzip"] }
 schemars = "1"
 sha2 = "0.10"

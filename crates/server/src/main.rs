@@ -2,7 +2,7 @@
 
 use game_types::object_types::ObjectKind;
 use server::{
-    ServerMode,
+    ServerMode, WebTransportServerConfig,
     database::{download_published_world, remove_running_server, remove_running_server_if_empty},
     start_running_server_in_bg,
 };
@@ -45,6 +45,15 @@ pub async fn main() {
         }
     });
 
+    // The browser reaches this server over HTTP/3 with its own certificate, so a deployment without one cannot serve players.
+    let webtransport = match WebTransportServerConfig::fromEnv() {
+        Ok(webtransport) => webtransport,
+        Err(error) => {
+            log::error!("Could not load the browser endpoint's certificate and key: {error}");
+            return;
+        }
+    };
+
     // start the server forever
     let server_start_time = Instant::now();
     let player_cleanup_tasks_tracker = TaskTracker::new();
@@ -55,6 +64,7 @@ pub async fn main() {
         server_start_time,
         *EDGEGAP_INTERNAL_PORT,
         ServerMode::Official,
+        Some(webtransport),
         None,
     );
 
