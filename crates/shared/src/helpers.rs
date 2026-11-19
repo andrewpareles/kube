@@ -1,3 +1,5 @@
+// Waiting for the process to be asked to stop is something only the native binaries do.
+#[cfg(not(target_arch = "wasm32"))]
 pub mod await_shutdown_signal;
 pub mod hashmap_heap;
 pub mod hashmap_queue;

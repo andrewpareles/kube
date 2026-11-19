@@ -4,7 +4,7 @@ import { useEffect, useRef, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import { useUser } from '@/components/context/useUser'
-import { DOWNLOAD_PATH, EDITOR_BASE_PATH } from '@/lib/siteNavigation'
+import { DOWNLOAD_PATH, EDITOR_BASE_PATH, PLAY_BASE_PATH } from '@/lib/siteNavigation'
 import { SiteBrandLink } from '@/components/site/SiteBrandLink'
 import { SiteSidebar } from './SiteSidebar'
 import { GoogleOneTap } from './login/GoogleOneTap'
@@ -35,8 +35,8 @@ export const SiteLayoutShell = ({ children, footer }: SiteLayoutShellProps) => {
         else window.scrollTo({ top: 0, behavior: 'instant' })
     }, [pathname])
 
-    // The editor owns the full viewport and provides its own navigation back to the game.
-    if (pathname.startsWith(`${EDITOR_BASE_PATH}/`)) return children
+    // The editor owns the full viewport and provides its own navigation back to the game, and so does a game being played.
+    if (pathname.startsWith(`${EDITOR_BASE_PATH}/`) || pathname.startsWith(`${PLAY_BASE_PATH}/`)) return children
 
     return (
         <div className="site-shell">

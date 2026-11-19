@@ -11,8 +11,9 @@ try {
     if ($LASTEXITCODE -ne 0 -or $wasmBindgenVersion -ne "wasm-bindgen 0.2.114") {
         throw "Install wasm-bindgen-cli 0.2.114 to build the website WebAssembly packages."
     }
-    # The renderer draws in the browser; the profanity filter runs on the server next to the database.
-    foreach ($crateName in @("render_web", "profanity")) {
+    # The renderer draws in the browser, the play session runs a world's simulation for it, and the profanity filter runs
+    # on the server next to the database.
+    foreach ($crateName in @("render_web", "play_web", "profanity")) {
         & cargo build --locked -p $crateName --target wasm32-unknown-unknown --release
         if ($LASTEXITCODE -ne 0) {
             throw "Building $crateName failed with exit code $LASTEXITCODE."

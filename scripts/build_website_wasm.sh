@@ -10,8 +10,9 @@ if [[ "$(wasm-bindgen --version)" != "wasm-bindgen 0.2.114" ]]; then
   exit 1
 fi
 
-# The renderer draws in the browser; the profanity filter runs on the server next to the database.
-for crate_name in render_web profanity; do
+# The renderer draws in the browser, the play session runs a world's simulation for it, and the profanity filter runs on
+# the server next to the database.
+for crate_name in render_web play_web profanity; do
   cargo build --locked -p "$crate_name" --target wasm32-unknown-unknown --release
   wasm-bindgen "target/wasm32-unknown-unknown/release/$crate_name.wasm" --target web --out-dir "packages/website/lib/gen/$crate_name"
 done
