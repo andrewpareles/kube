@@ -243,6 +243,7 @@ async fn blend_preserves_texture_alpha_opacity_and_selection_silhouettes() -> an
                         content: rear_content,
                         material: rear_material,
                         is_always_on_top,
+                        outline: None,
                     });
                     let layered_pixels = capture(&mut renderer, &scene).await;
                     if expected_alpha == 255 {

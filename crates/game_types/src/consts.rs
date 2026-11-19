@@ -88,12 +88,12 @@ pub const AI_CHAT_COMPACTION_INPUT_TOKENS: u64 = 800_000;
 // clients are typically never out of date... only servers are old.
 // bump this when a new client cannot connect with the old server code.
 // if there is a version mismatch for this const, the client will not be allowed to connect to the server.
-pub const CLIENT_SERVER_PROTOCOL_VERSION: u64 = 35;
+pub const CLIENT_SERVER_PROTOCOL_VERSION: u64 = 36;
 
 // The browser editor's binary batches include script sources alongside object deltas.
-pub const EDITOR_WORLD_PROTOCOL_VERSION: u64 = 25;
+pub const EDITOR_WORLD_PROTOCOL_VERSION: u64 = 26;
 
-pub const STORED_WORLD_CURRENT_VERSION: u64 = 92; // world schema version
+pub const STORED_WORLD_CURRENT_VERSION: u64 = 93; // world schema version
 pub const MESH_DATA_CURRENT_VERSION: u64 = 6;
 pub const DEHYDRATED_GLTF_CURRENT_VERSION: u64 = 6;
 pub const SOUND_DATA_CURRENT_VERSION: u64 = 1;

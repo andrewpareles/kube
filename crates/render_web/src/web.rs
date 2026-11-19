@@ -198,6 +198,11 @@ impl BrowserWgpuRenderContext {
         })
     }
 
+    // How many canvas pixels one CSS pixel spans, so outlines keep their thickness on high density screens.
+    pub fn set_device_pixel_ratio(&mut self, device_pixel_ratio: f32) {
+        self.browser_surface.core_renderer.set_device_pixel_ratio(device_pixel_ratio);
+    }
+
     pub fn load_mesh_bytes_into_gpu(&mut self, data_id: i64, mesh_bytes: &[u8]) -> Result<(), JsValue> {
         // Stored mesh bytes contain a u64 version followed by MeshData. Check the header before decoding the payload.
         let mut remaining_bytes = mesh_bytes;

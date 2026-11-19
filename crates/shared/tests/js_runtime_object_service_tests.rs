@@ -130,7 +130,9 @@ movedBall.location.position.x = 20.0;
     let (mut js_runtime, script_manager_rc) = initializeJsRuntime(JsRuntimeInitialization::NoNetworking, None).await?;
     initializeJsAndRunInitialScripts(&mut js_runtime, &mut world, 0.0, Some(0.0), &script_manager_rc).await?;
 
-    let rolled_ball = world.getObjectPhysicsInfo3D(rolled_ball_id).ok_or_else(|| anyhow::anyhow!("Expected ball physics"))?;
+    let rolled_ball = world
+        .getObjectPhysicsInfo3D(rolled_ball_id)
+        .ok_or_else(|| anyhow::anyhow!("Expected ball physics"))?;
     assert_eq!(rolled_ball.movement.velocity, Vec3::new(7.0, 0.0, 0.0));
     assert_eq!(world.getTeleportCount(rolled_ball_id), 0, "a movement write was sent as a jump");
     assert_eq!(world.getTeleportCount(moved_ball_id), 0, "a location write was sent as a jump");

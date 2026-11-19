@@ -19,7 +19,7 @@ use game_types::{
         WorldLightingInfo,
         label::{BillboardMode, CONSTANT_SIZE_REFERENCE_DISTANCE},
         material::AlphaMode,
-        shared::Color3,
+        shared::{Color3, OutlineSettings},
     },
 };
 use glam::{Mat4, Quat, Vec3};
@@ -318,6 +318,7 @@ pub struct RenderInstance {
     pub content: InstanceContent,
     pub material: MaterialTextureDataIds,
     pub is_always_on_top: bool,
+    pub outline: Option<OutlineSettings>,
 }
 // The client hands over finished pixels, so the renderer never needs to know what a font is.
 #[derive(Serialize, Deserialize)]
@@ -344,6 +345,7 @@ pub struct RenderLabel {
     pub object_id: ObjectId,
     pub content: LabelContent,
     pub is_always_on_top: bool,
+    pub outline: Option<OutlineSettings>,
 }
 
 pub enum LabelContent {
@@ -551,7 +553,7 @@ fn cylinder_instance_texture_mapping_mode_and_tile_transform(cylinder_material: 
 // decoded here before it reaches a shader. Color textures get the same decode from their sRGB GPU format,
 // which is what keeps a flat color and a texture of the same hex looking the same.
 // The fourth value rides along unchanged: an opacity, an intensity, or padding.
-fn decode_srgb_color(color: &Color3, w: f32) -> [f32; 4] {
+pub fn decode_srgb_color(color: &Color3, w: f32) -> [f32; 4] {
     let decode = |channel: f32| {
         if channel <= 0.04045 {
             channel / 12.92
@@ -806,7 +808,8 @@ pub fn build_render_scene(
                 let color = &visualSettings.color;
                 let alpha = visualSettings.opacity.clamp(0.0, 1.0);
                 let is_always_on_top = visualSettings.isAlwaysOnTop;
-                if alpha == 0.0 {
+                // A see-through object still draws its outline.
+                if alpha == 0.0 && visualSettings.outline.is_none() {
                     continue;
                 }
                 let material_texture_data_ids = material_texture_key_of_material_pointer(
@@ -830,6 +833,7 @@ pub fn build_render_scene(
                     content: instance,
                     material: material_texture_data_ids,
                     is_always_on_top,
+                    outline: visualSettings.outline,
                 });
             }
             RenderObject::Cylinder(cylinder) => {
@@ -847,7 +851,8 @@ pub fn build_render_scene(
                 let color = &visualSettings.color;
                 let alpha = visualSettings.opacity.clamp(0.0, 1.0);
                 let is_always_on_top = visualSettings.isAlwaysOnTop;
-                if alpha == 0.0 {
+                // A see-through object still draws its outline.
+                if alpha == 0.0 && visualSettings.outline.is_none() {
                     continue;
                 }
                 let material_texture_data_ids = material_texture_key_of_material_pointer(
@@ -871,6 +876,7 @@ pub fn build_render_scene(
                     content: instance,
                     material: material_texture_data_ids,
                     is_always_on_top,
+                    outline: visualSettings.outline,
                 });
             }
             RenderObject::Brick(brick) => {
@@ -884,7 +890,8 @@ pub fn build_render_scene(
                 let color = &visualSettings.color;
                 let alpha = visualSettings.opacity.clamp(0.0, 1.0);
                 let is_always_on_top = visualSettings.isAlwaysOnTop;
-                if alpha == 0.0 {
+                // A see-through object still draws its outline.
+                if alpha == 0.0 && visualSettings.outline.is_none() {
                     continue;
                 }
                 let material_texture_data_ids = material_texture_key_of_material_pointer(
@@ -908,6 +915,7 @@ pub fn build_render_scene(
                     content: instance,
                     material: material_texture_data_ids,
                     is_always_on_top,
+                    outline: visualSettings.outline,
                 });
             }
             RenderObject::Mesh(mesh) => {
@@ -922,7 +930,8 @@ pub fn build_render_scene(
                 let model = transform.to_cols_array_2d();
                 let (texture_mapping_mode, texture_tile_transform) = (INSTANCE_TEXTURE_MAPPING_MESH_UV, [0.0, 0.0, 0.0, 0.0]);
                 let is_always_on_top = visualSettings.isAlwaysOnTop;
-                if alpha == 0.0 {
+                // A see-through object still draws its outline.
+                if alpha == 0.0 && visualSettings.outline.is_none() {
                     continue;
                 }
 
@@ -966,12 +975,14 @@ pub fn build_render_scene(
                     content: instance,
                     material: material_texture_data_ids,
                     is_always_on_top,
+                    outline: visualSettings.outline,
                 });
             }
             RenderObject::RenderLabel(label) => {
                 let visualSettings = &label.visualSettings;
                 let alpha = visualSettings.opacity.clamp(0.0, 1.0);
-                if alpha == 0.0 {
+                // A see-through object still draws its outline.
+                if alpha == 0.0 && visualSettings.outline.is_none() {
                     continue;
                 }
                 // Billboarded: world offset, and the shader rebuilds the basis so rotation here is moot.
@@ -1061,6 +1072,7 @@ pub fn build_render_scene(
                     object_id: *object_id,
                     content,
                     is_always_on_top: visualSettings.isAlwaysOnTop,
+                    outline: visualSettings.outline,
                 });
             }
             RenderObject::Material(_) | RenderObject::Skeleton(_) | RenderObject::RigidGroup(_) | RenderObject::WorldLighting(_) => {}

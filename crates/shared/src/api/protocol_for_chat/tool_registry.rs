@@ -21,8 +21,9 @@ use game_types::{
     consts::MAX_PLAYTEST_CLIENTS,
     data_types::{DataId, MeshData, MeshVertexInternal},
     object_types::{
-        BallInfo, BrickInfo, CylinderInfo, LabelHorizontalAlign, LabelImageInfo, LabelInfo, Location3D, Movement3D, ObjectBeingAdded, ObjectId, ObjectIdPointer, ObjectInfo,
-        ObjectKind, Orientation3D, PhysicsInfo3D, PhysicsToggles3D, VisualSettings, label::BillboardMode,
+        BallInfo, BrickInfo, CylinderInfo, LabelHorizontalAlign, LabelImageInfo, LabelInfo, Location3D, Movement3D, ObjectBeingAdded, ObjectId,
+        ObjectIdPointer, ObjectInfo, ObjectKind, Orientation3D, PhysicsInfo3D, PhysicsToggles3D, VisualSettings,
+        label::BillboardMode,
         shared::{CameraLocation, Color3, euler_degrees_to_quat},
     },
     physics_primitive_types::{BallPrimitiveSettings, BrickPrimitiveSettings, CylinderPrimitiveSettings},
@@ -1281,6 +1282,7 @@ fn physical_visual_settings(color: Option<Color3Args>, opacity: Option<f32>, too
         color,
         glow: 0.0,
         isAlwaysOnTop: false,
+        outline: None,
     })
 }
 

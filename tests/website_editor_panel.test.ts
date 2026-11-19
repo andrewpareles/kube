@@ -57,7 +57,7 @@ test('object panel browser interactions', async t => {
         const worldLighting = object.info.WorldLighting
         if (worldLighting && typeof worldLighting === 'object' && !Array.isArray(worldLighting)) object.info.WorldLighting = { ...worldLighting, sunShadowSoftness: 2, ambientOcclusionIntensity: 0.7, ambientOcclusionRadius: 1, ambientOcclusionSunlightStrength: 0.5, skyReflectionStrength: 1, vibrance: 0.2 }
         // And it predates glow on every object's visual settings.
-        for (const [kind, info] of Object.entries(object.info)) if (info && typeof info === 'object' && !Array.isArray(info) && 'visualSettings' in info && info.visualSettings && typeof info.visualSettings === 'object') object.info[kind] = { ...info, visualSettings: { ...info.visualSettings, glow: 0 } }
+        for (const [kind, info] of Object.entries(object.info)) if (info && typeof info === 'object' && !Array.isArray(info) && 'visualSettings' in info && info.visualSettings && typeof info.visualSettings === 'object') object.info[kind] = { ...info, visualSettings: { ...info.visualSettings, glow: 0, outline: null } }
     }
     const brick = Object.values(world.objectOfId).find(object => object.info.Brick)
     assert.ok(brick)
