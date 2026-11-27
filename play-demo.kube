@@ -1,0 +1,1997 @@
+{
+  "worldSchemaVersion": 92,
+  "fallback_camera_location": {
+    "position": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "orientation": {
+      "theta": 0.0,
+      "phi": 0.7853982
+    }
+  },
+  "objectOfId": {
+    "117": {
+      "id": 117,
+      "name": "ball_red",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 113,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.4,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 1.0,
+              "g": 0.0,
+              "b": 0.0
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "120": {
+      "id": 120,
+      "name": "Character",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "147": {
+      "id": 147,
+      "name": "animation",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "118": {
+      "id": 118,
+      "name": "CharacterController",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "157": {
+      "id": 157,
+      "name": "Clock",
+      "info": {
+        "Clock": {
+          "clockState": {
+            "Playing": {
+              "localStartMs": 0.0,
+              "timeLocation": "Server"
+            }
+          },
+          "shouldLoop": true,
+          "speed": 1.0
+        }
+      }
+    },
+    "4": {
+      "id": 4,
+      "name": "ball_yellow",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 113,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.2,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 0.5,
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 0.0
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "126": {
+      "id": 126,
+      "name": "RightArm",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.95,
+              "g": 0.8,
+              "b": 0.65
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "128": {
+      "id": 128,
+      "name": "Torso",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.25,
+              "g": 0.55,
+              "b": 0.9
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "146": {
+      "id": 146,
+      "name": "Clock",
+      "info": {
+        "Clock": {
+          "clockState": {
+            "Playing": {
+              "localStartMs": 0.0,
+              "timeLocation": "Server"
+            }
+          },
+          "shouldLoop": true,
+          "speed": 1.0
+        }
+      }
+    },
+    "107": {
+      "id": 107,
+      "name": "ground",
+      "info": {
+        "Brick": {
+          "material": {
+            "materialInfoId": 116,
+            "tileSizeU": 2.0,
+            "tileSizeV": 2.0,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 0.8,
+            "color": {
+              "r": 0.1,
+              "g": 0.3,
+              "b": 0.04
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "123": {
+      "id": 123,
+      "name": "HeadSkAttachment",
+      "info": {
+        "SkAttachment": {
+          "objectId": 122,
+          "jointName": "Head",
+          "offsetFromJoint": {
+            "position": [
+              0.2,
+              0.60000014,
+              0.5
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "153": {
+      "id": 153,
+      "name": "RightArm",
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "156": {
+      "id": 156,
+      "name": "IdleAnimator",
+      "info": {
+        "SkAnimator": {
+          "skeletonId": 148,
+          "skAnimationId": 232,
+          "clockId": 157,
+          "priority": 5,
+          "weight": 100.0,
+          "weightTransition": null
+        }
+      }
+    },
+    "106": {
+      "id": 106,
+      "name": "client_hello_script",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "112": {
+      "id": 112,
+      "name": "lower_baseplate",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.8,
+              "g": 0.8,
+              "b": 0.86
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "144": {
+      "id": 144,
+      "name": "Clock",
+      "info": {
+        "Clock": {
+          "clockState": {
+            "Playing": {
+              "localStartMs": 0.0,
+              "timeLocation": "Server"
+            }
+          },
+          "shouldLoop": true,
+          "speed": 1.0
+        }
+      }
+    },
+    "109": {
+      "id": 109,
+      "name": "ScriptGroup",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "122": {
+      "id": 122,
+      "name": "Eye",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.1,
+              "g": 0.1,
+              "b": 0.12
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "150": {
+      "id": 150,
+      "name": "RightLeg",
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "142": {
+      "id": 142,
+      "name": "Nametag",
+      "info": {
+        "Label": {
+          "text": "Player",
+          "lineHeight": 0.5,
+          "maxWidth": null,
+          "horizontalAlign": "Center",
+          "backgroundColor": {
+            "r": 0.0,
+            "g": 0.0,
+            "b": 0.0
+          },
+          "backgroundOpacity": 0.45,
+          "offsetFromObject": [
+            0.0,
+            4.7,
+            0.0
+          ],
+          "rotationFromObject": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "physicalObjectId": 121,
+          "billboardMode": "Full",
+          "isConstantSize": false,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "136": {
+      "id": 136,
+      "name": "Cap",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.25,
+              "g": 0.55,
+              "b": 0.9
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "149": {
+      "id": 149,
+      "name": "Hips",
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "130": {
+      "id": 130,
+      "name": "RightLeg",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.2,
+              "g": 0.22,
+              "b": 0.3
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "115": {
+      "id": 115,
+      "name": "orbit_script",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "3": {
+      "id": 3,
+      "name": "player_join_avatar_script",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "141": {
+      "id": 141,
+      "name": "HeadSkAttachment",
+      "info": {
+        "SkAttachment": {
+          "objectId": 140,
+          "jointName": "Head",
+          "offsetFromJoint": {
+            "position": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "114": {
+      "id": 114,
+      "name": "wall1",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "132": {
+      "id": 132,
+      "name": "Head",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.95,
+              "g": 0.8,
+              "b": 0.65
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "124": {
+      "id": 124,
+      "name": "LeftLeg",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.2,
+              "g": 0.22,
+              "b": 0.3
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "155": {
+      "id": 155,
+      "name": "LeftLeg",
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              -0.3,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "1": {
+      "id": 1,
+      "name": "root",
+      "info": {
+        "LocalGroup": {}
+      }
+    },
+    "134": {
+      "id": 134,
+      "name": "LeftArm",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.95,
+              "g": 0.8,
+              "b": 0.65
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "125": {
+      "id": 125,
+      "name": "LeftLegSkAttachment",
+      "info": {
+        "SkAttachment": {
+          "objectId": 124,
+          "jointName": "LeftLeg",
+          "offsetFromJoint": {
+            "position": [
+              0.01,
+              -0.7,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "111": {
+      "id": 111,
+      "name": "ClientScript",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "151": {
+      "id": 151,
+      "name": "Torso",
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "121": {
+      "id": 121,
+      "name": "Body",
+      "info": {
+        "RigidGroup": {
+          "followSkeletonId": 148
+        }
+      }
+    },
+    "116": {
+      "id": 116,
+      "name": "grass_material",
+      "info": {
+        "Material": {
+          "albedoTextureDataId": null,
+          "metallicTextureDataId": null,
+          "roughnessTextureDataId": 1,
+          "normalTextureDataId": null,
+          "alphaMode": "Opaque",
+          "isDoubleSided": false
+        }
+      }
+    },
+    "110": {
+      "id": 110,
+      "name": "ServerScript",
+      "info": {
+        "Script": {
+          "objectLocation": "Server"
+        }
+      }
+    },
+    "108": {
+      "id": 108,
+      "name": "ball_green",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 113,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.2,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.0,
+              "g": 1.0,
+              "b": 0.0
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "2": {
+      "id": 2,
+      "name": "brick1",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 0.5,
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "127": {
+      "id": 127,
+      "name": "RightArmSkAttachment",
+      "info": {
+        "SkAttachment": {
+          "objectId": 126,
+          "jointName": "RightArm",
+          "offsetFromJoint": {
+            "position": [
+              0.0,
+              -0.5,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "140": {
+      "id": 140,
+      "name": "HatSpot",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 0.0,
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "133": {
+      "id": 133,
+      "name": "HeadSkAttachment",
+      "info": {
+        "SkAttachment": {
+          "objectId": 132,
+          "jointName": "Head",
+          "offsetFromJoint": {
+            "position": [
+              0.0,
+              0.5,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "135": {
+      "id": 135,
+      "name": "LeftArmSkAttachment",
+      "info": {
+        "SkAttachment": {
+          "objectId": 134,
+          "jointName": "LeftArm",
+          "offsetFromJoint": {
+            "position": [
+              0.0,
+              -0.5,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "152": {
+      "id": 152,
+      "name": "LeftArm",
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              -0.8,
+              1.25,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "5": {
+      "id": 5,
+      "name": "ball_blue",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 113,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.075,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.0,
+              "g": 0.0,
+              "b": 1.0
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "105": {
+      "id": 105,
+      "name": "ball1",
+      "info": {
+        "Ball": {
+          "material": {
+            "materialInfoId": 113,
+            "tileSizeU": 0.2,
+            "tileSizeV": 0.47,
+            "tileOffsetU": 0.0,
+            "tileOffsetV": 0.0
+          },
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "119": {
+      "id": 119,
+      "name": "controller",
+      "info": {
+        "Script": {
+          "objectLocation": "Client"
+        }
+      }
+    },
+    "137": {
+      "id": 137,
+      "name": "HeadSkAttachment",
+      "info": {
+        "SkAttachment": {
+          "objectId": 136,
+          "jointName": "Head",
+          "offsetFromJoint": {
+            "position": [
+              0.0,
+              1.1000001,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "143": {
+      "id": 143,
+      "name": "JumpAnimator",
+      "info": {
+        "SkAnimator": {
+          "skeletonId": 148,
+          "skAnimationId": 143,
+          "clockId": 144,
+          "priority": 7,
+          "weight": 0.0,
+          "weightTransition": null
+        }
+      }
+    },
+    "148": {
+      "id": 148,
+      "name": "Skeleton",
+      "info": {
+        "Skeleton": {}
+      }
+    },
+    "131": {
+      "id": 131,
+      "name": "RightLegSkAttachment",
+      "info": {
+        "SkAttachment": {
+          "objectId": 130,
+          "jointName": "RightLeg",
+          "offsetFromJoint": {
+            "position": [
+              -0.01,
+              -0.7,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "154": {
+      "id": 154,
+      "name": "Head",
+      "info": {
+        "SkJoint": {
+          "restPose": {
+            "position": [
+              0.0,
+              1.4,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "145": {
+      "id": 145,
+      "name": "WalkAnimator",
+      "info": {
+        "SkAnimator": {
+          "skeletonId": 148,
+          "skAnimationId": 54,
+          "clockId": 146,
+          "priority": 6,
+          "weight": 0.0,
+          "weightTransition": null
+        }
+      }
+    },
+    "113": {
+      "id": 113,
+      "name": "ball_texture_material",
+      "info": {
+        "Material": {
+          "albedoTextureDataId": 1,
+          "metallicTextureDataId": null,
+          "roughnessTextureDataId": null,
+          "normalTextureDataId": null,
+          "alphaMode": "Opaque",
+          "isDoubleSided": false
+        }
+      }
+    },
+    "138": {
+      "id": 138,
+      "name": "Eye",
+      "info": {
+        "Brick": {
+          "material": null,
+          "visualSettings": {
+            "opacity": 1.0,
+            "color": {
+              "r": 0.1,
+              "g": 0.1,
+              "b": 0.12
+            },
+            "glow": 0.0,
+            "isAlwaysOnTop": false
+          }
+        }
+      }
+    },
+    "129": {
+      "id": 129,
+      "name": "TorsoSkAttachment",
+      "info": {
+        "SkAttachment": {
+          "objectId": 128,
+          "jointName": "Torso",
+          "offsetFromJoint": {
+            "position": [
+              0.0,
+              0.6999999,
+              0.0
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "139": {
+      "id": 139,
+      "name": "HeadSkAttachment",
+      "info": {
+        "SkAttachment": {
+          "objectId": 138,
+          "jointName": "Head",
+          "offsetFromJoint": {
+            "position": [
+              -0.2,
+              0.60000014,
+              0.5
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    }
+  },
+  "rootObjectId": 1,
+  "childrenOfId": {
+    "152": [],
+    "148": [
+      149
+    ],
+    "156": [
+      157
+    ],
+    "111": [],
+    "114": [],
+    "110": [],
+    "153": [],
+    "108": [],
+    "3": [],
+    "140": [
+      141
+    ],
+    "112": [],
+    "127": [],
+    "106": [],
+    "137": [],
+    "116": [],
+    "136": [
+      137
+    ],
+    "147": [],
+    "126": [
+      127
+    ],
+    "151": [
+      152,
+      154,
+      153
+    ],
+    "157": [],
+    "113": [],
+    "105": [],
+    "149": [
+      151,
+      155,
+      150
+    ],
+    "146": [],
+    "155": [],
+    "131": [],
+    "145": [
+      146
+    ],
+    "134": [
+      135
+    ],
+    "117": [],
+    "142": [],
+    "118": [
+      119
+    ],
+    "121": [
+      130,
+      138,
+      140,
+      126,
+      128,
+      122,
+      134,
+      124,
+      136,
+      132
+    ],
+    "115": [],
+    "150": [],
+    "144": [],
+    "133": [],
+    "138": [
+      139
+    ],
+    "132": [
+      133
+    ],
+    "125": [],
+    "120": [
+      121,
+      156,
+      147,
+      148,
+      142,
+      143,
+      145
+    ],
+    "2": [],
+    "107": [],
+    "4": [],
+    "129": [],
+    "124": [
+      125
+    ],
+    "139": [],
+    "135": [],
+    "1": [
+      117,
+      116,
+      120,
+      106,
+      4,
+      108,
+      118,
+      113,
+      109,
+      112,
+      114,
+      105,
+      107,
+      3,
+      5,
+      115,
+      2
+    ],
+    "128": [
+      129
+    ],
+    "119": [],
+    "130": [
+      131
+    ],
+    "122": [
+      123
+    ],
+    "123": [],
+    "141": [],
+    "109": [
+      111,
+      110
+    ],
+    "154": [],
+    "5": [],
+    "143": [
+      144
+    ]
+  },
+  "scriptRawCodeOfId": {
+    "106": "console.log('local script is running and says hello');\n",
+    "115": " const movingObject = game.world.getChildren().find((child) => child.name === 'ball1');\nlet angle = 0;\n\n\nlet x = () => {\n\n}\n\nconsole.log('aaaaa11111')\nlet y = () => {\n\n  console.log('bbbbbbbb111111')\n  // let o2 = game.objectService.cloneObject(movingObject.id, \"movingobject2\");\n  // game.objectService.scaleObject(o2, 10, {x:0,y:0,z:0})\n  x()\n}\n\nexport { y }\n\n\n\n// while (true) {\n//   if (movingObject !== undefined && movingObject.type === 'ball') {\n//     movingObject.location.position.x = Math.cos(angle) * 6.0;\n//     movingObject.location.position.y = 5.0;\n//     movingObject.location.position.z = Math.sin(angle) * 6.0;\n//     angle += 0.05;\n//   }\n//   await tick();\n// }\n",
+    "119": "'use client'\n// The default character controller. It moves the local player's character. Change the numbers below to tune it, or delete\n// this script to write your own. A server script can change one player's movement with setMovement(player.id, { speed: 15 }).\n// Shift toggles shift lock: the mouse turns the camera, the cursor becomes a crosshair, the character faces where the camera\n// looks, and the camera moves over the character's right shoulder.\n\ntype Vec3 = { x: number, y: number, z: number };\n\nconst movementSettings = { speed: 7, acceleration: 160, jumpHeight: 3, stepHeight: 0.1 };\n\nconst JUMP_RESET_MS = 300;\nconst AIR_JUMP_MS = 100;\nconst SNAP_DOWN_HEIGHT = 0.1;\nconst MAX_GROUND_SLOPE_DEGREES = 55;\nconst FACING_NATURAL_FREQUENCY = 11;\nconst FACING_DAMPING_RATIO = 1;\nconst FACING_MAX_ANGULAR_ACCELERATION = 700;\nconst SHIFT_LOCK_TURN_SECS = 0.04;\nconst SHIFT_LOCK_CAMERA_OFFSET: Vec3 = { x: 1.5, y: 0, z: 0 };\nconst SHIFT_LOCK_FULL_OFFSET_ZOOM = 3; // TODO: AI-PICKED-VALUE: zoomed in closer than this, shift lock's offset shrinks to nothing at zoom 0, so a camera zoomed all the way in sits in the head. It matches zoom_fade's FADE_START_ZOOM, where the character is fully back.\nconst UPRIGHT_NATURAL_FREQUENCY = 34;\nconst UPRIGHT_DAMPING_RATIO = 1;\nconst UPRIGHT_MAX_ANGULAR_ACCELERATION = 3600;\n\nconst RADIANS_PER_DEGREE = Math.PI / 180;\nconst ZERO: Vec3 = { x: 0, y: 0, z: 0 };\nconst UP: Vec3 = { x: 0, y: 1, z: 0 };\nconst DOWN: Vec3 = { x: 0, y: -1, z: 0 };\n\ntype JumpState =\n  | { kind: \"groundedReady\" }\n  | { kind: \"waitingToGetOffGround\", jumpStartMs: number }\n  | { kind: \"offGroundNeverJumped\", leftGroundMs: number }\n  | { kind: \"waitingToLand\" };\n\nlet nowMs = 0;\nlet jumpState: JumpState = { kind: \"groundedReady\" };\nlet autostep: { startPosition: Vec3, translation: Vec3, stepHeight: number } | null = null;\nlet facingSpinRate = 0;\nlet isShiftLocked = false;\n\nconst wrapAngle = (angle: number) => {\n  const wrapped = (angle + Math.PI) % (2 * Math.PI);\n  return (wrapped < 0 ? wrapped + 2 * Math.PI : wrapped) - Math.PI;\n};\n\nconst clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);\n\nconst copyVec3 = (v: Vec3): Vec3 => ({ x: v.x, y: v.y, z: v.z });\n\nconst getPhysicalObject = (objectId: number) => {\n  const object = game.objectService.getObjectById(objectId);\n  if (object === null || !(\"movement\" in object)) return null;\n  return object;\n};\n\nexport const setMovement = async (_playerObjectId: number, changes: Partial<typeof movementSettings>) => {\n  Object.assign(movementSettings, changes);\n};\n\nconst getMovementSettings = () => {\n  const { speed, acceleration, jumpHeight, stepHeight } = movementSettings;\n  return { speed, acceleration: Math.max(acceleration, 0), jumpHeight: Math.max(jumpHeight, 0), stepHeight: Math.max(stepHeight, 0) };\n};\n\nconst getGroundSpinRate = (groundObjectId: number) => {\n  const groundObject = getPhysicalObject(groundObjectId);\n  return groundObject === null ? 0 : groundObject.movement.angularVelocity.y * RADIANS_PER_DEGREE;\n};\n\nconst shouldJump = (isGrounded: boolean, isJumpHeld: boolean): boolean => {\n  switch (jumpState.kind) {\n    case \"groundedReady\":\n      if (isJumpHeld && isGrounded) {\n        jumpState = { kind: \"waitingToGetOffGround\", jumpStartMs: nowMs };\n        return true;\n      }\n      if (!isGrounded) jumpState = { kind: \"offGroundNeverJumped\", leftGroundMs: nowMs };\n      return false;\n    case \"waitingToGetOffGround\":\n      if (!isGrounded) jumpState = { kind: \"waitingToLand\" };\n      else if (nowMs > jumpState.jumpStartMs + JUMP_RESET_MS) jumpState = { kind: \"groundedReady\" };\n      return false;\n    case \"offGroundNeverJumped\":\n      if (isGrounded) {\n        jumpState = { kind: \"groundedReady\" };\n        return false;\n      }\n      if (nowMs <= jumpState.leftGroundMs + AIR_JUMP_MS) {\n        if (!isJumpHeld) return false;\n        jumpState = { kind: \"waitingToLand\" };\n        return true;\n      }\n      jumpState = { kind: \"waitingToLand\" };\n      return false;\n    case \"waitingToLand\":\n      if (isGrounded) jumpState = { kind: \"groundedReady\" };\n      return false;\n  }\n};\n\nconst getStepTranslation = (characterObjectId: number, forward: Vec3, stepHeight: number): Vec3 | null => {\n  const forwardDistance = vec3.length(forward);\n  if (forwardDistance * forwardDistance <= 1e-7) return null;\n  const forwardDirection = vec3.normalize(forward);\n  const minGroundNormalY = Math.cos(MAX_GROUND_SLOPE_DEGREES * RADIANS_PER_DEGREE);\n\n  const wall = game.objectService.castObjectShape(characterObjectId, forwardDirection, { maxDistance: forwardDistance });\n  if (wall === null || wall.normal.y >= minGroundNormalY) return null;\n\n  const stepUp = { x: 0, y: stepHeight, z: 0 };\n  if (game.objectService.castObjectShape(characterObjectId, UP, { maxDistance: stepHeight }) !== null) return null;\n  if (game.objectService.castObjectShape(characterObjectId, forwardDirection, { maxDistance: forwardDistance, startOffset: stepUp }) !== null) return null;\n\n  const stepDown = game.objectService.castObjectShape(characterObjectId, DOWN, { maxDistance: stepHeight, startOffset: vec3.add(stepUp, forward) });\n  if (stepDown === null || stepDown.normal.y < minGroundNormalY) return null;\n\n  return vec3.sub(vec3.add(stepUp, forward), { x: 0, y: stepDown.distance, z: 0 });\n};\n\ngame.clientInputService.addKeyDownListener((key) => {\n  if (key !== \"ShiftLeft\" && key !== \"ShiftRight\") return;\n  isShiftLocked = !isShiftLocked;\n  if (isShiftLocked) game.clientInputService.lockMouse();\n  else game.clientInputService.unlockMouse();\n  game.clientInputService.setCameraOffset(isShiftLocked ? SHIFT_LOCK_CAMERA_OFFSET : ZERO);\n  game.clientInputService.setMouseCursor(isShiftLocked ? \"crosshair\" : \"default\");\n});\n\ngame.clientCharacterService.addBeforeStepListener((characterObjectId, dtSecs) => {\n  nowMs += dtSecs * 1000;\n  autostep = null;\n  // This follows the zoom the player picked, not getZoom(), because a wall that pulls the camera in would shrink the offset, which frees\n  // the camera, which grows the offset again.\n  if (isShiftLocked) game.clientInputService.setCameraOffset(vec3.scale(SHIFT_LOCK_CAMERA_OFFSET, Math.min(game.clientInputService.getDesiredZoom() / SHIFT_LOCK_FULL_OFFSET_ZOOM, 1)));\n  const character = getPhysicalObject(characterObjectId);\n  const settings = getMovementSettings();\n  if (character === null) return;\n  const movement = character.movement;\n  const velocity = copyVec3(movement.velocity);\n  const angularVelocity = vec3.scale(copyVec3(movement.angularVelocity), RADIANS_PER_DEGREE);\n  const ground = game.objectService.getGroundSupport(characterObjectId);\n\n  const camera = game.clientInputService.getCameraDirection();\n  const forward = vec3.normalize({ x: camera.x, y: 0, z: camera.z });\n  const right = { x: -forward.z, y: 0, z: forward.x };\n  let moveDirection = ZERO;\n  if (game.clientInputService.isKeyDown(\"W\") || game.clientInputService.isKeyDown(\"ArrowUp\")) moveDirection = vec3.add(moveDirection, forward);\n  if (game.clientInputService.isKeyDown(\"S\") || game.clientInputService.isKeyDown(\"ArrowDown\")) moveDirection = vec3.sub(moveDirection, forward);\n  if (game.clientInputService.isKeyDown(\"D\") || game.clientInputService.isKeyDown(\"ArrowRight\")) moveDirection = vec3.add(moveDirection, right);\n  if (game.clientInputService.isKeyDown(\"A\") || game.clientInputService.isKeyDown(\"ArrowLeft\")) moveDirection = vec3.sub(moveDirection, right);\n  const isMoving = vec3.length(moveDirection) > 0;\n  const desiredVelocity = isMoving ? vec3.scale(vec3.normalize(moveDirection), settings.speed) : ZERO;\n  const desiredFacingAngle = isShiftLocked ? Math.atan2(forward.x, forward.z) : isMoving ? Math.atan2(moveDirection.x, moveDirection.z) : null;\n  const isJumping = shouldJump(ground !== null, game.clientInputService.isKeyDown(\"Space\"));\n\n  const autostepDirection = ground === null ? desiredVelocity : vec3.projectOntoPlane(desiredVelocity, vec3.normalize(ground.normal));\n  if (vec3.length(autostepDirection) > 0) {\n    autostep = {\n      startPosition: copyVec3(character.location.position),\n      translation: vec3.scale(vec3.normalize(autostepDirection), vec3.length(desiredVelocity) * dtSecs),\n      stepHeight: settings.stepHeight,\n    };\n  }\n\n  const groundVelocity = ground === null ? ZERO : vec3.sub(velocity, game.objectService.getVelocityRelativeToGround(characterObjectId));\n  const maxVelocityChange = settings.acceleration * dtSecs;\n  let velocityChange: Vec3;\n  if (ground !== null && vec3.dot(ground.normal, ground.normal) > 1e-6) {\n    const groundNormal = vec3.normalize(ground.normal);\n    const inputAlongGround = vec3.projectOntoPlane(desiredVelocity, groundNormal);\n    const desiredAlongGround = vec3.add(\n      vec3.projectOntoPlane(groundVelocity, groundNormal),\n      vec3.dot(inputAlongGround, inputAlongGround) > 1e-6 ? vec3.scale(vec3.normalize(inputAlongGround), vec3.length(desiredVelocity)) : ZERO,\n    );\n    velocityChange = vec3.clampLength(vec3.sub(desiredAlongGround, vec3.projectOntoPlane(velocity, groundNormal)), maxVelocityChange);\n  } else {\n    const desiredHorizontal = vec3.add({ x: groundVelocity.x, y: 0, z: groundVelocity.z }, desiredVelocity);\n    velocityChange = vec3.clampLength(vec3.sub(desiredHorizontal, { x: velocity.x, y: 0, z: velocity.z }), maxVelocityChange);\n  }\n\n  if (isJumping) {\n    const gravity = Math.max(-game.objectService.getGravity().y, 0);\n    const jumpSpeedChange = Math.max(Math.sqrt(2 * gravity * settings.jumpHeight) - velocity.y, 0);\n    velocityChange = vec3.add(velocityChange, { x: 0, y: jumpSpeedChange, z: 0 });\n  }\n\n  const axes = game.objectService.getObjectAxes(characterObjectId);\n  const flatForward = { x: axes.z.x, y: 0, z: axes.z.z };\n  const facingAngle = vec3.dot(flatForward, flatForward) > 1e-6 ? Math.atan2(flatForward.x, flatForward.z) : null;\n  let facingError = 0;\n  let targetSpinRate = 0;\n  if (desiredFacingAngle === null) {\n    targetSpinRate = ground === null ? 0 : getGroundSpinRate(ground.object.id);\n  } else if (facingAngle !== null) {\n    facingError = wrapAngle(desiredFacingAngle - facingAngle);\n  }\n  const facingAcceleration = clamp(\n    facingError * FACING_NATURAL_FREQUENCY * FACING_NATURAL_FREQUENCY\n      - (facingSpinRate - targetSpinRate) * 2 * FACING_DAMPING_RATIO * FACING_NATURAL_FREQUENCY,\n    -FACING_MAX_ANGULAR_ACCELERATION,\n    FACING_MAX_ANGULAR_ACCELERATION,\n  );\n  facingSpinRate = isShiftLocked ? facingError / SHIFT_LOCK_TURN_SECS : facingSpinRate + facingAcceleration * dtSecs;\n  let angularVelocityChange = { x: 0, y: facingSpinRate - angularVelocity.y, z: 0 };\n\n  const tilt = Math.acos(clamp(axes.y.y, -1, 1));\n  const balanceSpin = { x: angularVelocity.x, y: 0, z: angularVelocity.z };\n  let balanceAxis: Vec3 | null = null;\n  if (tilt > 1e-6) {\n    const tiltAxis = vec3.cross(axes.y, UP);\n    const fallbackTiltAxis = vec3.cross(axes.z, UP);\n    if (vec3.dot(tiltAxis, tiltAxis) > 1e-6) balanceAxis = vec3.normalize(tiltAxis);\n    else if (vec3.dot(fallbackTiltAxis, fallbackTiltAxis) > 1e-6) balanceAxis = vec3.normalize(fallbackTiltAxis);\n    else balanceAxis = { x: 1, y: 0, z: 0 };\n  } else if (vec3.dot(balanceSpin, balanceSpin) > 1e-6) {\n    balanceAxis = vec3.normalize(balanceSpin);\n  }\n  if (balanceAxis !== null) {\n    const balanceAcceleration = vec3.sub(\n      vec3.scale(balanceAxis, tilt * UPRIGHT_NATURAL_FREQUENCY * UPRIGHT_NATURAL_FREQUENCY),\n      vec3.scale(balanceSpin, 2 * UPRIGHT_DAMPING_RATIO * UPRIGHT_NATURAL_FREQUENCY),\n    );\n    angularVelocityChange = vec3.add(angularVelocityChange, vec3.scale(vec3.clampLength(balanceAcceleration, UPRIGHT_MAX_ANGULAR_ACCELERATION), dtSecs));\n  }\n\n  const changes: { velocityChange?: Vec3, angularVelocityChange?: Vec3 } = {};\n  if (vec3.length(velocityChange) > 0) changes.velocityChange = velocityChange;\n  if (vec3.length(angularVelocityChange) > 0) changes.angularVelocityChange = vec3.scale(angularVelocityChange, 1 / RADIANS_PER_DEGREE);\n  return changes;\n});\n\ngame.clientCharacterService.addAfterStepListener((characterObjectId) => {\n  const stepAutostep = autostep;\n  autostep = null;\n  const character = getPhysicalObject(characterObjectId);\n  if (character === null) return;\n  const position = copyVec3(character.location.position);\n  const velocity = copyVec3(character.movement.velocity);\n\n  if (stepAutostep !== null) {\n    const direction = vec3.normalize(stepAutostep.translation);\n    const distance = vec3.length(stepAutostep.translation);\n    const remainingDistance = distance - clamp(vec3.dot(direction, vec3.sub(position, stepAutostep.startPosition)), 0, distance);\n    const stepTranslation = remainingDistance > 0 ? getStepTranslation(characterObjectId, vec3.scale(direction, remainingDistance), stepAutostep.stepHeight) : null;\n    if (stepTranslation !== null) {\n      const steppedVelocity = { x: velocity.x, y: Math.max(velocity.y, 0), z: velocity.z };\n      if (steppedVelocity.y <= 0) jumpState = { kind: \"groundedReady\" };\n      else if (jumpState.kind === \"waitingToLand\" || jumpState.kind === \"waitingToGetOffGround\") jumpState = { kind: \"waitingToGetOffGround\", jumpStartMs: nowMs };\n      return { position: vec3.add(position, stepTranslation), velocity: steppedVelocity };\n    }\n  }\n\n  if (jumpState.kind === \"waitingToGetOffGround\") return;\n  const ground = game.objectService.getGroundSupport(characterObjectId, { maxDistance: SNAP_DOWN_HEIGHT, maxGroundSlopeDegrees: MAX_GROUND_SLOPE_DEGREES });\n  if (ground === null) return;\n  const didLandGently = (jumpState.kind === \"offGroundNeverJumped\" || jumpState.kind === \"waitingToLand\") && velocity.y < 0;\n  if (jumpState.kind === \"waitingToLand\" && ground.distance !== 0 && !didLandGently) return;\n  const shouldSnap = ground.distance > 0 && (jumpState.kind !== \"waitingToLand\" || didLandGently);\n  jumpState = { kind: \"groundedReady\" };\n\n  const changes: { position?: Vec3, velocity?: Vec3 } = {};\n  if (shouldSnap) changes.position = vec3.sub(position, { x: 0, y: ground.distance, z: 0 });\n  if (didLandGently) changes.velocity = { x: velocity.x, y: 0, z: velocity.z };\n  return changes;\n});\n",
+    "3": "import {y} from './orbit_script'\ny()\nconst createVec3 = (x, y, z) => ({ x, y, z });\nconst addVec3 = (left, right) => createVec3(left.x + right.x, left.y + right.y, left.z + right.z);\nconst subtractVec3 = (left, right) => createVec3(left.x - right.x, left.y - right.y, left.z - right.z);\nconst multiplyVec3 = (vector, scalar) => createVec3(vector.x * scalar, vector.y * scalar, vector.z * scalar);\nconst scaleVec3AroundPoint = (position, scaleMultiplier, centerPoint) => {\n  return addVec3(centerPoint, multiplyVec3(subtractVec3(position, centerPoint), scaleMultiplier));\n};\nconst createPhysicsInfo = (position) => ({\n  location: { position, rotation: createVec3(0.0, 0.0, 0.0) },\n  movement: {\n    velocity: createVec3(0.0, 0.0, 0.0),\n    angularVelocity: createVec3(0.0, 0.0, 0.0),\n  },\n});\n\nconst rootObjectId = game.world.id;\nconsole.log('[player_join_avatar_script] loaded rootObjectId', rootObjectId);\n\n// --- PIG SETTINGS ---\nconst pigColorBody = { r: 0.96, g: 0.67, b: 0.74 };\nconst pigColorDark = { r: 0.82, g: 0.43, b: 0.57 };\n\n// --- HUMAN SETTINGS ---\nconst skinColor = { r: 0.9, g: 0.7, b: 0.5 };\nconst shirtColor = { r: 0.1, g: 0.3, b: 0.8 };\nconst pantsColor = { r: 0.2, g: 0.2, b: 0.2 };\n\nconst brickDensityFromMassAndSize = (size, mass) => {\n  const volume = Math.abs(size.x * size.y * size.z);\n  if (volume === 0) return 0;\n  return mass / volume;\n};\n\nconst ballDensityFromMassAndRadius = (radius, mass) => {\n  const volume = Math.abs((4.0 / 3.0) * Math.PI * radius * radius * radius);\n  if (volume === 0) return 0;\n  return mass / volume;\n};\n\nconst createAvatarBrick = (name, size, position, mass, color, parentId) => {\n  return game.objectService.createObject(name, {\n    type: 'brick',\n    material: null,\n    opacity: 1.0,\n    color,\n    isAlwaysOnTop: false,\n    size,\n    isWalkthrough: false,\n    isPushable: true,\n    density: brickDensityFromMassAndSize(size, mass),\n    ...createPhysicsInfo(position),\n  }, parentId).id;\n};\n\nconst createAvatarBall = (name, radius, position, mass, color, parentId) => {\n  return game.objectService.createObject(name, {\n    type: 'ball',\n    material: null,\n    opacity: 1.0,\n    color,\n    isAlwaysOnTop: false,\n    radius,\n    isWalkthrough: false,\n    isPushable: true,\n    density: ballDensityFromMassAndRadius(radius, mass),\n    ...createPhysicsInfo(position),\n  }, parentId).id;\n};\n\nconst scaleRigidGroupAroundPoint = (rigidGroupId, scaleMultiplier, centerPoint) => {\n  const rigidGroup = game.world.getChildren().find((child) => child.id === rigidGroupId);\n  if (rigidGroup === undefined) return;\n  if (rigidGroup.type !== 'rigidGroup') return;\n\n  rigidGroup.location.position = scaleVec3AroundPoint(rigidGroup.location.position, scaleMultiplier, centerPoint);\n  for (const child of rigidGroup.getChildren()) {\n    game.objectService.scaleObject(child.id, scaleMultiplier, centerPoint);\n  }\n};\n\nconst createPigAvatar = (playerId, groupPosition) => {\n  const rigidGroupId = game.objectService.createObject('player_pig', {\n    type: 'rigidGroup',\n    followSkeletonId: null,\n    followJointNameOfChildName: null,\n    attachmentOffsetOfChildName: {},\n    ...createPhysicsInfo(groupPosition),\n  }, rootObjectId).id;\n  \n  createAvatarBrick('pig_body', createVec3(2.6, 1.7, 4.2), addVec3(groupPosition, createVec3(0.0, 0.0, 0.0)), 6.0, pigColorBody, rigidGroupId);\n  const pigHeadId = createAvatarBall('pig_head', 1.05, addVec3(groupPosition, createVec3(0.0, 0.55, 2.85)), 1.5, pigColorBody, rigidGroupId);\n  createAvatarBrick('pig_snout', createVec3(1.15, 0.8, 0.9), addVec3(groupPosition, createVec3(0.0, 0.35, 3.85)), 0.6, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_left_ear', createVec3(0.45, 0.7, 0.45), addVec3(groupPosition, createVec3(-0.55, 1.55, 2.65)), 0.3, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_right_ear', createVec3(0.45, 0.7, 0.45), addVec3(groupPosition, createVec3(0.55, 1.55, 2.65)), 0.3, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_front_left_leg', createVec3(0.45, 1.4, 0.45), addVec3(groupPosition, createVec3(-0.9, -1.3, 1.15)), 0.8, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_front_right_leg', createVec3(0.45, 1.4, 0.45), addVec3(groupPosition, createVec3(0.9, -1.3, 1.15)), 0.8, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_back_left_leg', createVec3(0.45, 1.4, 0.45), addVec3(groupPosition, createVec3(-0.9, -1.3, -1.15)), 0.8, pigColorDark, rigidGroupId);\n  createAvatarBrick('pig_back_right_leg', createVec3(0.45, 1.4, 0.45), addVec3(groupPosition, createVec3(0.9, -1.3, -1.15)), 0.8, pigColorDark, rigidGroupId);\n  createAvatarBall('pig_tail', 0.32, addVec3(groupPosition, createVec3(0.0, 0.55, -2.45)), 0.2, pigColorDark, rigidGroupId);\n  \n  return { rigidGroupId, headId: pigHeadId };\n};\n\nconst createHumanAvatar = (playerId, groupPosition) => {\n  const rigidGroupId = game.objectService.createObject('player_human', {\n    type: 'rigidGroup',\n    followSkeletonId: null,\n    followJointNameOfChildName: null,\n    attachmentOffsetOfChildName: {},\n    ...createPhysicsInfo(groupPosition),\n  }, rootObjectId).id;\n  \n  // Torso\n  createAvatarBrick('human_torso', createVec3(2.0, 3.0, 1.0), addVec3(groupPosition, createVec3(0.0, 0.0, 0.0)), 4.0, shirtColor, rigidGroupId);\n  // Head\n  const headId = createAvatarBrick('human_head', createVec3(1.5, 1.5, 1.5), addVec3(groupPosition, createVec3(0.0, 2.25, 0.0)), 1.5, skinColor, rigidGroupId);\n  // Arms\n  createAvatarBrick('human_left_arm', createVec3(1.0, 3.0, 1.0), addVec3(groupPosition, createVec3(-1.5, 0.0, 0.0)), 1.5, skinColor, rigidGroupId);\n  createAvatarBrick('human_right_arm', createVec3(1.0, 3.0, 1.0), addVec3(groupPosition, createVec3(1.5, 0.0, 0.0)), 1.5, skinColor, rigidGroupId);\n  // Legs\n  createAvatarBrick('human_left_leg', createVec3(1.0, 3.0, 1.0), addVec3(groupPosition, createVec3(-0.5, -3.0, 0.0)), 2.0, pantsColor, rigidGroupId);\n  createAvatarBrick('human_right_leg', createVec3(1.0, 3.0, 1.0), addVec3(groupPosition, createVec3(0.5, -3.0, 0.0)), 2.0, pantsColor, rigidGroupId);\n  \n  return { rigidGroupId, headId };\n};\n\nlet spawnedFirstCharacter = false;\n\ngame.objectService.addObjectCreatedListener((player) => {\n  console.log('[player_join_avatar_script] join callback fired', player.id);\n  if (player.type !== 'player') return;\n  if (player.characterObjectId !== null) return;\n  \n  const spawnColumn = player.id % 4;\n  const spawnRow = Math.floor(player.id / 4) % 3;\n  const groupPosition = createVec3((spawnColumn - 1.5) * 8.0, 8.0, spawnRow * 8.0 - 8.0);\n\n  let avatar;\n  if (!spawnedFirstCharacter) {\n    spawnedFirstCharacter = true;\n    avatar = createHumanAvatar(player.id, groupPosition);\n  } else {\n    avatar = createPigAvatar(player.id, groupPosition);\n  }\n  \n  player.headObjectId = avatar.headId;\n  player.characterObjectId = avatar.rigidGroupId;\n\n  const scaleLater = async () => {\n    const startTime = Date.now();\n    while (Date.now() - startTime < 5000) {\n      await tick();\n    }\n    const controlsObj = game.world.getChildren().find((child) => child.id === avatar.rigidGroupId);\n    if (controlsObj) {\n      game.objectService.scaleObject(avatar.rigidGroupId, 0.5, createVec3(0.0, 0.0, 0.0));\n      console.log('Scaled player down by 50% from the world origin');\n    }\n  };\n  scaleLater();\n}, \"player\");\n\nawait tick()",
+    "147": "",
+    "111": "// Kube.new added this when GUIs stopped taking an anchor. It shows this script's GUIs where their anchor used to put them.\nconst guiServiceWithOldAnchor = {\n  show: (guiKey: string, rootRenderable: Parameters<typeof game.guiService.show>[1], anchor: string = \"top\") => {\n    const placementClassNameOfAnchor: { [anchor: string]: string | undefined } = {\n      topLeft: \"justify-start items-start\",\n      top: \"justify-start items-center\",\n      topRight: \"justify-start items-end\",\n      left: \"justify-center items-start\",\n      center: \"justify-center items-center\",\n      right: \"justify-center items-end\",\n      bottomLeft: \"justify-end items-start\",\n      bottom: \"justify-end items-center\",\n      bottomRight: \"justify-end items-end\",\n    };\n    const placementClassName = placementClassNameOfAnchor[anchor] ?? placementClassNameOfAnchor.top;\n    game.guiService.show(guiKey, () => (\n      <div className={`pointer-events-none absolute inset-0 flex flex-col text-[12.5px] text-[#8c8c8c] *:pointer-events-auto ${placementClassName}`}>\n        {typeof rootRenderable === \"function\" ? rootRenderable() : rootRenderable}\n      </div>\n    ));\n  },\n  hide: (guiKey: string) => game.guiService.hide(guiKey),\n};\nconst Nested = ({x,setX})=>{\n  return <div className=\"border border-red-500 p-2\" onClick={()=>{setX(v=>v-1)}}>{x}</div>\n}\n\nconst StateTest=  ({init})=>{\n  const [x,setX] = useState(init)\n\n  return <div onClick={()=>{setX(v=>v+1)}}>{x}</div>\n\n}\n\nconst WelcomeUI = () => {\n  const [isOpen, setIsOpen] = useState(true);\n  const [count, setCount] = useState(1)\n  if (!isOpen) {\n    return <div className=\"border border-red-500\"></div>;\n  }\n\n  return (\n    <div className=\"bg-slate-900 border border-red-500 p-8 rounded-xl flex flex-col items-center justify-center gap-6\">\n      <div className=\"text-3xl font-sans text-white border border-red-500 p-2\">Welcome to the Game!</div>\n      <div className=\"text-lg font-sans text-slate-300 border border-red-500 p-2\">We are glad you are here.</div>\n      <div \n        className=\"bg-blue-700 hover:scale-105 transition-transform duration-150 px-8 py-3 rounded-lg text-white font-sans text-xl border border-red-500\"\n        onClick={() => setIsOpen(false)}\n      >\n        Play\n      </div>\n      <Nested x={count} setX={setCount} /> \n      <StateTest init={0}/>\n      <StateTest init={6}/>\n    </div>\n  );\n};\n\nguiServiceWithOldAnchor.show(\"welcome_ui\", WelcomeUI, \"center\");",
+    "110": "'use server'\n\nconsole.log('QQQQQQQQQQQ22222')\nexport const x = async (banana) => {\n\nconsole.log('SERVER RECEIVED!!!!', banana)\n\nreturn banana+10\n}"
+  },
+  "physicsInfo3DOfId": {
+    "105": {
+      "location": {
+        "position": [
+          0.0,
+          3.8,
+          -2.2
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "136": {
+      "location": {
+        "position": [
+          6.0,
+          4.1,
+          6.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "122": {
+      "location": {
+        "position": [
+          6.2,
+          3.6000001,
+          6.5
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "124": {
+      "location": {
+        "position": [
+          5.71,
+          0.9,
+          6.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "140": {
+      "location": {
+        "position": [
+          6.0,
+          4.0,
+          6.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "130": {
+      "location": {
+        "position": [
+          6.29,
+          0.9,
+          6.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "121": {
+      "location": {
+        "position": [
+          6.0,
+          0.2,
+          6.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "126": {
+      "location": {
+        "position": [
+          6.8,
+          2.3500001,
+          6.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "5": {
+      "location": {
+        "position": [
+          0.0,
+          4.9,
+          2.4
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "112": {
+      "location": {
+        "position": [
+          0.0,
+          -1.6,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "108": {
+      "location": {
+        "position": [
+          0.0,
+          4.2,
+          0.1
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "132": {
+      "location": {
+        "position": [
+          6.0,
+          3.5,
+          6.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "107": {
+      "location": {
+        "position": [
+          0.0,
+          -0.5,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "138": {
+      "location": {
+        "position": [
+          5.8,
+          3.6000001,
+          6.5
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "114": {
+      "location": {
+        "position": [
+          0.0,
+          2.0,
+          -8.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "2": {
+      "location": {
+        "position": [
+          3.0,
+          3.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "134": {
+      "location": {
+        "position": [
+          5.2,
+          2.3500001,
+          6.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "4": {
+      "location": {
+        "position": [
+          6.0,
+          6.0,
+          2.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "117": {
+      "location": {
+        "position": [
+          -3.4,
+          4.5,
+          0.6
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "128": {
+      "location": {
+        "position": [
+          6.0,
+          2.3,
+          6.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "movement": {
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angularVelocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "physicsToggles3DOfId": {
+    "105": {
+      "isWalkthrough": false,
+      "isPushable": false,
+      "density": 0.20300375
+    },
+    "138": {
+      "isWalkthrough": true,
+      "isPushable": true,
+      "density": 0.01
+    },
+    "5": {
+      "isWalkthrough": false,
+      "isPushable": true,
+      "density": 0.21220659
+    },
+    "117": {
+      "isWalkthrough": false,
+      "isPushable": true,
+      "density": 0.17052315
+    },
+    "134": {
+      "isWalkthrough": true,
+      "isPushable": true,
+      "density": 1.0
+    },
+    "122": {
+      "isWalkthrough": true,
+      "isPushable": true,
+      "density": 0.01
+    },
+    "107": {
+      "isWalkthrough": false,
+      "isPushable": false,
+      "density": 0.0
+    },
+    "114": {
+      "isWalkthrough": false,
+      "isPushable": false,
+      "density": 0.0
+    },
+    "4": {
+      "isWalkthrough": false,
+      "isPushable": true,
+      "density": 0.23873241
+    },
+    "140": {
+      "isWalkthrough": true,
+      "isPushable": true,
+      "density": 1.0
+    },
+    "132": {
+      "isWalkthrough": false,
+      "isPushable": true,
+      "density": 1.0
+    },
+    "126": {
+      "isWalkthrough": true,
+      "isPushable": true,
+      "density": 1.0
+    },
+    "128": {
+      "isWalkthrough": false,
+      "isPushable": true,
+      "density": 1.0
+    },
+    "112": {
+      "isWalkthrough": false,
+      "isPushable": false,
+      "density": 0.0
+    },
+    "136": {
+      "isWalkthrough": true,
+      "isPushable": true,
+      "density": 1.0
+    },
+    "124": {
+      "isWalkthrough": false,
+      "isPushable": true,
+      "density": 1.0
+    },
+    "130": {
+      "isWalkthrough": false,
+      "isPushable": true,
+      "density": 1.0
+    },
+    "108": {
+      "isWalkthrough": false,
+      "isPushable": true,
+      "density": 0.23873241
+    },
+    "2": {
+      "isWalkthrough": false,
+      "isPushable": true,
+      "density": 0.125
+    }
+  },
+  "primitiveSettingsOfId": {
+    "107": {
+      "Brick": {
+        "size": [
+          40.0,
+          1.0,
+          40.0
+        ]
+      }
+    },
+    "124": {
+      "Brick": {
+        "size": [
+          0.58,
+          1.4,
+          0.6
+        ]
+      }
+    },
+    "2": {
+      "Brick": {
+        "size": [
+          2.0,
+          2.0,
+          2.0
+        ]
+      }
+    },
+    "126": {
+      "Brick": {
+        "size": [
+          0.4,
+          1.3,
+          0.4
+        ]
+      }
+    },
+    "4": {
+      "Ball": {
+        "radius": 1.0
+      }
+    },
+    "112": {
+      "Brick": {
+        "size": [
+          48.0,
+          1.0,
+          48.0
+        ]
+      }
+    },
+    "130": {
+      "Brick": {
+        "size": [
+          0.58,
+          1.4,
+          0.6
+        ]
+      }
+    },
+    "5": {
+      "Ball": {
+        "radius": 2.0
+      }
+    },
+    "114": {
+      "Brick": {
+        "size": [
+          10.0,
+          4.0,
+          1.0
+        ]
+      }
+    },
+    "134": {
+      "Brick": {
+        "size": [
+          0.4,
+          1.3,
+          0.4
+        ]
+      }
+    },
+    "108": {
+      "Ball": {
+        "radius": 1.0
+      }
+    },
+    "136": {
+      "Brick": {
+        "size": [
+          1.1,
+          0.2,
+          1.1
+        ]
+      }
+    },
+    "140": {
+      "Brick": {
+        "size": [
+          0.1,
+          0.1,
+          0.1
+        ]
+      }
+    },
+    "105": {
+      "Ball": {
+        "radius": 1.4
+      }
+    },
+    "117": {
+      "Ball": {
+        "radius": 2.0
+      }
+    },
+    "138": {
+      "Brick": {
+        "size": [
+          0.16,
+          0.22,
+          0.06
+        ]
+      }
+    },
+    "122": {
+      "Brick": {
+        "size": [
+          0.16,
+          0.22,
+          0.06
+        ]
+      }
+    },
+    "128": {
+      "Brick": {
+        "size": [
+          1.2,
+          1.4,
+          0.7
+        ]
+      }
+    },
+    "132": {
+      "Brick": {
+        "size": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    }
+  }
+}

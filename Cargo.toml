@@ -9,6 +9,7 @@ members = [
     "crates/profanity",
     "crates/render_core",
     "crates/render_web",
+    "crates/play_web",
 ]
 resolver = "2"
 

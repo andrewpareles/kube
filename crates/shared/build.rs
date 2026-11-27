@@ -5,6 +5,11 @@ fn main() {
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rerun-if-changed=../../Cargo.lock");
 
+    // Only the native JS engine loads these files, and a browser build never has deno_web's sources to look for.
+    if env::var("CARGO_CFG_TARGET_ARCH").is_ok_and(|target_arch| target_arch == "wasm32") {
+        return;
+    }
+
     let lockfile = fs::read_to_string("../../Cargo.lock").unwrap();
     let registry_source_directory = home::cargo_home().unwrap().join("registry/src");
 

@@ -19,6 +19,8 @@ export const CREATE_PATH = '/create'
 // Every website entry to the editor opens the game's browser workspace.
 export const EDITOR_BASE_PATH = '/editor'
 export const EDITOR_PATH = (gameId: number) => `${EDITOR_BASE_PATH}/${gameId}`
+// The play page runs a game in the browser, full window, the way the editor does.
+export const PLAY_BASE_PATH = '/play'
 export const BLOG_PATH = '/blog'
 export const DOCS_PATH = '/docs'
 export const GAMES_PATH = '/games'

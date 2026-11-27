@@ -5349,6 +5349,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b4596b6d070b27117e987119b4dac604f3c58cfb0b191112e24771b2faeac1a6"
 
 [[package]]
+name = "play_web"
+version = "0.1.137"
+dependencies = [
+ "anyhow",
+ "game_types",
+ "glam 0.33.2",
+ "render_core",
+ "serde_json",
+ "shared",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
+ "wgpu",
+]
+
+[[package]]
 name = "png"
 version = "0.18.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
