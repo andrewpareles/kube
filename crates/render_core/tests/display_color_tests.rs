@@ -37,6 +37,7 @@ fn build_brick_scene(color: Color3, material: Option<MaterialInfo>) -> RenderSce
                 color,
                 glow: 0.0,
                 isAlwaysOnTop: false,
+                outline: None,
             },
             primitive: BrickPrimitiveSettings {
                 size: Vec3::new(4.0, 4.0, 1.0),

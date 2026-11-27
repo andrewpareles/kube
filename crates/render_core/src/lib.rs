@@ -16,6 +16,7 @@ pub mod detail_levels;
 pub mod fonts;
 pub mod label_text_mesh;
 pub mod material_to_stored_world;
+pub mod object_outline;
 pub mod picking;
 pub mod preview_lighting;
 pub mod render_scene;

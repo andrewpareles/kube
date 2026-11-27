@@ -30,6 +30,7 @@ fn label_info_for_test(follows: usize) -> LabelInfo {
             color: Color3 { r: 0.2, g: 0.4, b: 0.6 },
             glow: 0.0,
             isAlwaysOnTop: true,
+            outline: None,
         },
     }
 }

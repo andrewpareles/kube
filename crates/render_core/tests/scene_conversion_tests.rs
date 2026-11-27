@@ -2,7 +2,8 @@ use game_types::{
     data_types::MeshData,
     object_types::{
         BrickMaterialSettings, CylinderMaterialSettings, MaterialInfo, MeshMaterialSettings, PhysicsInfo3D, VisualSettings, WorldLightingInfo,
-        material::AlphaMode, shared::Color3,
+        material::AlphaMode,
+        shared::{Color3, OutlineSettings},
     },
     physics_primitive_types::{BallPrimitiveSettings, BrickPrimitiveSettings, CylinderPrimitiveSettings},
 };
@@ -208,6 +209,7 @@ fn authored_colors_reach_the_shaders_decoded_from_srgb() {
                     color: half_grey,
                     glow: 0.0,
                     isAlwaysOnTop: false,
+                    outline: None,
                 },
                 primitive: BrickPrimitiveSettings { size: Vec3::ONE },
                 material: None,
@@ -236,4 +238,41 @@ fn authored_colors_reach_the_shaders_decoded_from_srgb() {
     assert_decoded(scene.lighting.sun_color_and_intensity, 3.0, "the sun color");
     assert_decoded(scene.lighting.ambient_top_color_and_intensity, 0.4, "the ambient color");
     assert_decoded(scene.lighting.sky_horizon_color_and_padding, 0.0, "the sky color");
+}
+
+// An outline is drawn even around an object with no opacity, so a see-through outlined object stays in the scene while a
+// see-through object without an outline is left out.
+#[test]
+fn see_through_objects_stay_in_the_scene_only_when_outlined() {
+    let brick = |outline: Option<OutlineSettings>| {
+        RenderObject::Brick(RenderBrick {
+            transform: RenderTransform {
+                physicsInfo3D: PhysicsInfo3D::new(Vec3::ZERO, Quat::IDENTITY, Vec3::ZERO, Vec3::ZERO),
+                teleport_count: 0,
+                rigid_group_to_follow: None,
+                sk_joint_to_follow_arc: None,
+            },
+            visualSettings: VisualSettings {
+                opacity: 0.0,
+                outline,
+                ..VisualSettings::TYPICAL_OPAQUE
+            },
+            primitive: BrickPrimitiveSettings { size: Vec3::ONE },
+            material: None,
+        })
+    };
+    let outline = OutlineSettings {
+        color: Color3::BLACK,
+        opacity: 1.0,
+        thickness: 2.0,
+    };
+    let objects = HashMap::from([(1, brick(None)), (2, brick(Some(outline)))]);
+    let scene = build_render_scene(&objects, &HashMap::new(), None);
+    assert_eq!(scene.instances.len(), 1, "only the outlined see-through brick should be in the scene");
+    let instance = &scene.instances[0];
+    assert_eq!(instance.object_id, 2);
+    assert_eq!(instance.content.color[3], 0.0, "the brick itself stays invisible");
+    assert_eq!(instance.content.glow, 0.0, "the outline does not make the brick glow");
+    let kept_outline = instance.outline.expect("the brick's outline should reach the renderer");
+    assert_eq!((kept_outline.opacity, kept_outline.thickness), (1.0, 2.0));
 }

@@ -118,6 +118,7 @@ pub fn asset_object(mesh_data_id: i64, texture_data_id: i64, sound_data_id: i64)
                     color: Color3::WHITE,
                     glow: 0.0,
                     isAlwaysOnTop: true,
+                    outline: None,
                 };
             }
             ObjectInfo::LabelImage(info) => {

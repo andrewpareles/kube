@@ -145,8 +145,10 @@ export const EditorScene = ({ world, frameRequest, selectedObjectIds, onSelect, 
                         renderedWorld = worldRef.current
                         loadAssets(renderer)
                     }
-                    const width = Math.max(1, Math.round(canvas.clientWidth * Math.min(devicePixelRatio, 2)))
-                    const height = Math.max(1, Math.round(canvas.clientHeight * Math.min(devicePixelRatio, 2)))
+                    const pixelRatio = Math.min(devicePixelRatio, 2)
+                    const width = Math.max(1, Math.round(canvas.clientWidth * pixelRatio))
+                    const height = Math.max(1, Math.round(canvas.clientHeight * pixelRatio))
+                    resources.browserWgpuRenderContext.set_device_pixel_ratio(pixelRatio)
                     if (canvas.width !== width) canvas.width = width
                     if (canvas.height !== height) canvas.height = height
                     if (resources.gpuCanvas.width !== width) resources.gpuCanvas.width = width

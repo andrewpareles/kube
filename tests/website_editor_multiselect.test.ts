@@ -14,7 +14,7 @@ const loadWorld = () => {
     const world = storedWorldSchema.parse(withIsPushable(JSON.parse(fs.readFileSync(repoPath('game-35-latest.kube'), 'utf8'))))
     for (const object of Object.values(world.objectOfId))
         for (const [kind, info] of Object.entries(object.info))
-            if (info && typeof info === 'object' && !Array.isArray(info) && 'visualSettings' in info && info.visualSettings && typeof info.visualSettings === 'object') object.info[kind] = { ...info, visualSettings: { ...info.visualSettings, glow: 0 } }
+            if (info && typeof info === 'object' && !Array.isArray(info) && 'visualSettings' in info && info.visualSettings && typeof info.visualSettings === 'object') object.info[kind] = { ...info, visualSettings: { ...info.visualSettings, glow: 0, outline: null } }
     return world
 }
 

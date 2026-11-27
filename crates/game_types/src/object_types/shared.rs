@@ -47,7 +47,12 @@ pub struct Location3D {
 // around the world's up axis first, then tip x degrees around the object's own x axis, then roll z degrees around its
 // own z axis. That is glam's EulerRot::YXZ, which takes and returns the angles in y, x, z order.
 pub fn euler_degrees_to_quat(euler_degrees: Vec3) -> Quat {
-    Quat::from_euler(EulerRot::YXZ, euler_degrees.y.to_radians(), euler_degrees.x.to_radians(), euler_degrees.z.to_radians())
+    Quat::from_euler(
+        EulerRot::YXZ,
+        euler_degrees.y.to_radians(),
+        euler_degrees.x.to_radians(),
+        euler_degrees.z.to_radians(),
+    )
 }
 
 // This only ever reports an x in [-90, 90], so an object tipped past straight up comes back with its y and z turned
@@ -92,7 +97,10 @@ impl PhysicsInfo3D {
 
     pub fn validate(&self) -> anyhow::Result<()> {
         anyhow::ensure!(
-            self.location.position.is_finite() && self.location.quaternion.is_normalized() && self.movement.velocity.is_finite() && self.movement.angularVelocity.is_finite(),
+            self.location.position.is_finite()
+                && self.location.quaternion.is_normalized()
+                && self.movement.velocity.is_finite()
+                && self.movement.angularVelocity.is_finite(),
             "Invalid transform or movement."
         );
         Ok(())
@@ -168,6 +176,34 @@ impl Color3 {
     pub const DEFAULT: Self = Self { r: 0.5, g: 0.5, b: 0.5 };
 }
 
+// A colored border drawn around the outside of an object's silhouette on screen.
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+pub struct OutlineSettings {
+    pub color: Color3,
+    pub opacity: f32,   // 0 to 1
+    pub thickness: f32, // screen pixels, OUTLINE_MIN_THICKNESS to OUTLINE_MAX_THICKNESS
+}
+impl OutlineSettings {
+    // TODO: AI-PICKED-VALUE: Thinner than half a pixel does not show, and the renderer searches this far around every pixel, so
+    // 8 pixels keeps that search cheap while still allowing a bold cartoon outline.
+    pub const MIN_THICKNESS: f32 = 0.5;
+    pub const MAX_THICKNESS: f32 = 8.0;
+
+    pub fn validate(&self) -> anyhow::Result<()> {
+        anyhow::ensure!(
+            self.opacity.is_finite() && (0.0..=1.0).contains(&self.opacity),
+            "Outline opacity must be within [0, 1]."
+        );
+        anyhow::ensure!(
+            self.thickness.is_finite() && (Self::MIN_THICKNESS..=Self::MAX_THICKNESS).contains(&self.thickness),
+            "Outline thickness must be within [{}, {}] pixels.",
+            Self::MIN_THICKNESS,
+            Self::MAX_THICKNESS
+        );
+        Ok(())
+    }
+}
+
 // for primitives only (ball, brick, cylinder, mesh, label)
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct VisualSettings {
@@ -175,6 +211,7 @@ pub struct VisualSettings {
     pub color: Color3, // base color
     pub glow: f32,     // 0-1: shines in its own color whatever the light, and glows onto its surroundings
     pub isAlwaysOnTop: bool,
+    pub outline: Option<OutlineSettings>, // None means no outline
 }
 impl VisualSettings {
     pub const TYPICAL_OPAQUE: Self = Self {
@@ -182,5 +219,6 @@ impl VisualSettings {
         color: Color3::DEFAULT,
         glow: 0.0,
         isAlwaysOnTop: false,
+        outline: None,
     };
 }

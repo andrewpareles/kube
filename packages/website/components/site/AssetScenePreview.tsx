@@ -66,6 +66,7 @@ export const AssetScenePreview = ({ assetDataJson, assetName, mode, controls, fo
         let frameId: number | undefined
         let width = 1
         let height = 1
+        let pixelRatio = 1
         // The view and the clock stay put when the asset changes, so an avatar keeps its turn, zoom and breathing while trying on hats.
         if (isSkybox) viewRef.current = { ...initialSkyView }
 
@@ -89,6 +90,7 @@ export const AssetScenePreview = ({ assetDataJson, assetName, mode, controls, fo
             try {
                 if (renderResources.gpuCanvas.width !== width) renderResources.gpuCanvas.width = width
                 if (renderResources.gpuCanvas.height !== height) renderResources.gpuCanvas.height = height
+                renderResources.browserWgpuRenderContext.set_device_pixel_ratio(pixelRatio)
                 wgpuRenderer.render(renderResources.browserWgpuRenderContext, width, height, elapsedMsRef.current, yaw, pitch, zoom, shouldDrawSky, mode === 'spin')
                 // A see-through frame only covers what it draws, so the last frame is wiped first.
                 if (!shouldDrawSky) canvas2dContext.clearRect(0, 0, width, height)
@@ -104,9 +106,9 @@ export const AssetScenePreview = ({ assetDataJson, assetName, mode, controls, fo
         }
         const resizeObserver = new ResizeObserver(([entry]) => {
             // TODO: AI-PICKED-VALUE: Use the same pixel density for cards and details, capped at 2 for sharp Retina previews with bounded GPU cost.
-            const ratio = Math.min(window.devicePixelRatio, 2)
-            width = Math.max(1, Math.round(entry.contentRect.width * ratio))
-            height = Math.max(1, Math.round(entry.contentRect.height * ratio))
+            pixelRatio = Math.min(window.devicePixelRatio, 2)
+            width = Math.max(1, Math.round(entry.contentRect.width * pixelRatio))
+            height = Math.max(1, Math.round(entry.contentRect.height * pixelRatio))
             if (previewCanvas.width !== width) previewCanvas.width = width
             if (previewCanvas.height !== height) previewCanvas.height = height
             isDirty = true
